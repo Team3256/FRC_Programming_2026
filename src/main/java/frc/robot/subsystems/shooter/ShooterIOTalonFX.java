@@ -1,3 +1,10 @@
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -8,8 +15,6 @@ import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
@@ -17,7 +22,7 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.utils.PhoenixUtil;
 
 public class ShooterIOTalonFX implements ShooterIO {
-      private final TalonFX shooterMotor = new TalonFX(ShooterConstants.kShooterMotorRightID);
+  private final TalonFX shooterMotor = new TalonFX(ShooterConstants.kShooterMotorRightID);
   final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);

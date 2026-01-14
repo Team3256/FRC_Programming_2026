@@ -1,13 +1,19 @@
-package frc.robot.subsystems.shooter;
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
 
-import org.littletonrobotics.junction.AutoLog;
+package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface ShooterIO {
-    @AutoLog
-    public static class ShooterIOInputs {
+  @AutoLog
+  public static class ShooterIOInputs {
     public double shooterMotorVoltage = 0.0;
     public double shooterMotorVelocity = 0.0;
     public double shooterMotorStatorCurrent = 0.0;
