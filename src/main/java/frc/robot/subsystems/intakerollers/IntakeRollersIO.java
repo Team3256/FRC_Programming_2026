@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface IntakeRollersIO {
   @AutoLog
-  public static class GroundIntakeRollersIOInputs {
+  public static class IntakeRollersIOInputs {
     public double intakeRollerMotorVoltage = 0.0;
     public double intakeRollerMotorVelocity = 0.0;
     public double intakeRollerMotorStatorCurrent = 0.0;
@@ -15,7 +15,7 @@ public interface IntakeRollersIO {
     public double canRangeDistance = 0.0;
   }
 
-  public default void updateInputs(GroundIntakeRollersIOInputs inputs) {}
+  public default void updateInputs(IntakeRollersIOInputs inputs) {}
 
   public default void setVoltage(double voltage) {}
 

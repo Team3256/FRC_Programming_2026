@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import frc.robot.sim.SimMechs;
+//import frc.robot.sim.SimMechs;
 import frc.robot.utils.LoggedTunableNumber;
 import org.littletonrobotics.junction.LoggedRobot;
 
@@ -34,7 +34,7 @@ public class IntakeRollersIOSim extends IntakeRollersIOTalonFX {
   private final LoggedTunableNumber canRangeDistance =
       new LoggedTunableNumber("GIRCanRangeDistance", 10.0);
 
-  public GroundIntakeRollersIOSim() {
+  public IntakeRollersIOSim() {
     super();
     motorSim = super.getIntakeRollerMotor().getSimState();
     canRangeSimState = super.getCanRange().getSimState();
@@ -47,7 +47,6 @@ public class IntakeRollersIOSim extends IntakeRollersIOTalonFX {
     motorSim.setSupplyVoltage(RobotController.getBatteryVoltage());
     canRangeSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
 
-    canRangeSimState.setDistance(canRangeDistance.getAsDouble());
 
     // Update physics models
     rollerSimModel.setInput(motorSim.getMotorVoltage());
@@ -61,12 +60,5 @@ public class IntakeRollersIOSim extends IntakeRollersIOTalonFX {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(rollerSimModel.getCurrentDrawAmps()));
     super.updateInputs(inputs);
-
-    SimMechs.getInstance()
-        .updateRollers(
-            Degrees.of(
-                Math.toDegrees(motorRPS)
-                    * LoggedRobot.defaultPeriodSecs
-                    * IntakeRollersConstants.SimulationConstants.kAngularVelocityScalar));
   }
 }
