@@ -23,6 +23,8 @@ public class ExampleSubsystem extends SubsystemBase {
         () -> {
           /* one-time action goes here */
         });
+
+    // hi
   }
 
   /**
