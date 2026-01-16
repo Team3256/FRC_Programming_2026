@@ -18,6 +18,7 @@ public class PhoenixConfigEquality {
   public static final double CANCODER_CONFIG_EPSILON = 0.05;
 
   public static final double CANDI_CONFIG_EPSILON = 0.05;
+  public static final double CANRANGE_CONFIG_EPSILON = .05;
   private static final double kEpsilon = 1e-12;
 
   private static boolean epsilonEquals(double a, double b, double epsilon) {
@@ -49,11 +50,25 @@ public class PhoenixConfigEquality {
         && isEqual(a.MotionMagic, b.MotionMagic);
   }
 
+  public static boolean isEqual(CANrangeConfiguration a, CANrangeConfiguration b) {
+    return isEqual(a.FovParams, b.FovParams)
+        && a.FutureProofConfigs == b.FutureProofConfigs
+        && isEqual(a.ProximityParams, b.ProximityParams)
+        && isEqual(a.ToFParams, b.ToFParams);
+  }
+
   public static boolean isEqual(CANdiConfiguration a, CANdiConfiguration b) {
     return isEqual(a.DigitalInputs, b.DigitalInputs)
         && isEqual(a.PWM1, b.PWM1)
         && isEqual(a.PWM2, b.PWM2)
         && isEqual(a.Quadrature, b.Quadrature);
+  }
+
+  public static boolean isEqual(FovParamsConfigs a, FovParamsConfigs b) { // done
+    return epsilonEquals(a.FOVCenterX, b.FOVCenterX, CANRANGE_CONFIG_EPSILON)
+        && epsilonEquals(a.FOVCenterY, b.FOVCenterY, CANRANGE_CONFIG_EPSILON)
+        && epsilonEquals(a.FOVRangeX, b.FOVRangeX, CANRANGE_CONFIG_EPSILON)
+        && epsilonEquals(a.FOVRangeY, b.FOVRangeY, CANRANGE_CONFIG_EPSILON);
   }
 
   public static boolean isEqual(PWM1Configs a, PWM1Configs b) {
@@ -63,6 +78,21 @@ public class PhoenixConfigEquality {
             a.AbsoluteSensorDiscontinuityPoint,
             b.AbsoluteSensorDiscontinuityPoint,
             CANDI_CONFIG_EPSILON);
+  }
+
+  public static boolean isEqual(ProximityParamsConfigs a, ProximityParamsConfigs b) {
+    return epsilonEquals(
+            a.MinSignalStrengthForValidMeasurement,
+            b.MinSignalStrengthForValidMeasurement,
+            CANRANGE_CONFIG_EPSILON)
+        && epsilonEquals(a.ProximityHysteresis, b.ProximityHysteresis, CANRANGE_CONFIG_EPSILON)
+        && epsilonEquals(
+            a.ProximityThreshold, b.ProximityThreshold, CANRANGE_CONFIG_EPSILON); // all epsilon
+  }
+
+  public static boolean isEqual(ToFParamsConfigs a, ToFParamsConfigs b) {
+    return a.UpdateMode == b.UpdateMode
+        && epsilonEquals(a.UpdateFrequency, b.UpdateFrequency, CANRANGE_CONFIG_EPSILON); // done
   }
 
   public static boolean isEqual(PWM2Configs a, PWM2Configs b) {
