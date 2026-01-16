@@ -8,9 +8,7 @@
 package frc.robot.utils;
 
 import com.ctre.phoenix6.Utils;
-
 import frc.robot.Constants;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,6 +77,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
       return Utils.isSimulation() ? dashboardNumber.get() : defaultValue;
     }
   }
+
   public double getOrUse(double fallbackValue) {
     dashboardNumber.setDefault(fallbackValue);
     return Constants.FeatureFlags.kTuningModeEnabled ? dashboardNumber.get() : defaultValue;
