@@ -1,6 +1,5 @@
 package frc.robot.subsystems.intakerollers;
 
-import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -12,7 +11,6 @@ public interface IntakeRollersIO {
     public double intakeRollerMotorStatorCurrent = 0.0;
     public double intakeRollerMotorSupplyCurrent = 0.0;
     public double intakeRollerMotorTemperature = 0.0;
-    public double canRangeDistance = 0.0;
   }
 
   public default void updateInputs(IntakeRollersIOInputs inputs) {}
@@ -23,10 +21,6 @@ public interface IntakeRollersIO {
 
   public default TalonFX getIntakeRollerMotor() {
     return new TalonFX(0);
-  }
-
-  public default CANrange getCanRange() {
-    return new CANrange(0);
   }
 
   public default void off() {}

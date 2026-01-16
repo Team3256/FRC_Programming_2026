@@ -1,8 +1,6 @@
 package frc.robot.subsystems.intakerollers;
 
-import static edu.wpi.first.units.Units.Degrees;
 
-import com.ctre.phoenix6.sim.CANrangeSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -11,7 +9,6 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 //import frc.robot.sim.SimMechs;
-import frc.robot.utils.LoggedTunableNumber;
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class IntakeRollersIOSim extends IntakeRollersIOTalonFX {
@@ -29,15 +26,9 @@ public class IntakeRollersIOSim extends IntakeRollersIOTalonFX {
 
   private final TalonFXSimState motorSim;
 
-  private final CANrangeSimState canRangeSimState;
-
-  private final LoggedTunableNumber canRangeDistance =
-      new LoggedTunableNumber("GIRCanRangeDistance", 10.0);
-
   public IntakeRollersIOSim() {
     super();
     motorSim = super.getIntakeRollerMotor().getSimState();
-    canRangeSimState = super.getCanRange().getSimState();
   }
 
   @Override
@@ -45,7 +36,7 @@ public class IntakeRollersIOSim extends IntakeRollersIOTalonFX {
 
     // Update battery voltage
     motorSim.setSupplyVoltage(RobotController.getBatteryVoltage());
-    canRangeSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
+
 
 
     // Update physics models

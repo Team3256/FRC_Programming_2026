@@ -4,11 +4,9 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.utils.PhoenixUtil;
@@ -16,7 +14,6 @@ import frc.robot.utils.PhoenixUtil;
 public class IntakeRollersIOTalonFX implements IntakeRollersIO {
   private final TalonFX intakeMotor =
       new TalonFX(IntakeRollersConstants.kIntakeRollerMotorID, "bruh");
-  private final CANrange canRange = new CANrange(IntakeRollersConstants.kCANrangeId, "bruh");
   final VelocityVoltage intakeRequest = new VelocityVoltage(0).withSlot(0);
 
   private final StatusSignal<Voltage> intakeRollerMotorVoltage = intakeMotor.getMotorVoltage();
@@ -27,7 +24,6 @@ public class IntakeRollersIOTalonFX implements IntakeRollersIO {
       intakeMotor.getSupplyCurrent();
   private final StatusSignal<Temperature> intakeRollerMotorTemperature =
       intakeMotor.getDeviceTemp();
-  private final StatusSignal<Distance> canRangeDistance = canRange.getDistance();
 
   public IntakeRollersIOTalonFX() {
     PhoenixUtil.applyMotorConfigs(
@@ -41,8 +37,7 @@ public class IntakeRollersIOTalonFX implements IntakeRollersIO {
         intakeRollerMotorVelocity,
         intakeRollerMotorStatorCurrent,
         intakeRollerMotorSupplyCurrent,
-        intakeRollerMotorTemperature,
-        canRangeDistance);
+        intakeRollerMotorTemperature);
     PhoenixUtil.registerSignals(
         true,
         intakeRollerMotorVoltage,
@@ -61,7 +56,6 @@ public class IntakeRollersIOTalonFX implements IntakeRollersIO {
     inputs.intakeRollerMotorStatorCurrent = intakeRollerMotorStatorCurrent.getValueAsDouble();
     inputs.intakeRollerMotorSupplyCurrent = intakeRollerMotorSupplyCurrent.getValueAsDouble();
     inputs.intakeRollerMotorTemperature = intakeRollerMotorTemperature.getValueAsDouble();
-    inputs.canRangeDistance = canRangeDistance.getValueAsDouble();
   }
 
   @Override
@@ -83,10 +77,5 @@ public class IntakeRollersIOTalonFX implements IntakeRollersIO {
   @Override
   public TalonFX getIntakeRollerMotor() {
     return intakeMotor;
-  }
-
-  @Override
-  public CANrange getCanRange() {
-    return canRange;
   }
 }
