@@ -1,6 +1,14 @@
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.utils;
 
 import com.ctre.phoenix6.Utils;
+import frc.robot.Constants;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +76,11 @@ public class LoggedTunableNumber implements DoubleSupplier {
     } else {
       return Utils.isSimulation() ? dashboardNumber.get() : defaultValue;
     }
+  }
+
+  public double getOrUse(double fallbackValue) {
+    dashboardNumber.setDefault(fallbackValue);
+    return Constants.FeatureFlags.kTuningModeEnabled ? dashboardNumber.get() : defaultValue;
   }
 
   /**

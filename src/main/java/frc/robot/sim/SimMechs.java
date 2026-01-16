@@ -1,4 +1,4 @@
-// Copyright (c) 2024 FRC 3256
+// Copyright (c) 2025 FRC 3256
 // https://github.com/Team3256
 //
 // Use of this source code is governed by a 
@@ -8,6 +8,7 @@
 package frc.robot.sim;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -54,6 +55,6 @@ public final class SimMechs {
   }
 
   public static void init() {
-    SmartDashboard.putData("Ampevator", mech);
+    Shuffleboard.getTab("Sim").add("Shooter Mechanism", mech);
   }
 }

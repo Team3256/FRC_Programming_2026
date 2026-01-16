@@ -26,8 +26,8 @@ public final class Constants {
     public static final int kOperatorControllerPort = 1;
 
     public static class DriverConstants {
-      public static final double kStickDeadband = 0.05;
-      public static final double kRotationalDeadband = 0.1;
+      public static final double kStickDeadband = 0.1;
+      public static final double kRotationalDeadband = 0.12;
     }
   }
 
@@ -42,51 +42,35 @@ public final class Constants {
     // do comprehensive logging. Logging to NetworkTables
     // is disabled on field (FMS connected).
     public static final boolean kAdvKitEnabled = true;
-    // We don't want AdvantageKit (which logs EVERYTHING)
-    // to dump to NetworkTables during competition.
-    // So we use Monologue to log the things we deem necessary
+    // Monologue is another logging library that we use for
+    // sending values to our dashboard because we don't want
+    // AdvantageKit (which logs EVERYTHING) to dump to NetworkTables
+    // during competition. So we use Monologue to log the things
     // for our dashboard (it will ALWAYS log to NetworkTables;
-    // AdvantageKit will be configured to log to a file when connected to FMS)
-    public static final boolean kEpilogueEnabled = true;
+    // AdvantageKit can be configured to log to a file when connected to FMS)
+    public static final boolean kMonologueEnabled = true;
     // If true, the LoggedTunableNumber will work and do TunableNumber things
     public static final boolean kTuningModeEnabled = false;
+    // Toggle whether or not the controller map should dump
+    public static final boolean kControllerMapEnabled = true;
 
-    public static final boolean kPhotonEnabled = false;
+    public static final boolean kSwerveEnabled = true;
+    public static final boolean kVisionEnabled = false;
+    public static final boolean kClimbEnabled = true;
+    public static final boolean kIntakeEnabled = true;
+    public static final boolean kShooterEnabled = true;
+    public static final boolean kPivotShooterEnabled = true;
+    public static final boolean kTurretEnabled = true;
+    public static final boolean kAmpevatorEnabled = true;
+    public static final boolean kAmpevatorRollersEnabled = true;
+    public static final boolean kSpindexEnabled = true;
   }
 
   public static class Logging {
-    public static final boolean kLogToUSB = false;
+    public static final boolean kLogToUSB = true;
     public static final boolean kAdvkitUseReplayLogs = false;
-    // DEBUG: Everything (which will be useful for debugging)
-    // INFO: Everything except DEBUG
-    public static final Logged.Importance kEpilogueImportance = Logged.Importance.DEBUG;
-  }
-
-  public static class SimulationConstants {
-    public static final Distance kDrivebaseWidth = Inches.of(27);
-  }
-
-  public enum RobotType {
-    COMPETITION("TODO: TUne"),
-    PRACTICE("TODO: Tune"),
-    SIMULATION("no label");
-
-    public final String serialNumber;
-
-    RobotType(String serialNumber) {
-      this.serialNumber = serialNumber;
-    }
-  }
-
-  public static final FieldConstants.BranchHeights branchHeights =
-      FieldConstants.BranchHeights.PRACTICE_FIELD;
-
-  /*
-   * Robot Constants.
-   */
-
-  public static class RobotConstants {
-    public static final double bumperLength = 0.1; // should be right?
-    public static final double bumperWidth = 22;
+    // Defaults from Monologue docs
+    public static final boolean kMonologueFileOnly = false;
+    public static final boolean kMonologueLazyLogging = false;
   }
 }
