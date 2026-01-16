@@ -7,6 +7,7 @@
 
 package frc.robot.utils;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANdiConfiguration;
@@ -173,7 +174,7 @@ public class PhoenixUtil {
         "Failed to apply config for cancoder after " + numTries + " attempts", false);
     return false;
   }
-
+  
   public static boolean applyCANdiConfigs(
       CANdi candi, CANdiConfiguration candiConfig, int numTries) {
     for (int i = 0; i < numTries; i++) {
@@ -210,5 +211,23 @@ public class PhoenixUtil {
     DriverStation.reportError(
         "Failed to apply config for candi after " + numTries + " attempts", false);
     return false;
+  }
+  private static BaseStatusSignal[] canivoreSignals = new BaseStatusSignal[0];
+
+  private static BaseStatusSignal[] rioSignals = new BaseStatusSignal[0];
+
+  /** Registers a set of signals for synchronized refresh. */
+  public static void registerSignals(boolean canivore, BaseStatusSignal... signals) {
+    if (canivore) {
+      BaseStatusSignal[] newSignals = new BaseStatusSignal[canivoreSignals.length + signals.length];
+      System.arraycopy(canivoreSignals, 0, newSignals, 0, canivoreSignals.length);
+      System.arraycopy(signals, 0, newSignals, canivoreSignals.length, signals.length);
+      canivoreSignals = newSignals;
+    } else {
+      BaseStatusSignal[] newSignals = new BaseStatusSignal[rioSignals.length + signals.length];
+      System.arraycopy(rioSignals, 0, newSignals, 0, rioSignals.length);
+      System.arraycopy(signals, 0, newSignals, rioSignals.length, signals.length);
+      rioSignals = newSignals;
+    }
   }
 }
