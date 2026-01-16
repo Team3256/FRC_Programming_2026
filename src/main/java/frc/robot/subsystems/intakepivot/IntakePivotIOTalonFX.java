@@ -7,15 +7,13 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-
 import frc.robot.utils.PhoenixUtil;
 
-public class IntakePivot implements IntakePivotIO {
+public class IntakePivotIOTalonFX implements IntakePivotIO {
 
   private final TalonFX pivotMotor =
       new TalonFX(IntakePivotConstants.pivotMotorId, IntakePivotConstants.canBusName);
@@ -30,14 +28,13 @@ public class IntakePivot implements IntakePivotIO {
 
   private final NeutralOut neutralOut = new NeutralOut();
 
-  // Signal Caching
   private final StatusSignal<Voltage> motorVoltage = pivotMotor.getMotorVoltage();
   private final StatusSignal<AngularVelocity> velocity = pivotMotor.getVelocity();
   private final StatusSignal<Angle> position = pivotMotor.getPosition();
   private final StatusSignal<Current> statorCurrent = pivotMotor.getStatorCurrent();
   private final StatusSignal<Current> supplyCurrent = pivotMotor.getSupplyCurrent();
 
-  public IntakePivot() {
+  public IntakePivotIOTalonFX() {
     PhoenixUtil.applyMotorConfigs(
         pivotMotor,
         IntakePivotConstants.motorConfigs,

@@ -8,12 +8,18 @@
 package frc.robot.utils;
 
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANdiConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import java.util.function.Supplier;
@@ -211,4 +217,11 @@ public class PhoenixUtil {
         "Failed to apply config for candi after " + numTries + " attempts", false);
     return false;
   }
+
+public static void registerSignals(boolean b, StatusSignal<Voltage> motorVoltage,
+        StatusSignal<AngularVelocity> velocity, StatusSignal<Angle> position, StatusSignal<Current> statorCurrent,
+        StatusSignal<Current> supplyCurrent) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'registerSignals'");
+}
 }
