@@ -14,6 +14,7 @@ public final class IntakePivotConstants {
   public static final boolean kUseFOC = false;
   public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
+  public static final double stowPosition = .4267;
   public static final double handoffPosition = 0.303;
   public static final double groundIntakePosition = -.09;
 
