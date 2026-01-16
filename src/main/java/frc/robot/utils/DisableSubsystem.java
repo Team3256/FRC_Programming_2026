@@ -24,36 +24,36 @@ public abstract class DisableSubsystem extends SubsystemBase {
   @Override
   public Command run(Runnable action) {
     return disabled
-        ? Commands.none()
-        : super.run(action).withName(StackJumper.getCallerMethodName());
+            ? Commands.none()
+            : super.run(action).withName(StackJumper.getCallerMethodName());
   }
 
   @Override
   public Command runOnce(Runnable action) {
     return disabled
-        ? Commands.none()
-        : super.runOnce(action).withName(StackJumper.getCallerMethodName() + ".runOnce");
+            ? Commands.none()
+            : super.runOnce(action).withName(StackJumper.getCallerMethodName() + ".runOnce");
   }
 
   @Override
   public Command startEnd(Runnable action, Runnable end) {
     return disabled
-        ? Commands.none()
-        : super.startEnd(action, end).withName(StackJumper.getCallerMethodName() + ".startEnd");
+            ? Commands.none()
+            : super.startEnd(action, end).withName(StackJumper.getCallerMethodName() + ".startEnd");
   }
 
   @Override
   public Command runEnd(Runnable action, Runnable end) {
     return disabled
-        ? Commands.none()
-        : super.runEnd(action, end).withName(StackJumper.getCallerMethodName() + ".runEnd");
+            ? Commands.none()
+            : super.runEnd(action, end).withName(StackJumper.getCallerMethodName() + ".runEnd");
   }
 
   @Override
   public Command defer(Supplier<Command> supplier) {
     return disabled
-        ? Commands.none()
-        : super.defer(supplier).withName(StackJumper.getCallerMethodName() + ".defer");
+            ? Commands.none()
+            : super.defer(supplier).withName(StackJumper.getCallerMethodName() + ".defer");
   }
 
   @Override
@@ -64,8 +64,8 @@ public abstract class DisableSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     Logger.recordOutput(
-        this.getClass().getSimpleName() + "/CurrentCommand",
-        this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "none");
+            this.getClass().getSimpleName() + "/CurrentCommand",
+            this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "none");
   }
 
   @Override
