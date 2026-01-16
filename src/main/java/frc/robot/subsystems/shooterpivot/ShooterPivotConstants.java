@@ -1,6 +1,14 @@
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems.shooterpivot;
 
 import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -10,7 +18,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
@@ -18,8 +25,8 @@ import edu.wpi.first.units.measure.Mass;
 public class ShooterPivotConstants {
   public static final int pivotMotorId = 0;
 
-  public static final boolean kUseFOC = false; 
-  public static final boolean kUseMotionMagic = true; 
+  public static final boolean kUseFOC = false;
+  public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
 
   public static final double stowPosition = 0;
@@ -63,4 +70,3 @@ public class ShooterPivotConstants {
     public static final Rotation2d startingAngle = Rotation2d.fromDegrees(150);
   }
 }
-

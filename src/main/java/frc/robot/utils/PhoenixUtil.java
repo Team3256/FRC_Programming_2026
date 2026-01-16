@@ -174,7 +174,7 @@ public class PhoenixUtil {
         "Failed to apply config for cancoder after " + numTries + " attempts", false);
     return false;
   }
-  
+
   public static boolean applyCANdiConfigs(
       CANdi candi, CANdiConfiguration candiConfig, int numTries) {
     for (int i = 0; i < numTries; i++) {
@@ -212,6 +212,7 @@ public class PhoenixUtil {
         "Failed to apply config for candi after " + numTries + " attempts", false);
     return false;
   }
+
   private static BaseStatusSignal[] canivoreSignals = new BaseStatusSignal[0];
 
   private static BaseStatusSignal[] rioSignals = new BaseStatusSignal[0];

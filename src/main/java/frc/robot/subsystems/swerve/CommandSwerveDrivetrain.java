@@ -1,4 +1,9 @@
-
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
 
 package frc.robot.subsystems.swerve;
 
@@ -20,7 +25,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -152,7 +156,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   /* The SysId routine to test */
   private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
 
-
   private Translation2d _calculatedOffsetToRobotCenter = new Translation2d();
   private int _calculatedOffsetToRobotCenterCount = 0;
 
@@ -177,7 +180,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     if (Utils.isSimulation()) {
       startSimThread();
     }
-
   }
 
   /**
@@ -410,7 +412,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
               });
     }
 
-
     // LoggedTracer.record(this.getClass().getSimpleName());
   }
 
@@ -557,4 +558,3 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     return Commands.sequence(initialize, executeEnd);
   }
 }
-

@@ -30,17 +30,23 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
       new MotionMagicVoltage(0).withSlot(0).withEnableFOC(ShooterPivotConstants.kUseFOC);
   private final VoltageOut voltageReq = new VoltageOut(0);
 
-  private final StatusSignal<Voltage> shooterPivotMotorVoltage = shooterPivotMotor.getMotorVoltage();
-  private final StatusSignal<AngularVelocity> shooterPivotMotorVelocity = shooterPivotMotor.getVelocity();
+  private final StatusSignal<Voltage> shooterPivotMotorVoltage =
+      shooterPivotMotor.getMotorVoltage();
+  private final StatusSignal<AngularVelocity> shooterPivotMotorVelocity =
+      shooterPivotMotor.getVelocity();
   private final StatusSignal<Angle> shooterPivotMotorPosition = shooterPivotMotor.getPosition();
-  private final StatusSignal<Current> shooterPivotMotorStatorCurrent = shooterPivotMotor.getStatorCurrent();
-  private final StatusSignal<Current> shooterPivotMotorSupplyCurrent = shooterPivotMotor.getSupplyCurrent();
+  private final StatusSignal<Current> shooterPivotMotorStatorCurrent =
+      shooterPivotMotor.getStatorCurrent();
+  private final StatusSignal<Current> shooterPivotMotorSupplyCurrent =
+      shooterPivotMotor.getSupplyCurrent();
 
   public ShooterPivotIOTalonFX() {
 
     PhoenixUtil.applyMotorConfigs(
-        shooterPivotMotor, ShooterPivotConstants.motorConfigs, ShooterPivotConstants.flashConfigRetries);
-/* 
+        shooterPivotMotor,
+        ShooterPivotConstants.motorConfigs,
+        ShooterPivotConstants.flashConfigRetries);
+
     PhoenixUtil.registerSignals(
         true,
         shooterPivotMotorVoltage,
@@ -48,9 +54,6 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         shooterPivotMotorPosition,
         shooterPivotMotorStatorCurrent,
         shooterPivotMotorSupplyCurrent);
-
-        doesn't exist in phoenix util
-*/
   }
 
   @Override

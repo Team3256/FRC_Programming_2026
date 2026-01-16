@@ -1,4 +1,4 @@
-// Copyright (c) 2026 FRC 3256
+// Copyright (c) 2025 FRC 3256
 // https://github.com/Team3256
 //
 // Use of this source code is governed by a 
@@ -79,6 +79,7 @@ public class ShooterPivot extends DisableSubsystem {
   }
 
   public boolean reachedPosition() {
-    return Util.epsilonEquals(shooterPivotIOInputsAutoLogged.pivotMotorPosition, reqPosition, 0.01);
+    return Util.epsilonEquals(
+        shooterPivotIOInputsAutoLogged.shooterPivotMotorPosition, reqPosition, 0.01);
   }
 }
