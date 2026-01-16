@@ -115,7 +115,7 @@ public class Util {
     double scaledValue = (value + (value < 0 ? deadband : -deadband)) / (1 - deadband);
     return (Math.abs(value) > Math.abs(deadband)) ? scaledValue : 0;
   }
-
+/* 
   public static Constants.RobotType getRobotType() {
     if (RobotController.getSerialNumber().equals(Constants.RobotType.COMPETITION.serialNumber)) {
       return Constants.RobotType.COMPETITION;
@@ -126,4 +126,5 @@ public class Util {
     // If the serial number is not recognized, assume it is a competition robot
     return Constants.RobotType.COMPETITION;
   }
+*/
 }
