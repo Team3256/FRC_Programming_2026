@@ -13,8 +13,6 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -45,8 +43,13 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         ShooterPivotConstants.motorConfigs,
         ShooterPivotConstants.flashConfigRetries);
 
-
-    BaseStatusSignal.setUpdateFrequencyForAll(ShooterPivotConstants.updateFrequency, shooterPivotMotorVoltage, shooterPivotMotorVelocity, shooterPivotMotorPosition, shooterPivotMotorSupplyCurrent, shooterPivotMotorStatorCurrent);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        ShooterPivotConstants.updateFrequency,
+        shooterPivotMotorVoltage,
+        shooterPivotMotorVelocity,
+        shooterPivotMotorPosition,
+        shooterPivotMotorSupplyCurrent,
+        shooterPivotMotorStatorCurrent);
 
     PhoenixUtil.registerSignals(
         true,
@@ -68,7 +71,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
   @Override
   public void setPosition(double position) {
-      shooterPivotMotor.setControl(motionMagicRequest.withPosition(position));
+    shooterPivotMotor.setControl(motionMagicRequest.withPosition(position));
   }
 
   @Override

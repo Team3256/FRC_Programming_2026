@@ -7,19 +7,15 @@
 
 package frc.robot.subsystems.shooter;
 
-
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
-import frc.robot.utils.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends DisableSubsystem {
 
   private final ShooterIO shooterIO;
   private final ShooterIOInputsAutoLogged shooterIOAutoLogged = new ShooterIOInputsAutoLogged();
-
 
   public Shooter(boolean disabled, ShooterIO shooterIO) {
     super(disabled);
@@ -32,21 +28,16 @@ public class Shooter extends DisableSubsystem {
     shooterIO.updateInputs(shooterIOAutoLogged);
     Logger.processInputs("Shooter", shooterIOAutoLogged);
 
-      LoggedTracer.record("Shooter");
+    LoggedTracer.record("Shooter");
   }
 
   public Command setVoltage(double voltage) {
-    return this.run(()->shooterIO.setShooterVoltage(voltage))
-        .finallyDo(shooterIO::off);
+    return this.run(() -> shooterIO.setShooterVoltage(voltage)).finallyDo(shooterIO::off);
   }
 
   public Command setVelocity(double velocity) {
-    return this.run(
-            () ->
-              shooterIO.setShooterVelocity(velocity))
-        .finallyDo(shooterIO::off);
+    return this.run(() -> shooterIO.setShooterVelocity(velocity)).finallyDo(shooterIO::off);
   }
-
 
   public Command off() {
     return this.runOnce(shooterIO::off);
