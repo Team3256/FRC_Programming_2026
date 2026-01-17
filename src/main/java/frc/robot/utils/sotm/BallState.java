@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 public class BallState {
     public Pose3d pose;
     public Translation3d velocity;
-    public Translation3d omega;
+    public Translation3d omega; // rad/s
 
     public BallState(
             Pose3d position,
