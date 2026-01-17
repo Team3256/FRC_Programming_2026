@@ -19,29 +19,29 @@ public class Indexer extends DisableSubsystem {
   private final IndexerIO indexerIO;
   private final IndexerIOInputsAutoLogged indexerIOAutoLogged = new IndexerIOInputsAutoLogged();
 
-  public Indexer(boolean enabled, IndexerIO IndexerIO) {
+  public Indexer(boolean enabled, IndexerIO indexerIO) {
     super(enabled);
-    this.indexerIO = IndexerIO;
+    this.indexerIO = indexerIO;
   }
 
   @Override
   public void periodic() {
     super.periodic();
-    IndexerIO.updateInputs(indexerIOAutoLogged);
+    indexerIO.updateInputs(indexerIOAutoLogged);
     Logger.processInputs("indexer", indexerIOAutoLogged);
 
     LoggedTracer.record("Indexer");
   }
 
   public Command setVoltage(double voltage) {
-    return this.run(() -> IndexerIO.setVoltage(voltage)).finallyDo(IndexerIO::off);
+    return this.run(() -> indexerIO.setVoltage(voltage)).finallyDo(indexerIO::off);
   }
 
   public Command setVelocity(double velocity) {
-    return this.run(() -> IndexerIO.setVelocity(velocity)).finallyDo(IndexerIO::off);
+    return this.run(() -> indexerIO.setVelocity(velocity)).finallyDo(indexerIO::off);
   }
 
   public Command off() {
-    return this.runOnce(IndexerIO::off);
+    return this.runOnce(indexerIO::off);
   }
 }

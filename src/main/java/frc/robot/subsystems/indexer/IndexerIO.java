@@ -20,15 +20,15 @@ public interface IndexerIO {
     public double indexerMotorTemperature = 0.0;
   }
 
-  public static void updateInputs(IndexerIOInputs inputs) {}
+  public default void updateInputs(IndexerIOInputs inputs) {}
 
-  public static void setVoltage(double voltage) {}
+  public default void setVoltage(double voltage) {}
 
-  public static void setVelocity(double velocity) {}
+  public default void setVelocity(double velocity) {}
 
   public default TalonFX getIndexerMotor() {
     return new TalonFX(0);
   }
 
-  public static void off() {}
+  public default void off() {}
 }
