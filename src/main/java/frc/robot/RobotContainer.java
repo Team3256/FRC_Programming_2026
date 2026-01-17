@@ -127,11 +127,7 @@ public class RobotContainer {
                                             .withVelocityY(-m_driverController.getLeftX() * SlowMaxSpeed)
                                             .withRotationalRate(-m_driverController.getRightX() * SlowMaxAngular)));
 
-
-    // Azimuth Barge Close
-
     // sets the heading to wherever the robot is facing
-    // do this with the elevator side of the robot facing YOU
     m_driverController.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
     drivetrain.registerTelemetry(logger::telemeterize);
