@@ -29,8 +29,7 @@ public class ShooterPivotConstants {
   public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
 
-  public static final double stowPosition = 0;
-  public static final double baseShootingPosition = 0; // im not sure
+  public static double updateFrequency = 50;
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()

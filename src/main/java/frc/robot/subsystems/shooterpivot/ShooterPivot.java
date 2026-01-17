@@ -31,8 +31,6 @@ public class ShooterPivot extends DisableSubsystem {
     super(enabled);
 
     this.shooterPivotIO = shooterPivotIO;
-
-    this.shooterPivotIO.resetPosition(Rotations.of(.4267));
   }
 
   @Override
@@ -62,21 +60,11 @@ public class ShooterPivot extends DisableSubsystem {
     return this.run(() -> shooterPivotIO.setVoltage(voltage));
   }
 
-  public Command zero() {
-    return this.runOnce(shooterPivotIO::zero);
-  }
 
   public Command off() {
     return this.runOnce(shooterPivotIO::off).withName("off");
   }
 
-  public Command goToStow() {
-    return this.setPosition(ShooterPivotConstants.stowPosition);
-  }
-
-  public Command goToShoot() {
-    return this.setPosition(ShooterPivotConstants.baseShootingPosition);
-  }
 
   public boolean reachedPosition() {
     return Util.epsilonEquals(

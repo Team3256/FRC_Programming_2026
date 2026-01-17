@@ -24,8 +24,6 @@ public interface ShooterPivotIO {
 
   public default void updateInputs(ShooterPivotIOInputs inputs) {}
 
-  public default void setPosition(Angle position) {}
-
   public default void setPosition(double position) {}
 
   public default void setVoltage(double voltage) {}
@@ -38,5 +36,4 @@ public interface ShooterPivotIO {
 
   public default void off() {}
 
-  public default void zero() {}
 }

@@ -9,6 +9,7 @@ package frc.robot.subsystems.shooterpivot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -23,12 +24,9 @@ import frc.robot.utils.PhoenixUtil;
 
 public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
-  private final TalonFX shooterPivotMotor = new TalonFX(ShooterPivotConstants.pivotMotorId, "idk");
-  private final PositionVoltage positionRequest =
-      new PositionVoltage(0).withSlot(0).withEnableFOC(ShooterPivotConstants.kUseFOC);
+  private final TalonFX shooterPivotMotor = new TalonFX(ShooterPivotConstants.pivotMotorId);
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0).withSlot(0).withEnableFOC(ShooterPivotConstants.kUseFOC);
-  private final VoltageOut voltageReq = new VoltageOut(0);
 
   private final StatusSignal<Voltage> shooterPivotMotorVoltage =
       shooterPivotMotor.getMotorVoltage();
@@ -46,6 +44,9 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         shooterPivotMotor,
         ShooterPivotConstants.motorConfigs,
         ShooterPivotConstants.flashConfigRetries);
+
+
+    BaseStatusSignal.setUpdateFrequencyForAll(ShooterPivotConstants.updateFrequency, shooterPivotMotorVoltage, shooterPivotMotorVelocity, shooterPivotMotorPosition, shooterPivotMotorSupplyCurrent, shooterPivotMotorStatorCurrent);
 
     PhoenixUtil.registerSignals(
         true,
@@ -66,21 +67,8 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
   }
 
   @Override
-  public void setPosition(Angle position) {
-    if (ShooterPivotConstants.kUseMotionMagic) {
-      shooterPivotMotor.setControl(motionMagicRequest.withPosition(position));
-    } else {
-      shooterPivotMotor.setControl(positionRequest.withPosition(position));
-    }
-  }
-
-  @Override
   public void setPosition(double position) {
-    if (ShooterPivotConstants.kUseMotionMagic) {
       shooterPivotMotor.setControl(motionMagicRequest.withPosition(position));
-    } else {
-      shooterPivotMotor.setControl(positionRequest.withPosition(position));
-    }
   }
 
   @Override

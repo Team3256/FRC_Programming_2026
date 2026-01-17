@@ -21,9 +21,9 @@ public class IntakeRollers extends DisableSubsystem {
   public void periodic() {
     super.periodic();
     intakeRollersIO.updateInputs(intakeIOAutoLogged);
-    Logger.processInputs("GroundIntake", intakeIOAutoLogged);
+    Logger.processInputs("IntakeRollers", intakeIOAutoLogged);
 
-    LoggedTracer.record("GroundIntake");
+    LoggedTracer.record("IntakeRollers");
   }
 
   public Command setVoltage(double voltage) {
