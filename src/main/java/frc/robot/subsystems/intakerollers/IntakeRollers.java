@@ -8,8 +8,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class IntakeRollers extends DisableSubsystem {
   private final IntakeRollersIO intakeRollersIO;
-  private final IntakeRollersIOInputsAutoLogged intakeIOAutoLogged =
-      new IntakeRollersIOInputsAutoLogged();
+  private final IntakeRollersIO.IntakeRollersIOInputs intakeIOAutoLogged =
+    new IntakeRollersIO.IntakeRollersIOInputs();
 
 
   public IntakeRollers(boolean enabled, IntakeRollersIO intakeRollersIO) {
