@@ -35,5 +35,4 @@ public interface ShooterPivotIO {
   public default void resetPosition(Angle angle) {}
 
   public default void off() {}
-
 }

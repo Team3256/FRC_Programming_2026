@@ -1,5 +1,3 @@
-
-
 // Copyright (c) 2025 FRC 3256
 // https://github.com/Team3256
 //
@@ -33,7 +31,6 @@ public class IntakeRollersConstants {
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(60));
   public static int flashConfigRetries = 5;
-
 
   public static final class SimulationConstants {
     public static double rollerGearingRatio = 1.0;

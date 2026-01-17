@@ -19,8 +19,7 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.utils.PhoenixUtil;
 
 public class IntakeRollersIOTalonFX implements IntakeRollersIO {
-  private final TalonFX intakeMotor =
-      new TalonFX(IntakeRollersConstants.kIntakeRollerMotorID);
+  private final TalonFX intakeMotor = new TalonFX(IntakeRollersConstants.kIntakeRollerMotorID);
   final VelocityVoltage intakeRequest = new VelocityVoltage(0).withSlot(0);
 
   private final StatusSignal<Voltage> intakeRollerMotorVoltage = intakeMotor.getMotorVoltage();
