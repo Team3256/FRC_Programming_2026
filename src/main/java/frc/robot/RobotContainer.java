@@ -30,6 +30,15 @@ import frc.robot.sim.SimMechs;
 
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
+import frc.robot.subsystems.sotm.ShotCalculator;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.shooterpivot.ShooterPivot;
+import frc.robot.subsystems.shooterpivot.ShooterPivotIO;
+import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
+import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
 
 import java.util.List;
 
@@ -53,6 +62,9 @@ public class RobotContainer {
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+  private final Shooter shooter;
+  private final ShooterPivot shooterPivot;
+  private final ShotCalculator shotCalculator;
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -63,6 +75,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    if (Utils.isSimulation()) {
+      shooter = new Shooter(false, new ShooterIOSim());
+      shooterPivot = new ShooterPivot(false, new ShooterPivotIOSim());
+    } else {
+      shooter = new Shooter(false, new ShooterIOTalonFX());
+      shooterPivot = new ShooterPivot(false, new ShooterPivotIOTalonFX());
+    }
+
+    shotCalculator = new ShotCalculator(false, drivetrain);
+
     // Configure the trigger bindings
     configureOperatorBinds();
     configureChoreoAutoChooser();
@@ -77,7 +99,26 @@ public class RobotContainer {
 
 
   private void configureOperatorBinds() {
+    m_operatorController.a().whileTrue(
+        Commands.parallel(
+            shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()),
+            shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
+            drivetrain.applyRequest(() ->
+                new SwerveRequest.FieldCentricFacingAngle()
+                    .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                    .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                    .withTargetDirection(Rotation2d.fromRadians(shotCalculator.getCurrentEffectiveYaw()))
+            )
+        ).withName("ShootOnTheMove")
+    );
 
+    m_operatorController.b().whileTrue(
+        shooter.setVelocity(50.0)//replace w constant later
+    );
+
+    m_operatorController.x().whileTrue(
+        shooterPivot.setPosition(Math.toRadians(45))//replace w constant later
+    );
   }
 
   private void configureChoreoAutoChooser() {
