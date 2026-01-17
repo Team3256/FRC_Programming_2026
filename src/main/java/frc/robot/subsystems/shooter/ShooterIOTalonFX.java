@@ -84,7 +84,8 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   @Override
   public void updateInputs(ShooterIOInputs inputs) {
-    BaseStatusSignal.refreshAll(
+    PhoenixUtil.registerSignals(
+      true,
         shooterMotorVoltage,
         shooterMotorVelocity,
         shooterMotorStatorCurrent,
