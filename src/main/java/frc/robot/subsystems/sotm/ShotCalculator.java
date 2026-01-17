@@ -92,86 +92,33 @@ public class ShotCalculator extends DisableSubsystem {
 
     double targetSpeedRps = ShotCalculatorConstants.DISTANCE_TO_SHOOTER_SPEED.get(distance);
 
-    BallPhysics.ShotSolution initialSol;
-    try {
-      initialSol = BallPhysics.solveBallisticWithSpeed(
-          shooterPose,
-          targetPose,
-          targetSpeedRps);
-    } catch (IllegalArgumentException e) {
+    ShootOnTheFlyCalculator.InterceptSolution solution =
+        ShootOnTheFlyCalculator.solveShootOnTheFly(
+            shooterPose,
+            targetPose,
+            robotSpeeds,
+            robotAccelerations,
+            targetSpeedRps,
+            ShotCalculatorConstants.kMaxIterations,
+            ShotCalculatorConstants.kConvergenceThreshold
+        );
+
+    if (solution == null) {
       return null;
     }
 
-    if (initialSol.flightTimeSeconds() == 0) {
-      return null;
-    }
+    Translation3d shooterPos = shooterPose.getTranslation();
+    Translation3d effectivePos = solution.effectiveTargetPose().getTranslation();
+    double deltaX = effectivePos.getX() - shooterPos.getX();
+    double deltaY = effectivePos.getY() - shooterPos.getY();
+    double requiredYaw = Math.atan2(deltaY, deltaX);
 
-    double t = initialSol.flightTimeSeconds();
-    Pose3d effectiveTarget = targetPose;
-
-    for (int i = 0; i < ShotCalculatorConstants.kMaxIterations; i++) {
-      double dx = robotSpeeds.vxMetersPerSecond * t;
-      double dy = robotSpeeds.vyMetersPerSecond * t;
-
-      effectiveTarget = new Pose3d(
-          targetPose.getX() - dx,
-          targetPose.getY() - dy,
-          targetPose.getZ(),
-          targetPose.getRotation());
-
-      BallPhysics.ShotSolution newSol;
-      try {
-        newSol = BallPhysics.solveBallisticWithSpeed(
-            shooterPose,
-            effectiveTarget,
-            targetSpeedRps);
-      } catch (IllegalArgumentException e) {
-        break;
-      }
-
-      if (Math.abs(newSol.flightTimeSeconds() - t) < ShotCalculatorConstants.kConvergenceThreshold) {
-        Translation3d shooterPos = shooterPose.getTranslation();
-        Translation3d effectivePos = effectiveTarget.getTranslation();
-        double deltaX = effectivePos.getX() - shooterPos.getX();
-        double deltaY = effectivePos.getY() - shooterPos.getY();
-        double requiredYaw = Math.atan2(deltaY, deltaX);
-
-        return new ShotSolution(
-            effectiveTarget,
-            requiredYaw,
-            newSol.launchPitchRad(),
-            targetSpeedRps
-        );
-      }
-
-      t = newSol.flightTimeSeconds();
-    }
-
-    if (effectiveTarget != null) {
-      Translation3d shooterPos = shooterPose.getTranslation();
-      Translation3d effectivePos = effectiveTarget.getTranslation();
-      double deltaX = effectivePos.getX() - shooterPos.getX();
-      double deltaY = effectivePos.getY() - shooterPos.getY();
-      double requiredYaw = Math.atan2(deltaY, deltaX);
-
-      try {
-        BallPhysics.ShotSolution finalSol = BallPhysics.solveBallisticWithSpeed(
-            shooterPose,
-            effectiveTarget,
-            targetSpeedRps);
-
-        return new ShotSolution(
-            effectiveTarget,
-            requiredYaw,
-            finalSol.launchPitchRad(),
-            targetSpeedRps
-        );
-      } catch (IllegalArgumentException e) {
-        return null;
-      }
-    }
-
-    return null;
+    return new ShotSolution(
+        solution.effectiveTargetPose(),
+        requiredYaw,
+        solution.launchPitchRad(),
+        targetSpeedRps
+    );
   }
 
   @SuppressWarnings("unused")
