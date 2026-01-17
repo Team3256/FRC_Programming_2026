@@ -15,6 +15,8 @@ import frc.robot.utils.LoggedTracer;
 import frc.robot.utils.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.DoubleSupplier;
+
 public class Shooter extends DisableSubsystem {
 
   private final ShooterIO shooterIO;
@@ -44,6 +46,13 @@ public class Shooter extends DisableSubsystem {
     return this.run(
             () ->
               shooterIO.setShooterVelocity(velocity))
+        .finallyDo(shooterIO::off);
+  }
+
+  public Command setVelocity(DoubleSupplier velocity) {
+    return this.run(
+            () ->
+              shooterIO.setShooterVelocity(velocity.getAsDouble()))
         .finallyDo(shooterIO::off);
   }
 
