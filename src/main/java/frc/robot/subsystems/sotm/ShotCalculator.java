@@ -9,6 +9,8 @@ import frc.robot.FieldConstants;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
+import frc.robot.utils.sotm.ChassisAccelerations;
+import frc.robot.utils.sotm.ShootOnTheFlyCalculator;
 import org.littletonrobotics.junction.Logger;
 
 public class ShotCalculator extends DisableSubsystem {
