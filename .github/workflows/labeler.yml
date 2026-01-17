@@ -1,0 +1,22 @@
+# This workflow will triage pull requests and apply a label based on the
+# paths that are modified in the pull request.
+#
+# To use this workflow, you will need to set up a .github/labeler.yml
+# file with configuration.  For more information, see:
+# https://github.com/actions/labeler
+
+'type: ci':
+  - changed-files:
+      - any-glob-to-any-file: .github/*
+'component: drivers':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/drivers/**
+'component: swerve':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/swerve/**
+'component: superstructure':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/Superstructure.java
+'type: utils':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/utils/**
