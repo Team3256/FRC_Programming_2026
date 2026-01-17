@@ -1,3 +1,5 @@
+
+
 // Copyright (c) 2025 FRC 3256
 // https://github.com/Team3256
 //
@@ -15,15 +17,7 @@ public class IntakeRollersConstants {
 
   public static final boolean kUseFOC = false;
 
-  // Constants used in CANrange construction
-
-  // Configure the CANrange for basic use
-
   public static final int kIntakeRollerMotorID = 45;
-  public static final double intakeVoltage = -6;
-
-  public static final double handoffVoltage = 4;
-  public static double l1OuttakeVoltage = 8;
 
   public static double updateFrequency = 50;
 
@@ -40,7 +34,6 @@ public class IntakeRollersConstants {
                   .withStatorCurrentLimit(60));
   public static int flashConfigRetries = 5;
 
-  public static final int motorCoralStall = 40;
 
   public static final class SimulationConstants {
     public static double rollerGearingRatio = 1.0;

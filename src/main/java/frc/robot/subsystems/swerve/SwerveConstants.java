@@ -22,22 +22,6 @@ public final class SwerveConstants {
   public static final double SlowMaxSpeed = MaxSpeed * 0.3;
   public static final double SlowMaxAngular = MaxAngularRate * 0.3;
 
-  // source 1, 5 degree overshoot for weight drag from elevator
-  // overshoot if weight concentrated = (0.0872665)
-  public static final Rotation2d sourceLeft1 = new Rotation2d(0.559 + (3 * 0.0872665));
-  public static final Rotation2d sourceRight2 = new Rotation2d(2.46091);
-
-  // climb and processor - close preset doubles as climb target facing cage, same for far presets
-  public static final Rotation2d processorClose = new Rotation2d(0);
-  public static final Rotation2d processorFar = new Rotation2d(Math.PI);
-
-  // barge targets
-  public static final Rotation2d bargeClose = new Rotation2d((Math.PI / 2));
-  public static final Rotation2d bargeFar = new Rotation2d(((Math.PI / 2) + Math.PI));
-
-  // time to force stop the command so we can regain control of rotation
-  public static final double aziTimeout = 1.2;
-
   // Physics constants
   public static final Mass robotMass = Pounds.of(120);
   public static final MomentOfInertia robotMOI = KilogramSquareMeters.of(36);
