@@ -20,10 +20,15 @@ public class IntakeRollers extends DisableSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    intakeRollersIO.updateInputs(intakeIOAutoLogged);
-    Logger.processInputs("IntakeRollers", intakeIOAutoLogged);
+  intakeRollersIO.updateInputs(intakeIOAutoLogged);
 
-    LoggedTracer.record("IntakeRollers");
+  Logger.recordOutput("IntakeRollers/intakeRollerMotorVoltage", intakeIOAutoLogged.intakeRollerMotorVoltage);
+  Logger.recordOutput("IntakeRollers/intakeRollerMotorVelocity", intakeIOAutoLogged.intakeRollerMotorVelocity);
+  Logger.recordOutput("IntakeRollers/intakeRollerMotorStatorCurrent", intakeIOAutoLogged.intakeRollerMotorStatorCurrent);
+  Logger.recordOutput("IntakeRollers/intakeRollerMotorSupplyCurrent", intakeIOAutoLogged.intakeRollerMotorSupplyCurrent);
+  Logger.recordOutput("IntakeRollers/intakeRollerMotorTemperature", intakeIOAutoLogged.intakeRollerMotorTemperature);
+
+  LoggedTracer.record("IntakeRollers");
   }
 
   public Command setVoltage(double voltage) {
