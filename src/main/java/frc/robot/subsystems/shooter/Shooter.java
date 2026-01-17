@@ -10,7 +10,6 @@ package frc.robot.subsystems.shooter;
 
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
@@ -34,11 +33,6 @@ public class Shooter extends DisableSubsystem {
   public void periodic() {
     super.periodic();
     shooterIO.updateInputs(shooterIOAutoLogged);
-    if (Constants.FeatureFlags.kTuningModeEnabled) {
-      double velocity = shooterMotorVelocityInput.getOrUse(0);
-      shooterIO.setShooterVelocity(velocity);
-      shooterIO.setShooterFollowerVelocity(shooterFollowerVelocityInput.getOrUse(velocity));
-    }
     Logger.processInputs(this.getClass().getSimpleName(), shooterIOAutoLogged);
   }
 
