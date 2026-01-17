@@ -1,96 +1,80 @@
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems.intakepivot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Rotations;
 
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.utils.DisableSubsystem;
+import frc.robot.utils.Util;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Voltage;
+public class IntakePivot extends DisableSubsystem {
 
-import frc.robot.utils.PhoenixUtil;
+  private final IntakePivotIO intakePivotIO;
+  private final IntakePivotIOInputsAutoLogged intakePivotIOInputsAutoLogged =
+      new IntakePivotIOInputsAutoLogged();
 
-public class IntakePivot implements IntakePivotIO {
+  public final Trigger reachedPosition = new Trigger(this::reachedPosition);
 
-  private final TalonFX pivotMotor =
-      new TalonFX(IntakePivotConstants.pivotMotorId, IntakePivotConstants.canBusName);
+  private double reqPosition = 0.0;
 
-  private final PositionVoltage positionRequest = new PositionVoltage(0)
-      .withSlot(0)
-      .withEnableFOC(IntakePivotConstants.kUseFOC);
+  public IntakePivot(boolean enabled, IntakePivotIO intakePivotIO) {
+    super(enabled);
 
-  private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0)
-      .withSlot(0)
-      .withEnableFOC(IntakePivotConstants.kUseFOC);
+    this.intakePivotIO = intakePivotIO;
 
-  private final NeutralOut neutralOut = new NeutralOut();
-
-  // Signal Caching
-  private final StatusSignal<Voltage> motorVoltage = pivotMotor.getMotorVoltage();
-  private final StatusSignal<AngularVelocity> velocity = pivotMotor.getVelocity();
-  private final StatusSignal<Angle> position = pivotMotor.getPosition();
-  private final StatusSignal<Current> statorCurrent = pivotMotor.getStatorCurrent();
-  private final StatusSignal<Current> supplyCurrent = pivotMotor.getSupplyCurrent();
-
-  public IntakePivot() {
-    PhoenixUtil.applyMotorConfigs(
-        pivotMotor,
-        IntakePivotConstants.motorConfigs,
-        IntakePivotConstants.flashConfigRetries);
-
-    PhoenixUtil.registerSignals(
-        true,
-        motorVoltage,
-        velocity,
-        position,
-        statorCurrent,
-        supplyCurrent);
+    this.intakePivotIO.resetPosition(Rotations.of(.4267));
   }
 
   @Override
-  public void updateInputs(IntakePivotIOInputs inputs) {
-    
-    motorVoltage.refresh();
-    velocity.refresh();
-    position.refresh();
-    statorCurrent.refresh();
-    supplyCurrent.refresh();
+  public void periodic() {
+    super.periodic();
+    intakePivotIO.updateInputs(intakePivotIOInputsAutoLogged);
+    Logger.processInputs("IntakePivot", intakePivotIOInputsAutoLogged);
 
-    inputs.pivotMotorVoltage = motorVoltage.getValue().in(Volts);
-    inputs.pivotMotorVelocity = velocity.getValue().in(RotationsPerSecond);
-    
-    inputs.pivotMotorPosition = position.getValue().in(Rotations);
-
-    inputs.pivotMotorStatorCurrent = statorCurrent.getValue().in(Amps);
-    inputs.pivotMotorSupplyCurrent = supplyCurrent.getValue().in(Amps);
+    Logger.recordOutput(this.getClass().getSimpleName() + "/reqPosition", reqPosition);
   }
 
-  @Override
-  public void setPosition(Angle target) {
-    if (IntakePivotConstants.kUseMotionMagic) {
-      pivotMotor.setControl(motionMagicRequest.withPosition(target));
-    } else {
-      pivotMotor.setControl(positionRequest.withPosition(target));
-    }
+  public Command setPosition(double position) {
+    return setPosition(() -> position);
   }
 
-  @Override
-  public void setVoltage(double volts) {
-    pivotMotor.setVoltage(volts);
+  public Command setPosition(DoubleSupplier position) {
+    return this.run(
+        () -> {
+          reqPosition = position.getAsDouble();
+          intakePivotIO.setPosition(reqPosition);
+        });
   }
 
-  @Override
-  public void stop() {
-    pivotMotor.setControl(neutralOut);
+  public Command setVoltage(double voltage) {
+    return this.run(() -> intakePivotIO.setVoltage(voltage));
   }
 
-  @Override
-  public void resetPosition(Angle angle) {
-    pivotMotor.setPosition(angle);
+  public Command zero() {
+    return this.runOnce(intakePivotIO::zero);
+  }
+
+  public Command off() {
+    return this.runOnce(intakePivotIO::off).withName("off");
+  }
+
+  public Command goToStow() {
+    return this.setPosition(IntakePivotConstants.stowPosition);
+  }
+  public Command goToGroundIntake() {
+    return this.setPosition(IntakePivotConstants.groundIntakePosition);
+  }
+
+  public boolean reachedPosition() {
+    return Util.epsilonEquals(intakePivotIOInputsAutoLogged.pivotMotorPosition, reqPosition, 0.01);
   }
 }

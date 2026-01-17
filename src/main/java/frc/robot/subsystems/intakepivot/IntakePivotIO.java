@@ -17,10 +17,16 @@ public interface IntakePivotIO {
 
   default void setPosition(Angle position) {}
 
+  default void setPosition(double position) {}
+
   default void setVoltage(double voltage) {}
 
   default void stop() {}
 
   default void resetPosition(Angle angle) {}
+
+  public default void off() {}
+
+  public default void zero() {}
 
 }
