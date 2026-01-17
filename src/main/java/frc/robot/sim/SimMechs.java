@@ -7,54 +7,43 @@
 
 package frc.robot.sim;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.robot.Constants;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 
 public final class SimMechs {
 
-  public static final Mechanism2d mech = new Mechanism2d(5, 5);
+  public final LoggedMechanism2d mech =
+          new LoggedMechanism2d(Constants.SimulationConstants.kDrivebaseWidth.in(Meters), 1);
 
-  private static final MechanismRoot2d ampevator = mech.getRoot("ampevator", 1, 0);
 
-  private static final MechanismLigament2d m_ampevator =
-      ampevator.append(new MechanismLigament2d("ampevator", 2, 90));
-  private static final MechanismLigament2d m_ampevatorRollers =
-      m_ampevator.append(
-          new MechanismLigament2d("rollers", .35, 0, 5.0, new Color8Bit(Color.kPurple)));
+  private static SimMechs instance = null;
 
-  private static final MechanismRoot2d pivotShooterRoot = mech.getRoot("Pivot Shooter", 3.5, 0.2);
-  private static final MechanismLigament2d pivotShooterViz =
-      pivotShooterRoot.append(
-          new MechanismLigament2d("Pivot Shooter", 1, 0.0, 5.0, new Color8Bit(Color.kGreen)));
-  private static final MechanismLigament2d rightShooterViz =
-      pivotShooterViz.append(
-          new MechanismLigament2d(
-              "Right Shooter Flywheel", 0.35, 90, 2.5, new Color8Bit(Color.kRed)));
-  private static final MechanismLigament2d leftShooterViz =
-      pivotShooterViz.append(
-          new MechanismLigament2d(
-              "Left Shooter Flywheel", .25, 0.0, 2.5, new Color8Bit(Color.kYellow)));
+  private SimMechs() {}
 
-  public static void updateAmpevator(double position) {
-    m_ampevator.setLength(position);
+  public static SimMechs getInstance() {
+    if (instance == null) {
+      instance = new SimMechs();
+    }
+    return instance;
   }
 
-  public static void addToShooterFlywheelAngle(double leftAngle, double rightAngle) {
-    leftShooterViz.setAngle(leftShooterViz.getAngle() + leftAngle);
-    rightShooterViz.setAngle(rightShooterViz.getAngle() + rightAngle);
+
+
+  public void publishToNT() {
+    Logger.recordOutput("RobotSim", mech);
   }
 
-  public static void updatePivotShooter(Rotation2d angle) {
-    pivotShooterViz.setAngle(angle.getDegrees());
-  }
-
-  public static void init() {
-    Shuffleboard.getTab("Sim").add("Shooter Mechanism", mech);
-  }
 }

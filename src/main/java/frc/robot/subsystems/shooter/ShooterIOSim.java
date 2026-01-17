@@ -72,13 +72,6 @@ public class ShooterIOSim extends ShooterIOTalonFX {
         BatterySim.calculateDefaultBatteryLoadedVoltage(
             leftFlywheelSimModel.getCurrentDrawAmps(), rightFlywheelSimModel.getCurrentDrawAmps()));
     super.updateInputs(inputs);
-
-    SimMechs.addToShooterFlywheelAngle(
-        Math.toDegrees(leftRps)
-            * LoggedRobot.defaultPeriodSecs
-            * ShooterConstants.SimulationConstants.kAngularVelocityScalar,
-        Math.toDegrees(rightRps)
-            * LoggedRobot.defaultPeriodSecs
-            * ShooterConstants.SimulationConstants.kAngularVelocityScalar);
+    
   }
 }

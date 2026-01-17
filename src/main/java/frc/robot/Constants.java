@@ -46,24 +46,11 @@ public final class Constants {
     // sending values to our dashboard because we don't want
     // AdvantageKit (which logs EVERYTHING) to dump to NetworkTables
     // during competition. So we use Monologue to log the things
-    // for our dashboard (it will ALWAYS log to NetworkTables;
-    // AdvantageKit can be configured to log to a file when connected to FMS)
-    public static final boolean kMonologueEnabled = true;
-    // If true, the LoggedTunableNumber will work and do TunableNumber things
-    public static final boolean kTuningModeEnabled = false;
-    // Toggle whether or not the controller map should dump
-    public static final boolean kControllerMapEnabled = true;
 
-    public static final boolean kSwerveEnabled = true;
-    public static final boolean kVisionEnabled = false;
-    public static final boolean kClimbEnabled = true;
-    public static final boolean kIntakeEnabled = true;
-    public static final boolean kShooterEnabled = true;
-    public static final boolean kPivotShooterEnabled = true;
-    public static final boolean kTurretEnabled = true;
-    public static final boolean kAmpevatorEnabled = true;
-    public static final boolean kAmpevatorRollersEnabled = true;
-    public static final boolean kSpindexEnabled = true;
+  }
+
+  public static class SimulationConstants {
+    public static final Distance kDrivebaseWidth = Inches.of(27);
   }
 
   public static class Logging {
