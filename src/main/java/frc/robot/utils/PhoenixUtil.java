@@ -7,13 +7,16 @@
 
 package frc.robot.utils;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANdiConfiguration;
+import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.Angle;
@@ -37,7 +40,7 @@ public class PhoenixUtil {
     }
     if (code != StatusCode.OK) {
       DriverStation.reportError(
-          "Failed to execute phoenix pro api call after " + numTries + " attempts", false);
+              "Failed to execute phoenix pro api call after " + numTries + " attempts", false);
       return false;
     }
     return true;
@@ -53,12 +56,12 @@ public class PhoenixUtil {
     if (!spamGetStatusCode(() -> talon.getConfigurator().refresh(readConfig))) {
       // could not get config!
       DriverStation.reportWarning(
-          "Failed to read config for talon [" + talon.getDescription() + "]", false);
+              "Failed to read config for talon [" + talon.getDescription() + "]", false);
       return false;
     } else if (!PhoenixConfigEquality.isEqual(config, readConfig)) {
       // configs did not match
       DriverStation.reportWarning(
-          "Configuration verification failed for talon [" + talon.getDescription() + "]", false);
+              "Configuration verification failed for talon [" + talon.getDescription() + "]", false);
       return false;
     } else {
       // configs read and match, Talon OK
@@ -67,17 +70,17 @@ public class PhoenixUtil {
   }
 
   public static boolean readAndVerifyConfiguration(
-      CANcoder cancoder, CANcoderConfiguration config) {
+          CANcoder cancoder, CANcoderConfiguration config) {
     CANcoderConfiguration readConfig = new CANcoderConfiguration();
     if (!spamGetStatusCode(() -> cancoder.getConfigurator().refresh(readConfig))) {
       // could not get config!
       DriverStation.reportWarning(
-          "Failed to read config for CANCoder [" + cancoder.getDeviceID() + "]", false);
+              "Failed to read config for CANCoder [" + cancoder.getDeviceID() + "]", false);
       return false;
     } else if (!PhoenixConfigEquality.isEqual(config, readConfig)) {
       // configs did not match
       DriverStation.reportWarning(
-          "Configuration verification failed for cancoder [" + cancoder.getDeviceID() + "]", false);
+              "Configuration verification failed for cancoder [" + cancoder.getDeviceID() + "]", false);
       return false;
     } else {
       // configs read and match, Talon OK
@@ -90,12 +93,31 @@ public class PhoenixUtil {
     if (!spamGetStatusCode(() -> canDi.getConfigurator().refresh(readConfig))) {
       // could not get config!
       DriverStation.reportWarning(
-          "Failed to read config for CANdi [" + canDi.getDeviceID() + "]", false);
+              "Failed to read config for CANdi [" + canDi.getDeviceID() + "]", false);
       return false;
     } else if (!PhoenixConfigEquality.isEqual(config, readConfig)) {
       // configs did not match
       DriverStation.reportWarning(
-          "Configuration verification failed for CANdi [" + canDi.getDeviceID() + "]", false);
+              "Configuration verification failed for CANdi [" + canDi.getDeviceID() + "]", false);
+      return false;
+    } else {
+      // configs read and match, Talon OK
+      return true;
+    }
+  }
+
+  public static boolean readAndVerifyConfiguration(
+          CANrange CANrange, CANrangeConfiguration canRangeConfig) {
+    CANrangeConfiguration readConfig = new CANrangeConfiguration();
+    if (!spamGetStatusCode(() -> CANrange.getConfigurator().refresh(readConfig))) {
+      // could not get config!
+      DriverStation.reportWarning(
+              "Failed to read config for talon [" + CANrange.getDeviceID() + "]", false);
+      return false;
+    } else if (!PhoenixConfigEquality.isEqual(canRangeConfig, readConfig)) {
+      // configs did not match
+      DriverStation.reportWarning(
+              "Configuration verification failed for talon [" + CANrange.getDeviceID() + "]", false);
       return false;
     } else {
       // configs read and match, Talon OK
@@ -105,7 +127,7 @@ public class PhoenixUtil {
 
   // The main function you should use for most purposes
   public static boolean applyMotorConfigs(
-      TalonFX motor, TalonFXConfiguration motorConfig, int numTries) {
+          TalonFX motor, TalonFXConfiguration motorConfig, int numTries) {
     for (int i = 0; i < numTries; i++) {
       if (RobotBase.isSimulation()) {
         return motor.getConfigurator().apply(motorConfig).isOK();
@@ -116,34 +138,34 @@ public class PhoenixUtil {
           return true;
         } else {
           DriverStation.reportWarning(
-              "Failed to verify config for talon ["
-                  + motor.getDescription()
-                  + "] (attempt "
-                  + (i + 1)
-                  + " of "
-                  + numTries
-                  + ")",
-              false);
+                  "Failed to verify config for talon ["
+                          + motor.getDescription()
+                          + "] (attempt "
+                          + (i + 1)
+                          + " of "
+                          + numTries
+                          + ")",
+                  false);
         }
       } else {
         DriverStation.reportWarning(
-            "Failed to apply config for talon ["
-                + motor.getDescription()
-                + "] (attempt "
-                + (i + 1)
-                + " of "
-                + numTries
-                + ")",
-            false);
+                "Failed to apply config for talon ["
+                        + motor.getDescription()
+                        + "] (attempt "
+                        + (i + 1)
+                        + " of "
+                        + numTries
+                        + ")",
+                false);
       }
     }
     DriverStation.reportError(
-        "Failed to apply config for talon after " + numTries + " attempts", false);
+            "Failed to apply config for talon after " + numTries + " attempts", false);
     return false;
   }
 
   public static boolean applyCancoderConfig(
-      CANcoder cancoder, CANcoderConfiguration cancoderConfig, int numTries) {
+          CANcoder cancoder, CANcoderConfiguration cancoderConfig, int numTries) {
     for (int i = 0; i < numTries; i++) {
       if (RobotBase.isSimulation()) {
         return cancoder.getConfigurator().apply(cancoderConfig).isOK();
@@ -154,34 +176,34 @@ public class PhoenixUtil {
           return true;
         } else {
           DriverStation.reportWarning(
-              "Failed to verify config for cancoder ["
-                  + cancoder.getDeviceID()
-                  + "] (attempt "
-                  + (i + 1)
-                  + " of "
-                  + numTries
-                  + ")",
-              false);
+                  "Failed to verify config for cancoder ["
+                          + cancoder.getDeviceID()
+                          + "] (attempt "
+                          + (i + 1)
+                          + " of "
+                          + numTries
+                          + ")",
+                  false);
         }
       } else {
         DriverStation.reportWarning(
-            "Failed to apply config for cancoder ["
-                + cancoder.getDeviceID()
-                + "] (attempt "
-                + (i + 1)
-                + " of "
-                + numTries
-                + ")",
-            false);
+                "Failed to apply config for cancoder ["
+                        + cancoder.getDeviceID()
+                        + "] (attempt "
+                        + (i + 1)
+                        + " of "
+                        + numTries
+                        + ")",
+                false);
       }
     }
     DriverStation.reportError(
-        "Failed to apply config for cancoder after " + numTries + " attempts", false);
+            "Failed to apply config for cancoder after " + numTries + " attempts", false);
     return false;
   }
 
   public static boolean applyCANdiConfigs(
-      CANdi candi, CANdiConfiguration candiConfig, int numTries) {
+          CANdi candi, CANdiConfiguration candiConfig, int numTries) {
     for (int i = 0; i < numTries; i++) {
       if (RobotBase.isSimulation()) {
         return candi.getConfigurator().apply(candiConfig).isOK();
@@ -192,29 +214,29 @@ public class PhoenixUtil {
           return true;
         } else {
           DriverStation.reportWarning(
-              "Failed to verify config for candi ["
-                  + candi.getDeviceID()
-                  + "] (attempt "
-                  + (i + 1)
-                  + " of "
-                  + numTries
-                  + ")",
-              false);
+                  "Failed to verify config for candi ["
+                          + candi.getDeviceID()
+                          + "] (attempt "
+                          + (i + 1)
+                          + " of "
+                          + numTries
+                          + ")",
+                  false);
         }
       } else {
         DriverStation.reportWarning(
-            "Failed to apply config for candi ["
-                + candi.getDeviceID()
-                + "] (attempt "
-                + (i + 1)
-                + " of "
-                + numTries
-                + ")",
-            false);
+                "Failed to apply config for candi ["
+                        + candi.getDeviceID()
+                        + "] (attempt "
+                        + (i + 1)
+                        + " of "
+                        + numTries
+                        + ")",
+                false);
       }
     }
     DriverStation.reportError(
-        "Failed to apply config for candi after " + numTries + " attempts", false);
+            "Failed to apply config for candi after " + numTries + " attempts", false);
     return false;
   }
 
