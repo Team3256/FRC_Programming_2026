@@ -16,29 +16,20 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import frc.robot.sim.SimMechs;
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class ShooterIOSim extends ShooterIOTalonFX {
 
   private final DCMotor motor =
-      ShooterConstants.kUseFOC ? DCMotor.getKrakenX60Foc(1) : DCMotor.getKrakenX60(1);
+      ShooterConstants.kUseFOC ? DCMotor.getKrakenX60Foc(2) : DCMotor.getKrakenX60(2);
 
-  private final LinearSystem<N1, N1, N1> leftFlywheelPlant =
+  private final LinearSystem<N1, N1, N1> flywheelSystem =
       LinearSystemId.createFlywheelSystem(
           motor,
           ShooterConstants.SimulationConstants.kLeftGearingRatio,
           ShooterConstants.SimulationConstants.kLeftMomentOfInertia);
 
-  private final LinearSystem<N1, N1, N1> rightFlywheelPlant =
-      LinearSystemId.createFlywheelSystem(
-          motor,
-          ShooterConstants.SimulationConstants.kRightGearingRatio,
-          ShooterConstants.SimulationConstants.kRightMomentOfInertia);
-
-  private final FlywheelSim leftFlywheelSimModel = new FlywheelSim(leftFlywheelPlant, motor);
-
-  private final FlywheelSim rightFlywheelSimModel = new FlywheelSim(rightFlywheelPlant, motor);
+  private final FlywheelSim flywheelSim = new FlywheelSim(flywheelSystem, motor);
 
   private final TalonFXSimState shooterMotorSim;
   private final TalonFXSimState shooterMotorFollowerSim;
@@ -55,23 +46,21 @@ public class ShooterIOSim extends ShooterIOTalonFX {
     shooterMotorSim.setSupplyVoltage(RobotController.getBatteryVoltage());
     shooterMotorFollowerSim.setSupplyVoltage(RobotController.getBatteryVoltage());
     // Update physics models
-    leftFlywheelSimModel.setInput(shooterMotorSim.getMotorVoltage());
-    leftFlywheelSimModel.update(LoggedRobot.defaultPeriodSecs);
-    rightFlywheelSimModel.setInput(shooterMotorFollowerSim.getMotorVoltage());
-    rightFlywheelSimModel.update(LoggedRobot.defaultPeriodSecs);
+    flywheelSim.setInput(shooterMotorSim.getMotorVoltage());
+    flywheelSim.update(LoggedRobot.defaultPeriodSecs);
 
-    double leftRps = leftFlywheelSimModel.getAngularVelocityRPM() / 60;
-    shooterMotorSim.setRotorVelocity(leftRps);
-    shooterMotorSim.addRotorPosition(leftRps * LoggedRobot.defaultPeriodSecs);
-    double rightRps = rightFlywheelSimModel.getAngularVelocityRPM() / 60;
-    shooterMotorFollowerSim.setRotorVelocity(rightRps);
-    shooterMotorFollowerSim.addRotorPosition(rightRps * LoggedRobot.defaultPeriodSecs);
+    double motor1Rps = flywheelSim.getAngularVelocityRPM() / 60;
+    shooterMotorSim.setRotorVelocity(motor1Rps);
+    shooterMotorSim.addRotorPosition(motor1Rps * LoggedRobot.defaultPeriodSecs);
+    double motor2Rps = flywheelSim.getAngularVelocityRPM() / 60;
+    shooterMotorFollowerSim.setRotorVelocity(motor2Rps);
+    shooterMotorFollowerSim.addRotorPosition(motor2Rps * LoggedRobot.defaultPeriodSecs);
 
     // Update battery voltage (after the effects of physics models)
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(
-            leftFlywheelSimModel.getCurrentDrawAmps(), rightFlywheelSimModel.getCurrentDrawAmps()));
+            flywheelSim.getCurrentDrawAmps()));
     super.updateInputs(inputs);
-    
+
   }
 }

@@ -18,10 +18,6 @@ public class Shooter extends DisableSubsystem {
 
   private final ShooterIO shooterIO;
   private final ShooterIOInputsAutoLogged shooterIOAutoLogged = new ShooterIOInputsAutoLogged();
-  private final LoggedTunableNumber shooterMotorVelocityInput =
-      new LoggedTunableNumber("Shooter/MotorVelocity");
-  private final LoggedTunableNumber shooterFollowerVelocityInput =
-      new LoggedTunableNumber("Shooter/FollowerVelocity");
 
 
   public Shooter(boolean disabled, ShooterIO shooterIO) {
@@ -36,21 +32,15 @@ public class Shooter extends DisableSubsystem {
     Logger.processInputs(this.getClass().getSimpleName(), shooterIOAutoLogged);
   }
 
-  public Command setVoltage(double voltage, double followerVoltage) {
-    return this.run(
-            () -> {
-              shooterIO.setShooterVoltage(voltage);
-              shooterIO.setShooterFollowerVoltage(followerVoltage);
-            })
+  public Command setVoltage(double voltage) {
+    return this.run(()->shooterIO.setShooterVoltage(voltage))
         .finallyDo(shooterIO::off);
   }
 
-  public Command setVelocity(double velocity, double followerVelocity) {
+  public Command setVelocity(double velocity) {
     return this.run(
-            () -> {
-              shooterIO.setShooterVelocity(velocity);
-              shooterIO.setShooterFollowerVelocity(followerVelocity);
-            })
+            () ->
+              shooterIO.setShooterVelocity(velocity))
         .finallyDo(shooterIO::off);
   }
 

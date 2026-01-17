@@ -24,8 +24,8 @@ public final class ShooterConstants {
   public static final boolean kUseShooterRegenBraking = true;
 
   // can IDs
-  public static int kShooterMotorRightID = 0;
-  public static int kShooterMotorLeftID = 0;
+  public static int shooterFollower = 0;
+  public static int shooterMain = 1;
 
   // motor output behavior
   public static MotorOutputConfigs motorOutputConfigs =
@@ -56,18 +56,11 @@ public final class ShooterConstants {
                   .withPeakForwardTorqueCurrent(80)
                   .withPeakReverseTorqueCurrent(80));
   public static TalonFXConfiguration followerMotorConfigs =
-      motorConfigs.withMotorOutput(
-          motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive));
-
-  public static double kShooterFeederRPS = -35;
-  public static double kShooterFollowerFeederRPS = 35;
+      motorConfigs;
 
   public static final class SimulationConstants {
     public static double kLeftGearingRatio = 1.0; // TODO: Update this value
     public static double kLeftMomentOfInertia = 0.0001; // TODO: Update this value
-    public static double kRightGearingRatio = 1.0; // TODO: Update this value
-    public static double kRightMomentOfInertia = 0.0001; // TODO: Update this value
-    // Scale down the angular velocity so we can actually see what is happening
     public static double kAngularVelocityScalar = 0.05;
   }
 
