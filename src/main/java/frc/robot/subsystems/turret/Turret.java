@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.utils.DisableSubsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -25,8 +26,8 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Turret extends DisableSubsystem {
-  private static final double minAngle = Units.degreesToRadians(-210.0);
-  private static final double maxAngle = Units.degreesToRadians(210.0);
+  private static final double minAngle = Units.degreesToRadians(0.0); // 270
+  private static final double maxAngle = Units.degreesToRadians(0.0);
   private static final double trackOverlapMargin = Units.degreesToRadians(10);
   private static final double trackCenterRads = (minAngle + maxAngle) / 2;
   private static final double trackMinAngle = trackCenterRads - Math.PI - trackOverlapMargin;
@@ -48,7 +49,7 @@ public class Turret extends DisableSubsystem {
       new Alert("Turret motor disconnected!", Alert.AlertType.kWarning);
   private BooleanSupplier coastOverride = () -> false;
 
-  SlewRateLimiter profile = new SlewRateLimiter(maxVelocity.get());
+  SlewRateLimiter profile = new SlewRateLimiter(SwerveConstants.MaxSpeed); //TODO: verify
   private double turretOffset;
 
   public Turret(TurretIO turretIO) {
@@ -88,6 +89,7 @@ public class Turret extends DisableSubsystem {
             new RobotState.TurretObservation(Timer.getTimestamp(), new Rotation2d(getPosition())));
   }
 
+  //TODO: add odom checker
   public void periodicAfterScheduler() {
     // Delay tracking math until after the RobotState has been updated
     if (DriverStation.isEnabled()) {

@@ -12,7 +12,13 @@ import org.littletonrobotics.junction.AutoLog;
 public interface TurretIO {
   @AutoLog
   public static class TurretIOInputs {
-    double turretMotorVoltage = 0.0;
+      public boolean motorConnected;
+      public double positionRads;
+      public double velocityRadsPerSec;
+      public double appliedVolts;
+      public double supplyCurrentAmps;
+      public double torqueCurrentAmps;
+      double turretMotorVoltage = 0.0;
     double turretMotorVelocity = 0.0;
     double turretMotorStatorCurrent = 0.0;
     double turretMotorSupplyCurrent = 0.0;
