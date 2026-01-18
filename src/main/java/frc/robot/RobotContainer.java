@@ -13,12 +13,21 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.sim.SimMechs;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.shooterpivot.ShooterPivot;
+import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
+import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
+import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 
@@ -42,6 +51,10 @@ public class RobotContainer {
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+  private final Shooter shooter;
+  private final ShooterPivot shooterPivot;
+  private final ShotCalculator shotCalculator;
+
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
@@ -50,6 +63,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    if (Utils.isSimulation()) {
+      shooter = new Shooter(false, new ShooterIOSim());
+      shooterPivot = new ShooterPivot(false, new ShooterPivotIOSim());
+    } else {
+      shooter = new Shooter(false, new ShooterIOTalonFX());
+      shooterPivot = new ShooterPivot(false, new ShooterPivotIOTalonFX());
+    }
+
+    shotCalculator = new ShotCalculator(drivetrain);
+
     // Configure the trigger bindings
     configureOperatorBinds();
     configureChoreoAutoChooser();
@@ -60,7 +83,35 @@ public class RobotContainer {
     }
   }
 
-  private void configureOperatorBinds() {}
+  private void configureOperatorBinds() {
+    m_operatorController
+        .a()
+        .whileTrue(
+            Commands.parallel(
+                    shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()),
+                    shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
+                    drivetrain.applyRequest(
+                        () ->
+                            new SwerveRequest.FieldCentricFacingAngle()
+                                .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                                .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                                .withTargetDirection(
+                                    Rotation2d.fromRadians(
+                                        shotCalculator.getCurrentEffectiveYaw()))))
+                .withName("ShootOnTheMove"));
+
+    m_operatorController
+        .b()
+        .whileTrue(
+            shooter.setVelocity(50.0) // replace w constant later
+            );
+
+    m_operatorController
+        .x()
+        .whileTrue(
+            shooterPivot.setPosition(Math.toRadians(45)) // replace w constant later
+            );
+  }
 
   private void configureChoreoAutoChooser() {
 
