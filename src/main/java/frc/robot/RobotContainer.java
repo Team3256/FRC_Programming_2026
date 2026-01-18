@@ -83,7 +83,7 @@ public class RobotContainer {
       shooterPivot = new ShooterPivot(false, new ShooterPivotIOTalonFX());
     }
 
-    shotCalculator = new ShotCalculator(false, drivetrain);
+    shotCalculator = new ShotCalculator(drivetrain);
 
     // Configure the trigger bindings
     configureOperatorBinds();
