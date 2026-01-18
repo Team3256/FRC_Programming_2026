@@ -63,6 +63,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   @AutoLogOutput private double[] startWheelPositions = new double[4];
   @AutoLogOutput private double currentEffectiveWheelRadius = 0;
 
+  private ChassisSpeeds previousSpeeds = new ChassisSpeeds();
+  private double previousTime = 0.0;
+
   /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
   private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
   /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
@@ -266,6 +269,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
               });
     }
 
+    double currentTime = Logger.getTimestamp() / 1e6;
+    ChassisSpeeds currentSpeeds = getState().Speeds;
+
+    if (previousTime > 0) {
+      double dt = currentTime - previousTime;
+    }
+
+    previousSpeeds = currentSpeeds;
+    previousTime = currentTime;
+
      LoggedTracer.record(this.getClass().getSimpleName());
   }
 
@@ -279,6 +292,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     // }
 
     // }
+  }
+
+  public frc.robot.utils.sotm.ChassisAccelerations getFieldRelativeAccelerations() {
+    double currentTime = Logger.getTimestamp() / 1e6;
+    double dt = previousTime > 0 ? currentTime - previousTime : 0.02;
+
+    ChassisSpeeds currentSpeeds = getState().Speeds;
+
+    return new frc.robot.utils.sotm.ChassisAccelerations(
+        currentSpeeds,
+        previousSpeeds,
+        dt
+    );
   }
 
   /**
