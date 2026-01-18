@@ -9,7 +9,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Inches;
 
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Distance;
 
 /**

@@ -16,16 +16,16 @@ public class StackJumper {
     if (traceTime) {
       double d = HALUtil.getFPGATime();
       String methodName =
-              StackWalker.getInstance()
-                      .walk(stream -> stream.skip(2).findFirst().get())
-                      .getMethodName();
+          StackWalker.getInstance()
+              .walk(stream -> stream.skip(2).findFirst().get())
+              .getMethodName();
       System.out.println(
-              "Time to get method name: " + (HALUtil.getFPGATime() - d) + " ns for " + methodName);
+          "Time to get method name: " + (HALUtil.getFPGATime() - d) + " ns for " + methodName);
       return methodName;
     } else {
       return StackWalker.getInstance()
-              .walk(stream -> stream.skip(2).findFirst().get())
-              .getMethodName();
+          .walk(stream -> stream.skip(2).findFirst().get())
+          .getMethodName();
     }
   }
 }

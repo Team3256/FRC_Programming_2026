@@ -58,9 +58,7 @@ public class ShooterIOSim extends ShooterIOTalonFX {
 
     // Update battery voltage (after the effects of physics models)
     RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(
-            flywheelSim.getCurrentDrawAmps()));
+        BatterySim.calculateDefaultBatteryLoadedVoltage(flywheelSim.getCurrentDrawAmps()));
     super.updateInputs(inputs);
-
   }
 }

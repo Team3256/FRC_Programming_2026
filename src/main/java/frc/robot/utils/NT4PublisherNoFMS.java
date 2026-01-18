@@ -15,15 +15,15 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 // subclass of NT4Publisher that does not publish to NT if FMS is attached.
 // may alleviate some command overrun issues
 public class NT4PublisherNoFMS extends NT4Publisher {
-    public NT4PublisherNoFMS() {
-        super();
-    }
+  public NT4PublisherNoFMS() {
+    super();
+  }
 
-    @Override
-    public void putTable(LogTable table) {
-        if (Robot.isReal() && DriverStation.isFMSAttached()) {
-            return;
-        }
-        super.putTable(table);
+  @Override
+  public void putTable(LogTable table) {
+    if (Robot.isReal() && DriverStation.isFMSAttached()) {
+      return;
     }
+    super.putTable(table);
+  }
 }

@@ -1,3 +1,10 @@
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems.intakerollers;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -12,8 +19,7 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.utils.PhoenixUtil;
 
 public class IntakeRollersIOTalonFX implements IntakeRollersIO {
-  private final TalonFX intakeMotor =
-      new TalonFX(IntakeRollersConstants.kIntakeRollerMotorID);
+  private final TalonFX intakeMotor = new TalonFX(IntakeRollersConstants.kIntakeRollerMotorID);
   final VelocityVoltage intakeRequest = new VelocityVoltage(0).withSlot(0);
 
   private final StatusSignal<Voltage> intakeRollerMotorVoltage = intakeMotor.getMotorVoltage();

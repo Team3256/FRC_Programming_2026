@@ -55,8 +55,7 @@ public final class ShooterConstants {
               new TorqueCurrentConfigs()
                   .withPeakForwardTorqueCurrent(80)
                   .withPeakReverseTorqueCurrent(80));
-  public static TalonFXConfiguration followerMotorConfigs =
-      motorConfigs;
+  public static TalonFXConfiguration followerMotorConfigs = motorConfigs;
 
   public static final class SimulationConstants {
     public static double kLeftGearingRatio = 1.0; // TODO: Update this value
