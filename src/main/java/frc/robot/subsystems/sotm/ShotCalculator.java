@@ -26,31 +26,21 @@ public class ShotCalculator extends SubsystemBase {
     private double targetDistance = 0.0;
     private double targetSpeedRps = 8;
 
-    private ChassisSpeeds previousSpeeds = new ChassisSpeeds();
-    private double previousTime = 0.0;
-
     public ShotCalculator(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
     }
 
     @Override
     public void periodic() {
-        double currentTime = Logger.getTimestamp() / 1e6;
-        double dt = previousTime > 0 ? currentTime - previousTime : 0.02;
-
         Pose2d drivetrainPose = drivetrain.getState().Pose;
-        ChassisSpeeds drivetrainSpeeds = drivetrain.getState().Speeds;
-
-        ChassisAccelerations drivetrainAccelerations = new ChassisAccelerations(
-                drivetrainSpeeds,
-                previousSpeeds,
-                dt
-        );
 
         targetDistance = drivetrainPose.getTranslation().getDistance(targetLocation.toPose2d().getTranslation());
         targetSpeedRps = DISTANCE_TO_SHOOTER_SPEED.get(targetDistance);
 
         Pose3d shooterPose = new Pose3d(drivetrainPose).plus(ROBOT_TO_SHOOTER);
+
+        ChassisSpeeds drivetrainSpeeds = drivetrain.getState().Speeds;
+        ChassisAccelerations drivetrainAccelerations = drivetrain.getFieldRelativeAccelerations();
 
         currentInterceptSolution = ShootOnTheFlyCalculator.solveShootOnTheFly(
                 shooterPose,
@@ -64,9 +54,6 @@ public class ShotCalculator extends SubsystemBase {
 
         currentEffectiveTargetPose = currentInterceptSolution.effectiveTargetPose();
         currentEffectiveYaw = currentInterceptSolution.requiredYaw();
-
-        previousSpeeds = drivetrainSpeeds;
-        previousTime = currentTime;
 
         Logger.recordOutput("ShotCalculator/EffectiveTargetPose", currentEffectiveTargetPose);
         Logger.recordOutput("ShotCalculator/EffectiveYaw", currentEffectiveYaw);
