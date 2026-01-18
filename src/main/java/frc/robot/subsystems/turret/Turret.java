@@ -49,7 +49,7 @@ public class Turret extends DisableSubsystem {
       new Alert("Turret motor disconnected!", Alert.AlertType.kWarning);
   private BooleanSupplier coastOverride = () -> false;
 
-  SlewRateLimiter profile = new SlewRateLimiter(SwerveConstants.MaxSpeed); //TODO: verify
+  SlewRateLimiter profile = new SlewRateLimiter(SwerveConstants.MaxSpeed); // TODO: verify
   private double turretOffset;
 
   public Turret(TurretIO turretIO) {
@@ -89,7 +89,7 @@ public class Turret extends DisableSubsystem {
             new RobotState.TurretObservation(Timer.getTimestamp(), new Rotation2d(getPosition())));
   }
 
-  //TODO: add odom checker
+  // TODO: add odom checker
   public void periodicAfterScheduler() {
     // Delay tracking math until after the RobotState has been updated
     if (DriverStation.isEnabled()) {
