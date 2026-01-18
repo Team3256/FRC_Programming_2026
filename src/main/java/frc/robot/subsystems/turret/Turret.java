@@ -52,14 +52,14 @@ public class Turret extends DisableSubsystem {
   private double turretOffset;
 
   public Turret(TurretIO turretIO) {
-      this.turretIO = turretIO;
+    this.turretIO = turretIO;
   }
 
   public void periodic() {
     turretIO.updateInputs(inputs);
     Logger.processInputs("Turret", inputs);
 
-    //TODO: motor disconnected check
+    // TODO: motor disconnected check
 
     // Stop when disabled
     if (DriverStation.isDisabled()) {
@@ -71,10 +71,10 @@ public class Turret extends DisableSubsystem {
     }
 
     // Update profile constraints
-//
-//    if (maxVelocity.hasChanged(hashCode())) { // TODO: get robot max speed
-//      profile = new SlewRateLimiter(maxVelocity.get());
-//    }
+    //
+    //    if (maxVelocity.hasChanged(hashCode())) { // TODO: get robot max speed
+    //      profile = new SlewRateLimiter(maxVelocity.get());
+    //    }
 
     // Reset profile when disabled
     if (DriverStation.isDisabled()) {

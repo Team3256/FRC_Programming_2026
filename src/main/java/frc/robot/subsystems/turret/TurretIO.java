@@ -17,7 +17,6 @@ public interface TurretIO {
     double turretMotorStatorCurrent = 0.0;
     double turretMotorSupplyCurrent = 0.0;
     double turretMotorTemperature = 0.0;
-
   }
 
   public static enum TurretIOOutputMode {
