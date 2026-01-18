@@ -5,9 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.indexer;
-
-// TODO: FILL
+package frc.robot.subsystems.turret;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -16,13 +14,13 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-public class IndexerConstants {
+public class TurretConstants {
 
   public static final boolean kUseFOC = true;
 
-  public static final int kIndexerMotorID = 0; // TODO: FILL
+  public static final int kTurretMotorID = 0; // TODO: FILL
 
-  public static final double indexerVoltage = 0.0;
+  public static final double turretVoltage = 0.0;
 
   public static double updateFrequency = 50;
 
@@ -41,8 +39,8 @@ public class IndexerConstants {
   public static int flashConfigRetries = 5;
 
   public static final class SimulationConstants {
-    public static double rollerGearingRatio = 0.0;
-    public static double rollerMomentOfInertia = 0.0;
+    public static double turretGearingRatio = 0.0;
+    public static double turretMomentOfInertia = 0.0;
 
     // Scale down the angular velocity so we can actually see what is happening
     public static double kAngularVelocityScalar = 0.0;
