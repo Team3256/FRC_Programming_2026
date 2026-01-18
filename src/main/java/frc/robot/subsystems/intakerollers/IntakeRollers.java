@@ -15,7 +15,7 @@ import org.littletonrobotics.junction.Logger;
 public class IntakeRollers extends DisableSubsystem {
   private final IntakeRollersIO intakeRollersIO;
   private final IntakeRollersIO.IntakeRollersIOInputs intakeIOAutoLogged =
-    new IntakeRollersIO.IntakeRollersIOInputs();
+      new IntakeRollersIO.IntakeRollersIOInputs();
 
   public IntakeRollers(boolean enabled, IntakeRollersIO intakeRollersIO) {
     super(enabled);
@@ -25,15 +25,23 @@ public class IntakeRollers extends DisableSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-  intakeRollersIO.updateInputs(intakeIOAutoLogged);
+    intakeRollersIO.updateInputs(intakeIOAutoLogged);
 
-  Logger.recordOutput("IntakeRollers/intakeRollerMotorVoltage", intakeIOAutoLogged.intakeRollerMotorVoltage);
-  Logger.recordOutput("IntakeRollers/intakeRollerMotorVelocity", intakeIOAutoLogged.intakeRollerMotorVelocity);
-  Logger.recordOutput("IntakeRollers/intakeRollerMotorStatorCurrent", intakeIOAutoLogged.intakeRollerMotorStatorCurrent);
-  Logger.recordOutput("IntakeRollers/intakeRollerMotorSupplyCurrent", intakeIOAutoLogged.intakeRollerMotorSupplyCurrent);
-  Logger.recordOutput("IntakeRollers/intakeRollerMotorTemperature", intakeIOAutoLogged.intakeRollerMotorTemperature);
+    Logger.recordOutput(
+        "IntakeRollers/intakeRollerMotorVoltage", intakeIOAutoLogged.intakeRollerMotorVoltage);
+    Logger.recordOutput(
+        "IntakeRollers/intakeRollerMotorVelocity", intakeIOAutoLogged.intakeRollerMotorVelocity);
+    Logger.recordOutput(
+        "IntakeRollers/intakeRollerMotorStatorCurrent",
+        intakeIOAutoLogged.intakeRollerMotorStatorCurrent);
+    Logger.recordOutput(
+        "IntakeRollers/intakeRollerMotorSupplyCurrent",
+        intakeIOAutoLogged.intakeRollerMotorSupplyCurrent);
+    Logger.recordOutput(
+        "IntakeRollers/intakeRollerMotorTemperature",
+        intakeIOAutoLogged.intakeRollerMotorTemperature);
 
-  LoggedTracer.record("IntakeRollers");
+    LoggedTracer.record("IntakeRollers");
   }
 
   public Command setVoltage(double voltage) {

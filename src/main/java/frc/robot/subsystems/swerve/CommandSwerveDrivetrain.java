@@ -272,7 +272,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     previousSpeeds = currentSpeeds;
     previousTime = currentTime;
 
-     LoggedTracer.record(this.getClass().getSimpleName());
+    LoggedTracer.record(this.getClass().getSimpleName());
   }
 
   public void addPhotonEstimate(
@@ -293,11 +293,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     ChassisSpeeds currentSpeeds = getState().Speeds;
 
-    return new frc.robot.utils.sotm.ChassisAccelerations(
-        currentSpeeds,
-        previousSpeeds,
-        dt
-    );
+    return new frc.robot.utils.sotm.ChassisAccelerations(currentSpeeds, previousSpeeds, dt);
   }
 
   /**

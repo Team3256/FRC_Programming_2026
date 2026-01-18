@@ -13,7 +13,6 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,17 +21,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.sim.SimMechs;
-import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import frc.robot.subsystems.swerve.generated.TunerConstants;
-import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooterpivot.ShooterPivot;
-import frc.robot.subsystems.shooterpivot.ShooterPivotIO;
 import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
 import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
+import frc.robot.subsystems.sotm.ShotCalculator;
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -86,30 +83,34 @@ public class RobotContainer {
     }
   }
 
-
-
-
   private void configureOperatorBinds() {
-    m_operatorController.a().whileTrue(
-        Commands.parallel(
-            shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()),
-            shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
-            drivetrain.applyRequest(() ->
-                new SwerveRequest.FieldCentricFacingAngle()
-                    .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
-                    .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
-                    .withTargetDirection(Rotation2d.fromRadians(shotCalculator.getCurrentEffectiveYaw()))
-            )
-        ).withName("ShootOnTheMove")
-    );
+    m_operatorController
+        .a()
+        .whileTrue(
+            Commands.parallel(
+                    shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()),
+                    shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
+                    drivetrain.applyRequest(
+                        () ->
+                            new SwerveRequest.FieldCentricFacingAngle()
+                                .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                                .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                                .withTargetDirection(
+                                    Rotation2d.fromRadians(
+                                        shotCalculator.getCurrentEffectiveYaw()))))
+                .withName("ShootOnTheMove"));
 
-    m_operatorController.b().whileTrue(
-        shooter.setVelocity(50.0)//replace w constant later
-    );
+    m_operatorController
+        .b()
+        .whileTrue(
+            shooter.setVelocity(50.0) // replace w constant later
+            );
 
-    m_operatorController.x().whileTrue(
-        shooterPivot.setPosition(Math.toRadians(45))//replace w constant later
-    );
+    m_operatorController
+        .x()
+        .whileTrue(
+            shooterPivot.setPosition(Math.toRadians(45)) // replace w constant later
+            );
   }
 
   private void configureChoreoAutoChooser() {
