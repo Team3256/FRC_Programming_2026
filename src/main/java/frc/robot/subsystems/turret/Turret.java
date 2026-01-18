@@ -190,7 +190,11 @@ public class Turret extends DisableSubsystem {
         });
   }
 
-  public Command zeroCommand() {
+    private void setShootState(ShootState shootState) {
+      this.shootState = shootState;
+    }
+
+    public Command zeroCommand() {
     return runOnce(this::zero).ignoringDisable(true);
   }
 
