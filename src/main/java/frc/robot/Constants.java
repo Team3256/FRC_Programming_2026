@@ -41,6 +41,7 @@ public final class Constants {
     // do comprehensive logging. Logging to NetworkTables
     // is disabled on field (FMS connected).
     public static final boolean kAdvKitEnabled = true;
+    public static boolean kTuningModeEnabled = true;
     // Monologue is another logging library that we use for
     // sending values to our dashboard because we don't want
     // AdvantageKit (which logs EVERYTHING) to dump to NetworkTables

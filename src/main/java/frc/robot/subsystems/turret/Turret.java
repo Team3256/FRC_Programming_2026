@@ -1,7 +1,7 @@
 // Copyright (c) 2025 FRC 3256
 // https://github.com/Team3256
 //
-// Use of this source code is governed by a
+// Use of this source code is governed by a 
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
@@ -9,7 +9,6 @@ package frc.robot.subsystems.turret;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -22,185 +21,179 @@ import frc.robot.utils.DisableSubsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-
-import frc.robot.utils.LoggedTracer;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Turret extends DisableSubsystem {
-    private static final double minAngle = Units.degreesToRadians(-210.0);
-    private static final double maxAngle = Units.degreesToRadians(210.0);
-    private static final double trackOverlapMargin = Units.degreesToRadians(10);
-    private static final double trackCenterRads = (minAngle + maxAngle) / 2;
-    private static final double trackMinAngle = trackCenterRads - Math.PI - trackOverlapMargin;
-    private static final double trackMaxAngle = trackCenterRads + Math.PI + trackOverlapMargin;
+  private static final double minAngle = Units.degreesToRadians(-210.0);
+  private static final double maxAngle = Units.degreesToRadians(210.0);
+  private static final double trackOverlapMargin = Units.degreesToRadians(10);
+  private static final double trackCenterRads = (minAngle + maxAngle) / 2;
+  private static final double trackMinAngle = trackCenterRads - Math.PI - trackOverlapMargin;
+  private static final double trackMaxAngle = trackCenterRads + Math.PI + trackOverlapMargin;
 
-    private final TurretIO turretIO;
-    private final TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
-    private final TurretIO.TurretIOOutputs outputs = new TurretIO.TurretIOOutputs();
+  private final TurretIO turretIO;
+  private final TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
+  private final TurretIO.TurretIOOutputs outputs = new TurretIO.TurretIOOutputs();
 
-    @AutoLogOutput private ShootState shootState = ShootState.ACTIVE_SHOOTING;
-    private Rotation2d goalAngle = Rotation2d.kZero;
-    private double goalVelocity = 0.0;
-    private double lastGoalAngle = 0.0;
+  @AutoLogOutput private ShootState shootState = ShootState.ACTIVE_SHOOTING;
+  private Rotation2d goalAngle = Rotation2d.kZero;
+  private double goalVelocity = 0.0;
+  private double lastGoalAngle = 0.0;
 
-    private final Debouncer motorConnectedDebouncer = new Debouncer(0.5, DebounceType.kFalling);
+  private final Debouncer motorConnectedDebouncer =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
 
-    private final Alert disconnected =
-            new Alert("Turret motor disconnected!", Alert.AlertType.kWarning);
-    private BooleanSupplier coastOverride = () -> false;
+  private final Alert disconnected =
+      new Alert("Turret motor disconnected!", Alert.AlertType.kWarning);
+  private BooleanSupplier coastOverride = () -> false;
 
-    SlewRateLimiter profile = new SlewRateLimiter(maxVelocity.get());
-    private double turretOffset;
+  SlewRateLimiter profile = new SlewRateLimiter(maxVelocity.get());
+  private double turretOffset;
 
-    public Turret(TurretIO turretIO) {
-        this.turretIO = turretIO;
+  public Turret(TurretIO turretIO) {
+      this.turretIO = turretIO;
+  }
+
+  public void periodic() {
+    turretIO.updateInputs(inputs);
+    Logger.processInputs("Turret", inputs);
+
+    //TODO: motor disconnected check
+
+    // Stop when disabled
+    if (DriverStation.isDisabled()) {
+      outputs.mode = TurretIO.TurretIOOutputMode.BRAKE;
+
+      if (coastOverride.getAsBoolean()) {
+        outputs.mode = TurretIO.TurretIOOutputMode.COAST;
+      }
     }
 
-    public void periodic() {
-        turretIO.updateInputs(inputs);
-        Logger.processInputs("Turret", inputs);
+    // Update profile constraints
+//
+//    if (maxVelocity.hasChanged(hashCode())) { // TODO: get robot max speed
+//      profile = new SlewRateLimiter(maxVelocity.get());
+//    }
 
-        disconnected.set(
-                Robot.showHardwareAlerts() && !motorConnectedDebouncer.calculate(inputs.motorConnected));
+    // Reset profile when disabled
+    if (DriverStation.isDisabled()) {
+      profile.reset(getPosition());
+      lastGoalAngle = getPosition();
+    }
 
-        // Stop when disabled
-        if (DriverStation.isDisabled()) {
-            outputs.mode = TurretIO.TurretIOOutputMode.BRAKE;
+    // Publish position
+    RobotState.getInstance()
+        .addTurretObservation(
+            new RobotState.TurretObservation(Timer.getTimestamp(), new Rotation2d(getPosition())));
+  }
 
-            if (coastOverride.getAsBoolean()) {
-                outputs.mode = TurretIO.TurretIOOutputMode.COAST;
-            }
+  public void periodicAfterScheduler() {
+    // Delay tracking math until after the RobotState has been updated
+    if (DriverStation.isEnabled()) {
+      Rotation2d robotAngle = RobotState.getInstance().getRotation();
+      double robotAngularVelocity =
+          RobotState.getInstance().getFieldVelocity().omegaRadiansPerSecond;
+
+      Rotation2d robotRelativeGoalAngle = goalAngle.minus(robotAngle);
+      double robotRelativeGoalVelocity = goalVelocity - robotAngularVelocity;
+
+      boolean hasBestAngle = false;
+      double bestAngle = 0;
+      double minLegalAngle =
+          switch (shootState) {
+            case ACTIVE_SHOOTING -> minAngle;
+            case TRACKING -> trackMinAngle;
+          };
+      double maxLegalAngle =
+          switch (shootState) {
+            case ACTIVE_SHOOTING -> maxAngle;
+            case TRACKING -> trackMaxAngle;
+          };
+      for (int i = -2; i < 3; i++) {
+        double potentialSetpoint = robotRelativeGoalAngle.getRadians() + Math.PI * 2.0 * i;
+        if (potentialSetpoint < minLegalAngle || potentialSetpoint > maxLegalAngle) {
+          continue;
+        } else {
+          if (!hasBestAngle) {
+            bestAngle = potentialSetpoint;
+            hasBestAngle = true;
+          }
+          if (Math.abs(lastGoalAngle - potentialSetpoint) < Math.abs(lastGoalAngle - bestAngle)) {
+            bestAngle = potentialSetpoint;
+          }
         }
+      }
+      lastGoalAngle = bestAngle;
 
-        // Update profile constraints
-        if (maxVelocity.hasChanged(hashCode())) { //TODO: get robot max speed
-            profile = new SlewRateLimiter(maxVelocity.get());
-        }
+      double setpoint = profile.calculate(MathUtil.clamp(bestAngle, minLegalAngle, maxLegalAngle));
+      Logger.recordOutput("Turret/GoalPositionRad", bestAngle);
+      Logger.recordOutput("Turret/GoalVelocityRadPerSec", robotRelativeGoalVelocity);
+      Logger.recordOutput("Turret/SetpointPositionRad", setpoint);
+      Logger.recordOutput("Turret/SetpointVelocityRadPerSec", robotRelativeGoalVelocity);
 
-        // Reset profile when disabled
-        if (DriverStation.isDisabled()) {
-            profile.reset(getPosition());
-            lastGoalAngle = getPosition();
-        }
-
-        // Publish position
-        RobotState.getInstance()
-                .addTurretObservation(
-                        new RobotState.TurretObservation(Timer.getTimestamp(), new Rotation2d(getPosition())));
-
+      outputs.mode = TurretIOOutputMode.CLOSED_LOOP;
+      outputs.position = setpoint - turretOffset;
+      outputs.velocity = robotRelativeGoalVelocity;
+      outputs.kP = kP.get();
+      outputs.kD = kD.get();
     }
 
-    public void periodicAfterScheduler() {
-        // Delay tracking math until after the RobotState has been updated
-        if (DriverStation.isEnabled()) {
-            Rotation2d robotAngle = RobotState.getInstance().getRotation();
-            double robotAngularVelocity =
-                    RobotState.getInstance().getFieldVelocity().omegaRadiansPerSecond;
+    // Apply outputs
+    turretIO.applyOutputs(outputs);
+  }
 
-            Rotation2d robotRelativeGoalAngle = goalAngle.minus(robotAngle);
-            double robotRelativeGoalVelocity = goalVelocity - robotAngularVelocity;
+  private void setFieldRelativeTarget(Rotation2d angle, double velocity) {
+    this.goalAngle = angle;
+    this.goalVelocity = velocity;
+  }
 
-            boolean hasBestAngle = false;
-            double bestAngle = 0;
-            double minLegalAngle =
-                    switch (shootState) {
-                        case ACTIVE_SHOOTING -> minAngle;
-                        case TRACKING -> trackMinAngle;
-                    };
-            double maxLegalAngle =
-                    switch (shootState) {
-                        case ACTIVE_SHOOTING -> maxAngle;
-                        case TRACKING -> trackMaxAngle;
-                    };
-            for (int i = -2; i < 3; i++) {
-                double potentialSetpoint = robotRelativeGoalAngle.getRadians() + Math.PI * 2.0 * i;
-                if (potentialSetpoint < minLegalAngle || potentialSetpoint > maxLegalAngle) {
-                    continue;
-                } else {
-                    if (!hasBestAngle) {
-                        bestAngle = potentialSetpoint;
-                        hasBestAngle = true;
-                    }
-                    if (Math.abs(lastGoalAngle - potentialSetpoint) < Math.abs(lastGoalAngle - bestAngle)) {
-                        bestAngle = potentialSetpoint;
-                    }
-                }
-            }
-            lastGoalAngle = bestAngle;
+  private void zero() {
+    turretOffset = -inputs.positionRads;
+  }
 
-            double setpoint = profile.calculate(MathUtil.clamp(bestAngle, minLegalAngle, maxLegalAngle));
-            Logger.recordOutput("Turret/GoalPositionRad", bestAngle);
-            Logger.recordOutput("Turret/GoalVelocityRadPerSec", robotRelativeGoalVelocity);
-            Logger.recordOutput("Turret/SetpointPositionRad", setpoint);
-            Logger.recordOutput("Turret/SetpointVelocityRadPerSec", robotRelativeGoalVelocity);
+  @AutoLogOutput(key = "Turret/MeasuredPositionRad")
+  public double getPosition() {
+    return inputs.positionRads + turretOffset;
+  }
 
-            outputs.mode = TurretIOOutputMode.CLOSED_LOOP;
-            outputs.position = setpoint - turretOffset;
-            outputs.velocity = robotRelativeGoalVelocity;
-            outputs.kP = kP.get();
-            outputs.kD = kD.get();
-        }
+  @AutoLogOutput(key = "Turret/MeasuredVelocityRadPerSec")
+  public double getVelocity() {
+    return inputs.velocityRadsPerSec;
+  }
 
-        // Apply outputs
-        turretIO.applyOutputs(outputs);
-    }
+  public Command runTrackTargetCommand() { // TODO: need shot calculator
+    return run(
+        () -> {
+          var params = ShotCalculator.getInstance().getParameters();
+          setFieldRelativeTarget(params.turretAngle(), params.turretVelocity());
+          setShootState(ShootState.TRACKING);
+        });
+  }
 
-    private void setFieldRelativeTarget(Rotation2d angle, double velocity) {
-        this.goalAngle = angle;
-        this.goalVelocity = velocity;
-    }
+  public Command runTrackTargetActiveShootingCommand() {
+    return run(
+        () -> {
+          var params = ShotCalculator.getInstance().getParameters(); // TODO: merge shot calc
+          setFieldRelativeTarget(params.turretAngle(), params.turretVelocity());
+          setShootState(ShootState.ACTIVE_SHOOTING);
+        });
+  }
 
-    private void zero() {
-        turretOffset = -inputs.positionRads;
-    }
+  public Command runFixedCommand(Supplier<Rotation2d> angle, DoubleSupplier velocity) {
+    return run(
+        () -> {
+          setFieldRelativeTarget(angle.get(), velocity.getAsDouble());
+          setShootState(ShootState.TRACKING);
+        });
+  }
 
-    @AutoLogOutput(key = "Turret/MeasuredPositionRad")
-    public double getPosition() {
-        return inputs.positionRads + turretOffset;
-    }
+  public Command zeroCommand() {
+    return runOnce(this::zero).ignoringDisable(true);
+  }
 
-    @AutoLogOutput(key = "Turret/MeasuredVelocityRadPerSec")
-    public double getVelocity() {
-        return inputs.velocityRadsPerSec;
-    }
-
-    public Command runTrackTargetCommand() { //TODO: need shot calculator
-        return run(
-                () -> {
-                    var params = ShotCalculator.getInstance().getParameters();
-                    setFieldRelativeTarget(params.turretAngle(), params.turretVelocity());
-                    setShootState(ShootState.TRACKING);
-                });
-    }
-
-    public Command runTrackTargetActiveShootingCommand() {
-        return run(
-                () -> {
-                    var params = ShotCalculator.getInstance().getParameters();
-                    setFieldRelativeTarget(params.turretAngle(), params.turretVelocity());
-                    setShootState(ShootState.ACTIVE_SHOOTING);
-                });
-    }
-
-    public Command runFixedCommand(Supplier<Rotation2d> angle, DoubleSupplier velocity) {
-        return run(
-                () -> {
-                    setFieldRelativeTarget(angle.get(), velocity.getAsDouble());
-                    setShootState(ShootState.TRACKING);
-                });
-    }
-
-    public Command zeroCommand() {
-        return runOnce(this::zero).ignoringDisable(true);
-    }
-
-    public enum ShootState {
-        ACTIVE_SHOOTING,
-        TRACKING
-    }
-}
-
-public Turret(boolean enable) {
-    super(enable);
+  public enum ShootState {
+    ACTIVE_SHOOTING,
+    TRACKING
+  }
 }

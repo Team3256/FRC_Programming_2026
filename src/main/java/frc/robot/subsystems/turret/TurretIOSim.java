@@ -11,7 +11,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import org.littletonrobotics.frc2026.Constants;
 
 public class TurretIOSim implements TurretIO {
   private final DCMotor gearbox = DCMotor.getKrakenX44Foc(1);
@@ -29,8 +28,8 @@ public class TurretIOSim implements TurretIO {
     if (currentControl) {
       appliedVoltage = gearbox.getVoltage(currentOutput, sim.getAngularVelocityRadPerSec());
     }
-    sim.setInputVoltage(MathUtil.clamp(appliedVoltage, -12.0, 12.0));
-    sim.update(Constants.loopPeriodSecs);
+    sim.setInputVoltage(MathUtil.clamp(appliedVoltage, -12.0, 12.0)); // TODO: check ts
+    // sim.update(Constants.loopPeriodSecs);
 
     inputs.motorConnected = true;
     inputs.positionRads = sim.getAngularPositionRad();

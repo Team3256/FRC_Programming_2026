@@ -7,4 +7,42 @@
 
 package frc.robot.subsystems.turret;
 
-public class TurretConstants {}
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
+public class TurretConstants {
+
+  public static final boolean kUseFOC = true;
+
+  public static final int kTurretMotorID = 0; // TODO: FILL
+
+  public static final double indexerVoltage = 0.0;
+
+  public static double updateFrequency = 50;
+
+  public static final TalonFXConfiguration motorConfigs =
+      new TalonFXConfiguration()
+          .withSlot0(new Slot0Configs().withKS(0.0).withKV(0.0).withKP(0.0).withKI(0).withKD(0))
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.Clockwise_Positive))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(60));
+
+  public static int flashConfigRetries = 5;
+
+  public static final class SimulationConstants {
+    public static double rollerGearingRatio = 0.0;
+    public static double rollerMomentOfInertia = 0.0;
+
+    // Scale down the angular velocity so we can actually see what is happening
+    public static double kAngularVelocityScalar = 0.0;
+  }
+}

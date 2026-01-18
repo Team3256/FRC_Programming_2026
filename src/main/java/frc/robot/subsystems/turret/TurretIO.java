@@ -12,13 +12,12 @@ import org.littletonrobotics.junction.AutoLog;
 public interface TurretIO {
   @AutoLog
   public static class TurretIOInputs {
-    // TODO: add encoder
-    boolean motorConnected = false;
-    double positionRads = 0.0;
-    double velocityRadsPerSec = 0.0;
-    double appliedVolts = 0.0;
-    double supplyCurrentAmps = 0.0;
-    double torqueCurrentAmps = 0.0;
+    double turretMotorVoltage = 0.0;
+    double turretMotorVelocity = 0.0;
+    double turretMotorStatorCurrent = 0.0;
+    double turretMotorSupplyCurrent = 0.0;
+    double turretMotorTemperature = 0.0;
+
   }
 
   public static enum TurretIOOutputMode {
