@@ -15,7 +15,6 @@ public final class IntakePivotConstants {
   public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
   public static final double stowPosition = .4267;
-  public static final double handoffPosition = 0.303;
   public static final double groundIntakePosition = -.09;
 
   public static final TalonFXConfiguration motorConfigs =
@@ -44,8 +43,6 @@ public final class IntakePivotConstants {
                   .withStatorCurrentLimit(80))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(27.32));
 
-public static final String canBusName = null;
-
   public static final class PivotSim {
     // not sure about what gearing means and not sure if its equal to gear ratio
     public static final double pivotSimGearing = 10;
@@ -58,4 +55,5 @@ public static final String canBusName = null;
     public static final Rotation2d maxAngle = Rotation2d.fromDegrees(180);
     public static final Rotation2d startingAngle = Rotation2d.fromDegrees(150);
   }
+public static double updateFrequency = 0.0;
 }

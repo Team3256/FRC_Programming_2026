@@ -2,10 +2,10 @@ package frc.robot.subsystems.intakepivot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -16,17 +16,11 @@ import frc.robot.utils.PhoenixUtil;
 public class IntakePivotIOTalonFX implements IntakePivotIO {
 
   private final TalonFX pivotMotor =
-      new TalonFX(IntakePivotConstants.pivotMotorId, IntakePivotConstants.canBusName);
-
-  private final PositionVoltage positionRequest = new PositionVoltage(0)
-      .withSlot(0)
-      .withEnableFOC(IntakePivotConstants.kUseFOC);
+      new TalonFX(IntakePivotConstants.pivotMotorId);
 
   private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0)
       .withSlot(0)
       .withEnableFOC(IntakePivotConstants.kUseFOC);
-
-  private final NeutralOut neutralOut = new NeutralOut();
 
   private final StatusSignal<Voltage> motorVoltage = pivotMotor.getMotorVoltage();
   private final StatusSignal<AngularVelocity> velocity = pivotMotor.getVelocity();
@@ -40,6 +34,14 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
         IntakePivotConstants.motorConfigs,
         IntakePivotConstants.flashConfigRetries);
 
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        IntakePivotConstants.updateFrequency,
+        motorVoltage,
+        velocity,
+        position,
+        statorCurrent,
+        supplyCurrent);
+
     PhoenixUtil.registerSignals(
         true,
         motorVoltage,
@@ -51,12 +53,6 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
 
   @Override
   public void updateInputs(IntakePivotIOInputs inputs) {
-    
-    motorVoltage.refresh();
-    velocity.refresh();
-    position.refresh();
-    statorCurrent.refresh();
-    supplyCurrent.refresh();
 
     inputs.pivotMotorVoltage = motorVoltage.getValue().in(Volts);
     inputs.pivotMotorVelocity = velocity.getValue().in(RotationsPerSecond);
@@ -68,12 +64,15 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
   }
 
   @Override
-  public void setPosition(Angle target) {
+  public void setPosition(double target) {
     if (IntakePivotConstants.kUseMotionMagic) {
       pivotMotor.setControl(motionMagicRequest.withPosition(target));
-    } else {
-      pivotMotor.setControl(positionRequest.withPosition(target));
     }
+  }
+
+  @Override
+  public TalonFX getMotor() {
+    return pivotMotor;
   }
 
   @Override
@@ -83,11 +82,11 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
 
   @Override
   public void stop() {
-    pivotMotor.setControl(neutralOut);
+    pivotMotor.setControl(new NeutralOut());
   }
 
   @Override
-  public void resetPosition(Angle angle) {
+  public void resetPosition(Double angle) {
     pivotMotor.setPosition(angle);
   }
 }

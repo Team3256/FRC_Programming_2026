@@ -1,8 +1,6 @@
 package frc.robot.subsystems.intakepivot;
 
 import static edu.wpi.first.units.Units.*;
-
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -10,12 +8,9 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.TimedRobot;
 
-public class IntakePivotIOSim implements IntakePivotIO {
+public class IntakePivotIOSim extends IntakePivotIOTalonFX {
 
-  private final TalonFX pivotMotor =
-      new TalonFX(IntakePivotConstants.pivotMotorId, IntakePivotConstants.canBusName);
-
-  private final TalonFXSimState pivotSimState = pivotMotor.getSimState();
+  private final TalonFXSimState pivotSimState;
 
   private final SingleJointedArmSim pivotSimModel =
       new SingleJointedArmSim(
@@ -29,7 +24,8 @@ public class IntakePivotIOSim implements IntakePivotIO {
           IntakePivotConstants.PivotSim.startingAngle.getRadians());
 
   public IntakePivotIOSim() {
-
+    super();
+    pivotSimState = super.getMotor().getSimState();
     pivotSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.Clockwise_Positive;
   }
 
@@ -49,12 +45,6 @@ public class IntakePivotIOSim implements IntakePivotIO {
     pivotSimState.setRawRotorPosition(rotorPosRotations);
     pivotSimState.setRotorVelocity(rotorVelRps);
 
-    inputs.pivotMotorVoltage = pivotSimState.getMotorVoltage();
-   
-    inputs.pivotMotorPosition = pivotSimModel.getAngleRads() / (2 * Math.PI);
-    inputs.pivotMotorVelocity = pivotSimModel.getVelocityRadPerSec() / (2 * Math.PI);
-    
-    inputs.pivotMotorStatorCurrent = pivotSimState.getSupplyCurrent();
-    inputs.pivotMotorSupplyCurrent = pivotSimState.getSupplyCurrent();
+    super.updateInputs(inputs);
   }
 }

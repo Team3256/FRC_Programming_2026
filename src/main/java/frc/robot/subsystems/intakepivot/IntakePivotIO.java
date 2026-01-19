@@ -1,7 +1,8 @@
 package frc.robot.subsystems.intakepivot;
 
 import org.littletonrobotics.junction.AutoLog;
-import edu.wpi.first.units.measure.Angle;
+
+import com.ctre.phoenix6.hardware.TalonFX;
 
 public interface IntakePivotIO {
   @AutoLog
@@ -13,9 +14,11 @@ public interface IntakePivotIO {
     public double pivotMotorSupplyCurrent = 0.0;
   }
 
-  default void updateInputs(IntakePivotIOInputs inputs) {}
+  public default TalonFX getMotor() {
+    return new TalonFX(0);
+  };
 
-  default void setPosition(Angle position) {}
+  default void updateInputs(IntakePivotIOInputs inputs) {}
 
   default void setPosition(double position) {}
 
@@ -23,7 +26,7 @@ public interface IntakePivotIO {
 
   default void stop() {}
 
-  default void resetPosition(Angle angle) {}
+  default void resetPosition(Double angle) {}
 
   public default void off() {}
 

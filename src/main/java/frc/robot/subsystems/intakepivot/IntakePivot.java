@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems.intakepivot;
 
-import static edu.wpi.first.units.Units.Rotations;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.utils.DisableSubsystem;
@@ -28,10 +26,7 @@ public class IntakePivot extends DisableSubsystem {
 
   public IntakePivot(boolean enabled, IntakePivotIO intakePivotIO) {
     super(enabled);
-
     this.intakePivotIO = intakePivotIO;
-
-    this.intakePivotIO.resetPosition(Rotations.of(.4267));
   }
 
   @Override
