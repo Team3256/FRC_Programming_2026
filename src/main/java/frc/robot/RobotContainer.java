@@ -7,15 +7,50 @@
 
 package frc.robot;
 
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static frc.robot.subsystems.swerve.SwerveConstants.*;
+
+import choreo.auto.AutoChooser;
+import choreo.util.ChoreoAllianceFlipUtil;
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.InternalButton;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.AutoRoutines;
+import frc.robot.sim.SimMechs;
+import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.Superstructure.StructureState;
+import frc.robot.subsystems.shooterpivot.ShooterPivot;
+import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
+import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
+import frc.robot.subsystems.intakerollers.IntakeRollers;
+import frc.robot.subsystems.intakerollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intakerollers.IntakeRollersIOTalonFX;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
+/* 
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.utils.MappedXboxController; 
+*/
+import frc.robot.utils.MappedXboxController;
+
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,16 +60,92 @@ import frc.robot.subsystems.ExampleSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  /*   private final CommandXboxController m_driverController =
-  new CommandXboxController(OperatorConstants.kDriverControllerPort); */
+  public final MappedXboxController m_driverController =
+      new MappedXboxController(ControllerConstants.kDriverControllerPort, "driver");
+  public final MappedXboxController m_operatorController =
+      new MappedXboxController(ControllerConstants.kOperatorControllerPort, "operator");
+
+  private final Telemetry logger =
+      new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
+
+  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+  private final Shooter shooter =
+      new Shooter(
+          true, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
+
+  private final IntakeRollers intakeRollers =
+      new IntakeRollers(
+          true,
+          Utils.isSimulation()
+              ? new IntakeRollersIOSim()
+              : new IntakeRollersIOTalonFX());
+
+  private final ShooterPivot shooterPivot = 
+      new ShooterPivot(
+          true, 
+          Utils.isSimulation() 
+              ? new ShooterPivotIOSim() 
+              : new ShooterPivotIOTalonFX());
+/*
+
+private final IntakePivot intakePivot =
+      new IntakePivot(
+          true, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
+ 
+ */
+
+  private final Superstructure superstructure =
+      new Superstructure(
+          shooterPivot, intakeRollers, shooter, () -> drivetrain.getState().Pose);
+
+/*
+ private final Vision vision =
+      new Vision(
+          drivetrain::addPhotonEstimate,
+          Utils.isSimulation()
+              ? new VisionIOPhotonVisionSim(
+                  VisionConstants.leftCam,
+                  VisionConstants.robotToLeftCam,
+                  () -> drivetrain.getState().Pose)
+              : new VisionIOPhotonVision(VisionConstants.leftCam, VisionConstants.robotToLeftCam),
+          Utils.isSimulation()
+              ? new VisionIOPhotonVisionSim(
+                  VisionConstants.rightCam,
+                  VisionConstants.robotToRightCam,
+                  () -> drivetrain.getState().Pose)
+              : new VisionIOPhotonVision(
+                  VisionConstants.rightCam, VisionConstants.robotToRightCam));
+ */
+  
+
+  private final AutoRoutines m_autoRoutines;
+  private AutoChooser autoChooser = new AutoChooser();
+/* 
+im assuming at one point we will implement autoaim
+  private final Trigger autoAlignedTrigger =
+      new Trigger(() -> AutoAim.isInToleranceCoral(drivetrain.getState().Pose));
+*/
+  private final InternalButton autoAlignRunning = new InternalButton();
+
+  //  private final Limelight limelight = new Limelight("limelight");
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    configureBindings();
+    configureOperatorBinds();
+    m_autoRoutines =
+        new AutoRoutines(
+            drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure);
+    configureChoreoAutoChooser();
+    CommandScheduler.getInstance().registerSubsystem(drivetrain);
+    configureSwerve();
+    /* */
+    if (Utils.isSimulation()) {
+      SimMechs.getInstance().publishToNT();
+    }
   }
 
   /**
@@ -46,23 +157,208 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+  public Pose2d getPose() {
+    return drivetrain.getState().Pose;
+  }
+/* 
+  public Pose2d getClosestAlignment() {
+    return drivetrain
+        .getState()
+        .Pose
+        .nearest(
+            List.of(
+                new Pose2d(7.197261810302734, 2.482149600982666, Rotation2d.fromDegrees(270)),
+                ChoreoAllianceFlipUtil.flip(
+                    new Pose2d(7.197261810302734, 2.482149600982666, Rotation2d.fromDegrees(270))),
+                new Pose2d(7.228638648986816, 4.02569580078125, Rotation2d.fromDegrees(270)),
+                ChoreoAllianceFlipUtil.flip(
+                    new Pose2d(7.228638648986816, 4.02569580078125, Rotation2d.fromDegrees(270))),
+                new Pose2d(7.197261810302734, 5.6082072257995605, Rotation2d.fromDegrees(270)),
+                ChoreoAllianceFlipUtil.flip(
+                    new Pose2d(
+                        7.197261810302734, 5.6082072257995605, Rotation2d.fromDegrees(270)))));
+  }
+*/
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+  private void configureOperatorBinds() {
+    return ;
+    /*
+    m_operatorController.a().onTrue(superstructure.setState(StructureState.DEALGAE_L2));
+    m_operatorController.y().onTrue(superstructure.setState(StructureState.DEALGAE_L3));
+    m_operatorController.x().onTrue(superstructure.setState(StructureState.GROUND_INTAKE));
+    m_operatorController.b().onTrue(superstructure.setState(StructureState.PREHOME));
+
+    m_operatorController.povUp().onTrue(superstructure.setState(StructureState.L4));
+    m_operatorController.povRight().onTrue(superstructure.setState(StructureState.L3));
+    m_operatorController.povDown().onTrue(superstructure.setState(StructureState.L2));
+    m_operatorController.povLeft().onTrue(superstructure.setState(StructureState.L1));
+
+    m_operatorController.rightTrigger().onTrue(superstructure.setState(StructureState.SCORE_CORAL));
+    m_operatorController.leftTrigger().onTrue(superstructure.setState(StructureState.SCORE_ALGAE));
+    m_operatorController.rightBumper().onTrue(superstructure.setState(StructureState.PRE_HANDOFF));
+    m_operatorController.leftBumper().onTrue(superstructure.setState(StructureState.BARGE));
+     */
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+
+  private void configureChoreoAutoChooser() {
+
+    // Add options to the chooser
+    autoChooser.addCmd("Wheel Radius Change", () -> drivetrain.wheelRadiusCharacterization(1));
+    autoChooser.addRoutine("Mobility Left", m_autoRoutines::mobilityLeft);
+    autoChooser.addRoutine("Mobility Right", m_autoRoutines::mobilityRight);
+    SmartDashboard.putData("auto chooser", autoChooser);
+
+    // Schedule the selected auto during the autonomous period
+    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+  }
+
+  private void configureSwerve() {
+
+    // Request to drive normally using input for both translation and rotation
+    SwerveRequest.FieldCentric drive =
+        new SwerveRequest.FieldCentric()
+            .withDeadband(0.15 * MaxSpeed)
+            .withRotationalRate(0.15 * MaxAngularRate);
+
+    // Request to control translation, with rotation being controlled by a heading controller
+    SwerveRequest.FieldCentricFacingAngle azimuth =
+        new SwerveRequest.FieldCentricFacingAngle().withDeadband(0.15 * MaxSpeed);
+
+    // Heading controller to control azimuth rotations
+    azimuth.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
+    azimuth.HeadingController.setPID(6, 0, 0);
+
+    // Default Swerve Command, run periodically every 20ms
+    drivetrain.setDefaultCommand(
+        drivetrain.applyRequest(
+            () ->
+                drive
+                    .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                    .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                    .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate)));
+
+    m_driverController
+        .a("Brake / Slow Mode")
+        .whileTrue(
+            drivetrain.applyRequest(
+                () ->
+                    drive
+                        .withVelocityX(-m_driverController.getLeftY() * SlowMaxSpeed)
+                        .withVelocityY(-m_driverController.getLeftX() * SlowMaxSpeed)
+                        .withRotationalRate(-m_driverController.getRightX() * SlowMaxAngular)));
+
+    m_driverController
+        .leftBumper("Azimuth Left Source")
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(sourceLeft1))
+                .withTimeout(aziTimeout));
+
+    m_driverController
+        .rightBumper("Azimuth Right Source")
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(sourceRight2))
+                .withTimeout(aziTimeout));
+
+    m_driverController
+        .povUp("Processor Close, Climb Facing cage")
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(processorClose))
+                .withTimeout(aziTimeout));
+
+    m_driverController
+        .povDown("Processor Far, Climb Facing DS")
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(processorFar))
+                .withTimeout(aziTimeout));
+
+    // Azimuth Barge Close
+
+    // sets the heading to wherever the robot is facing
+    // do this with the elevator side of the robot facing YOU
+    m_driverController.y("Zero Heading").onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+
+    // Run LEDs simultaneously with Auto Align
+    m_driverController
+        .leftTrigger()
+        .negate()
+        .onTrue(new InstantCommand(() -> autoAlignRunning.setPressed(false)));
+    m_driverController
+        .rightTrigger()
+        .onTrue(new InstantCommand(() -> autoAlignRunning.setPressed(true)));
+
+    drivetrain.registerTelemetry(logger::telemeterize);
+  }
+
+  public void periodic() {
+    /*
+    // Logger.recordOutput(
+    // "Stick Angle Radians",
+    // Math.atan2(m_driverController.getRightY(), m_driverController.getRightX()));
+    // Logger.recordOutput(
+    // "AutoAim/Targets/Coral",
+    // Stream.of(CoralTargets.values())
+    // .map((target) -> CoralTargets.getRobotTargetLocation(target.location))
+    // .toArray(Pose2d[]::new));
+    // // Log locations of all autoaim targets
+    // Logger.recordOutput(
+    // "AutoAim/Targets/Algae",
+    // Stream.of(AlgaeIntakeTargets.values())
+    // .map((target) -> AlgaeIntakeTargets.getRobotTargetLocation(target.location))
+    // .toArray(Pose2d[]::new));
+    //
+    // Logger.recordOutput(
+    // "AutoAim/Targets/SourceIntakes",
+    // Stream.of(SourceIntakeTargets.values())
+    // .map((target) -> SourceIntakeTargets.getRobotTargetLocation(target.location))
+    // .toArray(Pose2d[]::new));
+    //
+    // Logger.recordOutput(
+    // "AutoAim/CoralTarget",
+    // CoralTargets.getClosestTarget(drivetrain.getState().Pose));
+    // Logger.recordOutput(
+    // "AutoAim/LeftHandedCoralTarget",
+    // CoralTargets.getHandedClosestTarget(drivetrain.getState().Pose, true));
+    // Logger.recordOutput(
+    // "AutoAim/RightHandedCoralTarget",
+    // CoralTargets.getHandedClosestTarget(drivetrain.getState().Pose, false));
+    // Logger.recordOutput(
+    // "AutoAim/NameOfLHCoralTarget",
+    // CoralTargets.getHandedClosestTargetE(drivetrain.getState().Pose,
+    // true).name());
+    // Logger.recordOutput(
+    // "AutoAim/NameOfRHCoralTarget",
+    // CoralTargets.getHandedClosestTargetE(drivetrain.getState().Pose,
+    // false).name());
+    // Logger.recordOutput(
+    // "AutoAim/AlgaeIntakeTarget",
+    // AlgaeIntakeTargets.getClosestTarget(drivetrain.getState().Pose));
+    */
+    superstructure.periodic();
   }
 }
