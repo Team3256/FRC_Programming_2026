@@ -86,7 +86,7 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
   }
 
   @Override
-  public void resetPosition(Double angle) {
+  public void resetPosition(double angle) {
     pivotMotor.setPosition(angle);
   }
 }

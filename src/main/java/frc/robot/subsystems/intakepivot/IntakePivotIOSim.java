@@ -1,6 +1,8 @@
 package frc.robot.subsystems.intakepivot;
 
 import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -26,7 +28,7 @@ public class IntakePivotIOSim extends IntakePivotIOTalonFX {
   public IntakePivotIOSim() {
     super();
     pivotSimState = super.getMotor().getSimState();
-    pivotSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.Clockwise_Positive;
+    pivotSimState.Orientation = ChassisReference.Clockwise_Positive;
   }
 
   @Override

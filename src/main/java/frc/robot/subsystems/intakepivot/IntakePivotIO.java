@@ -26,7 +26,7 @@ public interface IntakePivotIO {
 
   default void stop() {}
 
-  default void resetPosition(Double angle) {}
+  default void resetPosition(double angle) {}
 
   public default void off() {}
 
