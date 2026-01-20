@@ -28,9 +28,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AutoRoutines;
 import frc.robot.sim.SimMechs;
-import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.Superstructure.StructureState;
+//import frc.robot.subsystems.Superstructure;
+//import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.shooterpivot.ShooterPivot;
+import frc.robot.subsystems.shooterpivot.ShooterPivotConstants;
 import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
 import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
 import frc.robot.subsystems.intakerollers.IntakeRollers;
@@ -89,19 +90,18 @@ public class RobotContainer {
           Utils.isSimulation() 
               ? new ShooterPivotIOSim() 
               : new ShooterPivotIOTalonFX());
-/*
 
 private final IntakePivot intakePivot =
       new IntakePivot(
           true, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
- 
- */
 
+ 
+/* NOT DONE
   private final Superstructure superstructure =
       new Superstructure(
           shooterPivot, intakeRollers, shooter, () -> drivetrain.getState().Pose);
+*/
 
-/*
  private final Vision vision =
       new Vision(
           drivetrain::addPhotonEstimate,
@@ -118,35 +118,36 @@ private final IntakePivot intakePivot =
                   () -> drivetrain.getState().Pose)
               : new VisionIOPhotonVision(
                   VisionConstants.rightCam, VisionConstants.robotToRightCam));
- */
+ 
   
 
   private final AutoRoutines m_autoRoutines;
   private AutoChooser autoChooser = new AutoChooser();
-/* 
-im assuming at one point we will implement autoaim
-  private final Trigger autoAlignedTrigger =
-      new Trigger(() -> AutoAim.isInToleranceCoral(drivetrain.getState().Pose));
-*/
-  private final InternalButton autoAlignRunning = new InternalButton();
 
-  //  private final Limelight limelight = new Limelight("limelight");
+// DO WE NEED AUTO ALIGN???
+
+  //private final Trigger autoAlignedTrigger =
+      //new Trigger(() -> AutoAim.isInToleranceCoral(drivetrain.getState().Pose));
+
+  ///private final InternalButton autoAlignRunning = new InternalButton();
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureOperatorBinds();
+    /* 
     m_autoRoutines =
         new AutoRoutines(
-            drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure);
+            drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure) */;
     configureChoreoAutoChooser();
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
     configureSwerve();
-    /* */
+    /* 
     if (Utils.isSimulation()) {
       SimMechs.getInstance().publishToNT();
-    }
-  }
+    }*/
+  } 
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -182,22 +183,12 @@ im assuming at one point we will implement autoaim
 
   private void configureOperatorBinds() {
     return ;
-    /*
-    m_operatorController.a().onTrue(superstructure.setState(StructureState.DEALGAE_L2));
-    m_operatorController.y().onTrue(superstructure.setState(StructureState.DEALGAE_L3));
-    m_operatorController.x().onTrue(superstructure.setState(StructureState.GROUND_INTAKE));
-    m_operatorController.b().onTrue(superstructure.setState(StructureState.PREHOME));
-
-    m_operatorController.povUp().onTrue(superstructure.setState(StructureState.L4));
-    m_operatorController.povRight().onTrue(superstructure.setState(StructureState.L3));
-    m_operatorController.povDown().onTrue(superstructure.setState(StructureState.L2));
-    m_operatorController.povLeft().onTrue(superstructure.setState(StructureState.L1));
-
-    m_operatorController.rightTrigger().onTrue(superstructure.setState(StructureState.SCORE_CORAL));
-    m_operatorController.leftTrigger().onTrue(superstructure.setState(StructureState.SCORE_ALGAE));
-    m_operatorController.rightBumper().onTrue(superstructure.setState(StructureState.PRE_HANDOFF));
-    m_operatorController.leftBumper().onTrue(superstructure.setState(StructureState.BARGE));
-     */
+    
+    m_operatorController.a().onTrue(shooterPivot.setPosition(ShooterPivotConstants.stowPosition));
+    m_operatorController.y().onTrue(shooter.setVelocity(15,15));
+    m_operatorController.x().onTrue(intakeRollers.setVelocity(15));
+    m_operatorController.b().onTrue(intakePivot.setPosition(0));
+    
   }
 
 
@@ -302,17 +293,6 @@ im assuming at one point we will implement autoaim
     // do this with the elevator side of the robot facing YOU
     m_driverController.y("Zero Heading").onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-
-    // Run LEDs simultaneously with Auto Align
-    m_driverController
-        .leftTrigger()
-        .negate()
-        .onTrue(new InstantCommand(() -> autoAlignRunning.setPressed(false)));
-    m_driverController
-        .rightTrigger()
-        .onTrue(new InstantCommand(() -> autoAlignRunning.setPressed(true)));
-
-    drivetrain.registerTelemetry(logger::telemeterize);
   }
 
   public void periodic() {
@@ -359,6 +339,6 @@ im assuming at one point we will implement autoaim
     // "AutoAim/AlgaeIntakeTarget",
     // AlgaeIntakeTargets.getClosestTarget(drivetrain.getState().Pose));
     */
-    superstructure.periodic();
+    //superstructure.periodic();
   }
 }
