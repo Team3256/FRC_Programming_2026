@@ -1,3 +1,10 @@
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems.intakepivot;
 
 import static edu.wpi.first.units.Units.*;
@@ -55,5 +62,6 @@ public final class IntakePivotConstants {
     public static final Rotation2d maxAngle = Rotation2d.fromDegrees(180);
     public static final Rotation2d startingAngle = Rotation2d.fromDegrees(150);
   }
-public static double updateFrequency = 0.0;
+
+  public static double updateFrequency = 0.0;
 }

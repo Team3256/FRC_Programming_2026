@@ -1,3 +1,10 @@
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems.intakepivot;
 
 import static edu.wpi.first.units.Units.*;
@@ -15,12 +22,10 @@ import frc.robot.utils.PhoenixUtil;
 
 public class IntakePivotIOTalonFX implements IntakePivotIO {
 
-  private final TalonFX pivotMotor =
-      new TalonFX(IntakePivotConstants.pivotMotorId);
+  private final TalonFX pivotMotor = new TalonFX(IntakePivotConstants.pivotMotorId);
 
-  private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0)
-      .withSlot(0)
-      .withEnableFOC(IntakePivotConstants.kUseFOC);
+  private final MotionMagicVoltage motionMagicRequest =
+      new MotionMagicVoltage(0).withSlot(0).withEnableFOC(IntakePivotConstants.kUseFOC);
 
   private final StatusSignal<Voltage> motorVoltage = pivotMotor.getMotorVoltage();
   private final StatusSignal<AngularVelocity> velocity = pivotMotor.getVelocity();
@@ -30,9 +35,7 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
 
   public IntakePivotIOTalonFX() {
     PhoenixUtil.applyMotorConfigs(
-        pivotMotor,
-        IntakePivotConstants.motorConfigs,
-        IntakePivotConstants.flashConfigRetries);
+        pivotMotor, IntakePivotConstants.motorConfigs, IntakePivotConstants.flashConfigRetries);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         IntakePivotConstants.updateFrequency,
@@ -43,12 +46,7 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
         supplyCurrent);
 
     PhoenixUtil.registerSignals(
-        true,
-        motorVoltage,
-        velocity,
-        position,
-        statorCurrent,
-        supplyCurrent);
+        true, motorVoltage, velocity, position, statorCurrent, supplyCurrent);
   }
 
   @Override
@@ -56,7 +54,7 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
 
     inputs.pivotMotorVoltage = motorVoltage.getValue().in(Volts);
     inputs.pivotMotorVelocity = velocity.getValue().in(RotationsPerSecond);
-    
+
     inputs.pivotMotorPosition = position.getValue().in(Rotations);
 
     inputs.pivotMotorStatorCurrent = statorCurrent.getValue().in(Amps);
