@@ -14,8 +14,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class IntakeRollers extends DisableSubsystem {
   private final IntakeRollersIO intakeRollersIO;
-  private final IntakeRollersIOInputsAutoLogged intakeIOAutoLogged =
-      new IntakeRollersIOInputsAutoLogged();
+  private final IntakeRollersIO.IntakeRollersIOInputs intakeIOAutoLogged =
+      new IntakeRollersIO.IntakeRollersIOInputs();
 
   public IntakeRollers(boolean enabled, IntakeRollersIO intakeRollersIO) {
     super(enabled);
@@ -26,7 +26,20 @@ public class IntakeRollers extends DisableSubsystem {
   public void periodic() {
     super.periodic();
     intakeRollersIO.updateInputs(intakeIOAutoLogged);
-    Logger.processInputs("IntakeRollers", intakeIOAutoLogged);
+
+    Logger.recordOutput(
+        "IntakeRollers/intakeRollerMotorVoltage", intakeIOAutoLogged.intakeRollerMotorVoltage);
+    Logger.recordOutput(
+        "IntakeRollers/intakeRollerMotorVelocity", intakeIOAutoLogged.intakeRollerMotorVelocity);
+    Logger.recordOutput(
+        "IntakeRollers/intakeRollerMotorStatorCurrent",
+        intakeIOAutoLogged.intakeRollerMotorStatorCurrent);
+    Logger.recordOutput(
+        "IntakeRollers/intakeRollerMotorSupplyCurrent",
+        intakeIOAutoLogged.intakeRollerMotorSupplyCurrent);
+    Logger.recordOutput(
+        "IntakeRollers/intakeRollerMotorTemperature",
+        intakeIOAutoLogged.intakeRollerMotorTemperature);
 
     LoggedTracer.record("IntakeRollers");
   }
