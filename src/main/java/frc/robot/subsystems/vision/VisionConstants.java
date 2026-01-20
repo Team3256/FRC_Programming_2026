@@ -12,7 +12,6 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
-import java.util.List;
 
 public class VisionConstants {
   // AprilTag layout
@@ -24,25 +23,6 @@ public class VisionConstants {
   public static String rightCam = "right";
   public static String frontCam = "front";
   public static String backCam = "back";
-
-  public static List<Short> nonHubIds =
-      List.of(
-          (short) 6,
-          (short) 7,
-          (short) 16,
-          (short) 15,
-          (short) 14,
-          (short) 13,
-          (short) 12,
-          (short) 1,
-          (short) 22,
-          (short) 23,
-          (short) 32,
-          (short) 31,
-          (short) 30,
-          (short) 29,
-          (short) 28,
-          (short) 17);
 
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)
