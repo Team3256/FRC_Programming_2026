@@ -1,0 +1,47 @@
+name: Choreo Generate
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-paths:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    container: wpilib/roborio-cross-ubuntu:2023-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Add repository to git safe directories
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      - name: Ensure we are at the root of the repository
+        run: cd $GITHUB_WORKSPACE && pwd
+
+      - name: Download and unzip Choreo CLI
+        run: |
+          wget https://github.com/SleipnirGroup/Choreo/releases/download/v2025.0.2/Choreo-v2025.0.2-Linux-x86_64-standalone.zip
+          unzip Choreo-v2025.0.2-Linux-x86_64-standalone.zip
+          chmod +x choreo-cli
+
+      - name: Generate paths
+        run: |
+          ./choreo-cli --chor src/main/deploy/choreo/Choreo.chor --all-trajectory -g
+
+      - name: Zip the generated paths
+        run: |
+          zip -r choreo-paths.zip src/main/deploy/choreo
+
+      - name: Upload the generated paths
+        uses: actions/upload-artifact@v4
+        with:
+          name: choreo-paths
+          path: choreo-paths.zip
+
+      # - name: Commit changes
+      #   uses: stefanzweifel/git-auto-commit-action@v5
+      #   with:
+      #       commit_message: [ci] generate choreo trajectories
