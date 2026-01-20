@@ -102,24 +102,7 @@ private final IntakePivot intakePivot =
           shooterPivot, intakeRollers, shooter, () -> drivetrain.getState().Pose);
 */
 
- private final Vision vision =
-      new Vision(
-          drivetrain::addPhotonEstimate,
-          Utils.isSimulation()
-              ? new VisionIOPhotonVisionSim(
-                  VisionConstants.leftCam,
-                  VisionConstants.robotToLeftCam,
-                  () -> drivetrain.getState().Pose)
-              : new VisionIOPhotonVision(VisionConstants.leftCam, VisionConstants.robotToLeftCam),
-          Utils.isSimulation()
-              ? new VisionIOPhotonVisionSim(
-                  VisionConstants.rightCam,
-                  VisionConstants.robotToRightCam,
-                  () -> drivetrain.getState().Pose)
-              : new VisionIOPhotonVision(
-                  VisionConstants.rightCam, VisionConstants.robotToRightCam));
- 
-  
+
 
   private final AutoRoutines m_autoRoutines;
   private AutoChooser autoChooser = new AutoChooser();
