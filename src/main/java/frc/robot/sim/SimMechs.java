@@ -35,7 +35,7 @@ public final class SimMechs {
 
 
   private final MechanismLigament2d intakePivotViz =
-      elevatorRoot.append(
+      groundIntakeRoot.append(
           new MechanismLigament2d(
               "Intake Pivot",
               IntakePivotConstants.PivotSim.intakePivotLength.in(Meters)
@@ -61,24 +61,12 @@ public final class SimMechs {
     return instance;
   }
 
-  public void updateArm(Angle angle) {
-    armViz.setAngle(angle.minus(Degrees.of(90)).in(Degrees));
-  }
-
-  public void updateElevator(Distance height) {
-    elevatorViz.setLength(height.in(Meters) / 4);
-  }
-
   public void updatePivot(Angle angle) {
     intakePivotViz.setAngle(angle.in(Degrees));
   }
 
   public void publishToNT() {
     SmartDashboard.putData("RobotSim", mech);
-  }
-
-  public void updateEndEffector(Angle eeWheel) {
-    endEffectorViz.setAngle(endEffectorViz.getAngle() + eeWheel.in(Degrees));
   }
 
   public void updateRollers(Angle coral) {
