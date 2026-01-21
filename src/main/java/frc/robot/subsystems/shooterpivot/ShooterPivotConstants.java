@@ -58,7 +58,7 @@ public class ShooterPivotConstants {
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(27.32));
 
   public static final class PivotSim {
-    public static final double pivotSimGearing = 0;
+    public static final double pivotSimGearing = 1;
 
     public static final Distance shooterPivotLength = Inches.of(24);
     public static final Mass shooterPivotMass = Kilograms.of(1);
