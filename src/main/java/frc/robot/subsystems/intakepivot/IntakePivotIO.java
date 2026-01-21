@@ -1,8 +1,14 @@
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems.intakepivot;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import com.ctre.phoenix6.hardware.TalonFX;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface IntakePivotIO {
   @AutoLog
@@ -16,7 +22,8 @@ public interface IntakePivotIO {
 
   public default TalonFX getMotor() {
     return new TalonFX(0);
-  };
+  }
+  ;
 
   default void updateInputs(IntakePivotIOInputs inputs) {}
 
@@ -31,5 +38,4 @@ public interface IntakePivotIO {
   public default void off() {}
 
   public default void zero() {}
-
 }
