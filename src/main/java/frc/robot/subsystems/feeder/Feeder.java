@@ -19,18 +19,18 @@ public class Feeder extends DisableSubsystem {
   private final FeederIO feederIO;
   private final FeederIOInputsAutoLogged feederIOAutoLogged = new FeederIOInputsAutoLogged();
 
-  public Feeder(boolean enabled, FeederIO indexerIO) {
+  public Feeder(boolean enabled, FeederIO feederIO) {
     super(enabled);
-    this.feederIO = indexerIO;
+    this.feederIO = feederIO;
   }
 
   @Override
   public void periodic() {
     super.periodic();
     feederIO.updateInputs(feederIOAutoLogged);
-    Logger.processInputs("indexer", feederIOAutoLogged);
+    Logger.processInputs("feeder", feederIOAutoLogged);
 
-    LoggedTracer.record("Indexer");
+    LoggedTracer.record("Feeder");
   }
 
   public Command setVoltage(double voltage) {

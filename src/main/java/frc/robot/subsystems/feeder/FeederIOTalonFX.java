@@ -16,7 +16,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.indexer.IndexerIO.IndexerIOInputs;
 import frc.robot.utils.PhoenixUtil;
 
 public class FeederIOTalonFX implements FeederIO {
@@ -49,13 +48,13 @@ public class FeederIOTalonFX implements FeederIO {
     feederMotor.optimizeBusUtilization();
   }
 
-  public void updateInputs(IndexerIOInputs inputs) {
+  public void updateInputs(FeederIOInputs inputs) {
 
-    inputs.indexerMotorVoltage = feederMotorVoltage.getValueAsDouble();
-    inputs.indexerMotorVelocity = feederMotorVelocity.getValueAsDouble();
-    inputs.indexerMotorStatorCurrent = feederMotorStatorCurrent.getValueAsDouble();
-    inputs.indexerMotorSupplyCurrent = feederMotorSupplyCurrent.getValueAsDouble();
-    inputs.indexerMotorTemperature = feederMotorTemperature.getValueAsDouble();
+    inputs.feederMotorVoltage = feederMotorVoltage.getValueAsDouble();
+    inputs.feederMotorVelocity = feederMotorVelocity.getValueAsDouble();
+    inputs.feederMotorStatorCurrent = feederMotorStatorCurrent.getValueAsDouble();
+    inputs.feederMotorSupplyCurrent = feederMotorSupplyCurrent.getValueAsDouble();
+    inputs.feederMotorTemperature = feederMotorTemperature.getValueAsDouble();
   }
 
   public void setVoltage(double voltage) {

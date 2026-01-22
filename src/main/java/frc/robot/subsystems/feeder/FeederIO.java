@@ -13,11 +13,11 @@ import org.littletonrobotics.junction.AutoLog;
 public interface FeederIO {
   @AutoLog
   public static class FeederIOInputs {
-    public double indexerMotorVoltage = 0.0;
-    public double indexerMotorVelocity = 0.0;
-    public double indexerMotorStatorCurrent = 0.0;
-    public double indexerMotorSupplyCurrent = 0.0;
-    public double indexerMotorTemperature = 0.0;
+    public double feederMotorVoltage = 0.0;
+    public double feederMotorVelocity = 0.0;
+    public double feederMotorStatorCurrent = 0.0;
+    public double feederMotorSupplyCurrent = 0.0;
+    public double feederMotorTemperature = 0.0;
   }
 
   public default void updateInputs(FeederIOInputs inputs) {}
@@ -26,7 +26,7 @@ public interface FeederIO {
 
   public default void setVelocity(double velocity) {}
 
-  public default TalonFX getIndexerMotor() {
+  public default TalonFX getFeederMotor() {
     return new TalonFX(0);
   }
 
