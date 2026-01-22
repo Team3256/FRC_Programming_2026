@@ -59,6 +59,6 @@ public class ShooterPivotIOSim extends ShooterPivotIOTalonFX {
         BatterySim.calculateDefaultBatteryLoadedVoltage(pivotSimModel.getCurrentDrawAmps()));
 
     super.updateInputs(inputs);
-    SimMechs.getInstance().updatePivot(Radians.of(pivotSimModel.getAngleRads()));
+    SimMechs.getInstance().updateShooterPivot(Radians.of(pivotSimModel.getAngleRads()));
   }
 }
