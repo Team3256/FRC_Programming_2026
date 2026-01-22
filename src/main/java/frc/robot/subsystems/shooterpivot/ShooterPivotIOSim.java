@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.sim.SimMechs;
+
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class ShooterPivotIOSim extends ShooterPivotIOTalonFX {
@@ -57,6 +59,6 @@ public class ShooterPivotIOSim extends ShooterPivotIOTalonFX {
         BatterySim.calculateDefaultBatteryLoadedVoltage(pivotSimModel.getCurrentDrawAmps()));
 
     super.updateInputs(inputs);
-    // SimMechs.getInstance().updatePivot(Radians.of(pivotSimModel.getAngleRads()));
+    SimMechs.getInstance().updatePivot(Radians.of(pivotSimModel.getAngleRads()));
   }
 }

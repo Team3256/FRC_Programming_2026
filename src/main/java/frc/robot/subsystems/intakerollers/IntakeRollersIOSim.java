@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import frc.robot.sim.SimMechs;
+import static edu.wpi.first.units.Units.Degrees;
+
 // import frc.robot.sim.SimMechs;
 import org.littletonrobotics.junction.LoggedRobot;
 
@@ -51,5 +54,12 @@ public class IntakeRollersIOSim extends IntakeRollersIOTalonFX {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(rollerSimModel.getCurrentDrawAmps()));
     super.updateInputs(inputs);
+
+    SimMechs.getInstance()
+        .updateRollers(
+            Degrees.of(
+                Math.toDegrees(motorRPS)
+                    * LoggedRobot.defaultPeriodSecs
+                    * IntakeRollersConstants.SimulationConstants.kAngularVelocityScalar));
   }
 }

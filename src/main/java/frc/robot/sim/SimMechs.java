@@ -91,13 +91,12 @@ private final MechanismRoot2d shooterRoot =
 
 
 
-  public void updateIntakePivot(Angle angle) {
+  public void updatePivot(Angle angle) {
     intakePivotViz.setAngle(angle.in(Degrees));
   }
 
-  public void updateIntakeRollers(Angle delta) {
-    groundIntakeRollerViz.setAngle(
-        groundIntakeRollerViz.getAngle() + delta.in(Degrees));
+  public void updateRollers(Angle x) {
+    groundIntakeRollerViz.setAngle(groundIntakeRollerViz.getAngle() + x.in(Degrees));
   }
 
   public void updateShooterPivot(Angle angle) {
