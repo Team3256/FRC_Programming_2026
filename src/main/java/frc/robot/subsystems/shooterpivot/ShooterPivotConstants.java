@@ -19,6 +19,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 
@@ -30,6 +31,15 @@ public class ShooterPivotConstants {
   public static final int flashConfigRetries = 5;
 
   public static double updateFrequency = 50;
+
+  // TODO: FIll
+  public static final Rotation2d minAngle = Rotation2d.fromDegrees(0.0);
+  public static final Rotation2d maxAngle = Rotation2d.fromDegrees(0.0);
+  private static final double trackOverlapMargin = Units.degreesToRadians(10);
+  private static final double trackCenterRads = (minAngle.getDegrees() + maxAngle.getDegrees()) / 2;
+  private static final double trackMinAngle = trackCenterRads - Math.PI - trackOverlapMargin;
+  private static final double trackMaxAngle = trackCenterRads + Math.PI + trackOverlapMargin;
+  public static final Rotation2d startingAngle = Rotation2d.fromDegrees(0.0);
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
@@ -63,9 +73,5 @@ public class ShooterPivotConstants {
     public static final Distance shooterPivotLength = Inches.of(24);
     public static final Mass shooterPivotMass = Kilograms.of(1);
     public static final double jkGMetersSquared = .5;
-
-    public static final Rotation2d minAngle = Rotation2d.fromDegrees(45);
-    public static final Rotation2d maxAngle = Rotation2d.fromDegrees(180);
-    public static final Rotation2d startingAngle = Rotation2d.fromDegrees(150);
   }
 }

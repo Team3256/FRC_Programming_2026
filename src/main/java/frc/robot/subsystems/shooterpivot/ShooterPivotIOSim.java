@@ -27,10 +27,10 @@ public class ShooterPivotIOSim extends ShooterPivotIOTalonFX {
           ShooterPivotConstants.PivotSim.pivotSimGearing,
           ShooterPivotConstants.PivotSim.jkGMetersSquared,
           ShooterPivotConstants.PivotSim.shooterPivotLength.in(Meters),
-          ShooterPivotConstants.PivotSim.minAngle.getRadians(),
-          ShooterPivotConstants.PivotSim.maxAngle.getRadians(),
+          ShooterPivotConstants.minAngle.getRadians(),
+          ShooterPivotConstants.maxAngle.getRadians(),
           true,
-          ShooterPivotConstants.PivotSim.startingAngle.getRadians());
+          ShooterPivotConstants.startingAngle.getRadians());
 
   private TalonFXSimState pivotSimState;
 
