@@ -10,6 +10,8 @@ package frc.robot.sim;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Radian;
+import static edu.wpi.first.units.Units.Radians;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -100,8 +102,9 @@ private final MechanismRoot2d shooterRoot =
   }
 
   public void updateShooterPivot(Angle angle) {
-    shooterPivotViz.setAngle(angle.in(Degrees));
-  }
+    shooterPivotViz.setAngle(angle.in(Degrees)); // flips direction
+}
+
 
   public void updateShooterWheel(Angle delta) {
     shooterWheelViz.setAngle(
