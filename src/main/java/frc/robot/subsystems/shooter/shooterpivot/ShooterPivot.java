@@ -7,9 +7,14 @@
 
 package frc.robot.subsystems.shooter.shooterpivot;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
@@ -23,10 +28,18 @@ public class ShooterPivot extends DisableSubsystem {
   private final ShooterPivotIOInputsAutoLogged shooterPivotIOInputsAutoLogged =
       new ShooterPivotIOInputsAutoLogged();
 
-  private double shooterPivotOffset;
-  private boolean zeroed = false;
-
   public final Trigger reachedPosition = new Trigger(this::reachedPosition);
+
+  //    private final SimpleMotorFeedforward m_shooterFeedforward =
+  //            new SimpleMotorFeedforward(
+  //                    ShooterPivotConstants.kSVolts,
+  // ShooterPivotConstants.kVVoltSecondsPerRotation);
+
+  private final PIDController pivotRotationController =
+      new PIDController(
+          ShooterPivotConstants.trackingP,
+          ShooterPivotConstants.trackingI,
+          ShooterPivotConstants.trackingD);
 
   private double reqPosition = 0.0;
 
@@ -76,6 +89,20 @@ public class ShooterPivot extends DisableSubsystem {
 
   public double getVoltage() {
     return shooterPivotIOInputsAutoLogged.shooterPivotMotorVoltage;
+  }
+
+  public Command trackTarget(
+      ShotCalculator calc, CommandSwerveDrivetrain drivetrain, Translation3d target) {
+
+    // return ParallelCommandGroup FEED FORWARD
+
+    calc.setTarget(new Pose3d(target, Rotation3d.kZero));
+    return run(
+        () -> {
+          pivotRotationController.calculate(
+              shooterPivotIOInputsAutoLogged.shooterPivotMotorPosition,
+              calc.getCurrentPivotAngle().getRotations());
+        });
   }
 
   public Command zero() {

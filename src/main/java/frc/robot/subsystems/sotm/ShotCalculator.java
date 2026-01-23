@@ -13,10 +13,8 @@ import static frc.robot.subsystems.sotm.ShotCalculatorConstants.ROBOT_TO_SHOOTER
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.FieldConstants;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.utils.sotm.ChassisAccelerations;
 import frc.robot.utils.sotm.ShootOnTheFlyCalculator;
@@ -31,8 +29,10 @@ public class ShotCalculator extends SubsystemBase {
   private double currentEffectiveYaw;
   private InterceptSolution currentInterceptSolution;
 
-  private Pose3d targetLocation =
-      new Pose3d(FieldConstants.Hub.topCenterPoint, new Rotation3d(Rotation2d.kZero));
+  // private Pose3d targetLocation = new Pose3d(FieldConstants.Hub.topCenterPoint, new
+  // Rotation3d(Rotation2d.kZero));
+
+  private Pose3d targetLocation;
 
   private double targetDistance = 0.0;
 
@@ -76,9 +76,8 @@ public class ShotCalculator extends SubsystemBase {
     Logger.recordOutput("ShotCalculator/TargetSpeedRps", targetSpeedRps);
   }
 
-  public void setTarget(Pose3d targetLocation, double targetSpeedRps) {
+  public void setTarget(Pose3d targetLocation) {
     this.targetLocation = targetLocation;
-    this.targetSpeedRps = targetSpeedRps;
   }
 
   public Pose3d getCurrentEffectiveTargetPose() {

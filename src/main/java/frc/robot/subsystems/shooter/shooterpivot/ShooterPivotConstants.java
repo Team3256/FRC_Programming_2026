@@ -31,6 +31,11 @@ public class ShooterPivotConstants {
 
   public static double updateFrequency = 50;
 
+  // TODO: TUNE
+  public static final double trackingP = 0.0;
+  public static final double trackingI = 0.0;
+  public static final double trackingD = 0.0;
+
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
           .withSlot0(

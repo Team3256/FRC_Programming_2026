@@ -84,10 +84,12 @@ public class RobotContainer {
 
   private void configureOperatorBinds() {
 
-    // Begin tracking
+    // Begin Tracking
     m_operatorController
         .leftTrigger()
-        .whileTrue(shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()));
+        .whileTrue(
+            shooterPivot.trackTarget(
+                shotCalculator, drivetrain, FieldConstants.Hub.topCenterPoint));
 
     // Fire
     m_operatorController
