@@ -37,7 +37,7 @@ public final class Constants {
   // be in their specific SubsystemConstants file
   public static class FeatureFlags {
     // AdvantageKit is a logging library we use that
-    // can provide logging replay and it's how we can
+    // can provide logging replay, and it's how we can
     // do comprehensive logging. Logging to NetworkTables
     // is disabled on field (FMS connected).
     public static final boolean kAdvKitEnabled = true;

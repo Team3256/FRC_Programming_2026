@@ -13,10 +13,8 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
@@ -71,7 +69,7 @@ public class RobotContainer {
       shooterPivot = new ShooterPivot(false, new ShooterPivotIOTalonFX());
     }
 
-    shotCalculator = new ShotCalculator(drivetrain);
+    shotCalculator = new ShotCalculator();
 
     // Configure the trigger bindings
     configureOperatorBinds();
@@ -84,21 +82,21 @@ public class RobotContainer {
   }
 
   private void configureOperatorBinds() {
-    m_operatorController
-        .a()
-        .whileTrue(
-            Commands.parallel(
-                    shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()),
-                    shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
-                    drivetrain.applyRequest(
-                        () ->
-                            new SwerveRequest.FieldCentricFacingAngle()
-                                .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
-                                .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
-                                .withTargetDirection(
-                                    Rotation2d.fromRadians(
-                                        shotCalculator.getCurrentEffectiveYaw()))))
-                .withName("ShootOnTheMove"));
+    //    m_operatorController
+    //        .a()
+    //        .whileTrue(
+    //            Commands.parallel(
+    //                    shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()),
+    //                    shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
+    //                    drivetrain.applyRequest(
+    //                        () ->
+    //                            new SwerveRequest.FieldCentricFacingAngle()
+    //                                .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+    //                                .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+    //                                .withTargetDirection(
+    //                                    Rotation2d.fromRadians(
+    //                                        shotCalculator.getCurrentEffectiveYaw()))))
+    //                .withName("ShootOnTheMove"));
 
     m_operatorController
         .b()
@@ -109,7 +107,7 @@ public class RobotContainer {
     m_operatorController
         .x()
         .whileTrue(
-            shooterPivot.setPosition(Math.toRadians(45)) // replace w constant later
+            shooterPivot.setAbsPosition(Math.toRadians(45)) // replace w constant later
             );
   }
 

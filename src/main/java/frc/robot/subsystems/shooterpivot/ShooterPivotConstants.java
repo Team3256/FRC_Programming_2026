@@ -19,6 +19,8 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
@@ -35,11 +37,14 @@ public class ShooterPivotConstants {
   // TODO: FIll
   public static final Rotation2d minAngle = Rotation2d.fromDegrees(0.0);
   public static final Rotation2d maxAngle = Rotation2d.fromDegrees(0.0);
-  private static final double trackOverlapMargin = Units.degreesToRadians(10);
-  private static final double trackCenterRads = (minAngle.getDegrees() + maxAngle.getDegrees()) / 2;
-  private static final double trackMinAngle = trackCenterRads - Math.PI - trackOverlapMargin;
-  private static final double trackMaxAngle = trackCenterRads + Math.PI + trackOverlapMargin;
+  public static final double trackOverlapMargin = Units.degreesToRadians(10);
+  public static final double trackCenterRads = (minAngle.getDegrees() + maxAngle.getDegrees()) / 2;
+  public static final double trackMinAngle = trackCenterRads - Math.PI - trackOverlapMargin;
+  public static final double trackMaxAngle = trackCenterRads + Math.PI + trackOverlapMargin;
   public static final Rotation2d startingAngle = Rotation2d.fromDegrees(0.0);
+
+  public static final double shooterPivotMaxRotationalVelocity = 0.0;
+  public static final double shooterPivotMaxRotationalAcceleration = 0.0;
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
@@ -66,6 +71,12 @@ public class ShooterPivotConstants {
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(80))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(27.32));
+
+  // TODO: fill
+  public static Transform3d robotToTurret = new Transform3d(0.0, 0.0, 0.0, Rotation3d.kZero);
+
+  public static Transform3d turretToCamera =
+      new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0.0, 0.0));
 
   public static final class PivotSim {
     public static final double pivotSimGearing = 0;
