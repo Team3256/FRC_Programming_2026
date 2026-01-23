@@ -13,6 +13,8 @@ import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 
+import edu.wpi.first.units.measure.Angle;
+
 public final class SimMechs {
 
   public final LoggedMechanism2d mech =
@@ -32,4 +34,9 @@ public final class SimMechs {
   public void publishToNT() {
     Logger.recordOutput("RobotSim", mech);
   }
+
+public void updateClimb(Angle of) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'updateClimb'");
+}
 }
