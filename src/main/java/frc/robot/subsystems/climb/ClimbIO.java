@@ -17,6 +17,8 @@ public interface ClimbIO {
     public double climbMotorVoltage = 0.0;
     public double climbMotorPosition = 0.0;
     public double climbMotorVelocity = 0.0;
+    public double climbMotorStatorCurrent = 0.0;
+    public double climbMotorSupplyCurrent = 0.0;
   }
 
   public default void updateInputs(ClimbIOInputs inputs) {}
