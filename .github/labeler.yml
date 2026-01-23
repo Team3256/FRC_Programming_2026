@@ -8,12 +8,37 @@
 'type: ci':
   - changed-files:
       - any-glob-to-any-file: .github/*
-'component: drivers':
+'component: Autos':
+  - changed-files:
+      - any-glob-to-any-file: src/main/deploy/Choreo/**
+      - any-glob-to-any-file: src/main/java/frc/robot/commands/**
+'component: Drivers':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/drivers/**
-'component: swerve':
+'component: Feeder':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/feeder/**
+'component: Indexer':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/indexer/**
+'component: Intake Pivot':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/intakepivot/**
+'component: Intake Rollers':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/intakerollers/**
+'component: Shooter Pivot':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/shooterpivot/**
+'component: Shooter':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/shooter/**
+'component: Swerve':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/swerve/**
+'component: Vision':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/vision/**
 'component: superstructure':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/Superstructure.java
