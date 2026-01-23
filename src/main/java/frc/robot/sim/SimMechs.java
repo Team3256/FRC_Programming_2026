@@ -9,11 +9,10 @@ package frc.robot.sim;
 
 import static edu.wpi.first.units.Units.Meters;
 
+import edu.wpi.first.units.measure.Angle;
 import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
-
-import edu.wpi.first.units.measure.Angle;
 
 public final class SimMechs {
 
@@ -35,8 +34,8 @@ public final class SimMechs {
     Logger.recordOutput("RobotSim", mech);
   }
 
-public void updateClimb(Angle of) {
+  public void updateClimb(Angle of) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'updateClimb'");
-}
+  }
 }
