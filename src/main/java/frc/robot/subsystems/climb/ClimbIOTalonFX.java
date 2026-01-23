@@ -7,26 +7,18 @@
 
 package frc.robot.subsystems.climb;
 
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.*;
 import frc.robot.utils.PhoenixUtil;
 
 public class ClimbIOTalonFX implements ClimbIO {
   private final TalonFX climbMotor = new TalonFX(ClimbConstants.kClimbMotorID);
-  private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0).withSlot(0).withEnableFOC(ClimbConstants.kUseFOC);
-  private final VoltageOut voltageRequest = new VoltageOut(0);
-
   private final StatusSignal<Voltage> climbMotorVoltage = climbMotor.getMotorVoltage();
   private final StatusSignal<AngularVelocity> climbMotorVelocity = climbMotor.getVelocity();
   private final StatusSignal<Angle> climbMotorPosition = climbMotor.getPosition();
@@ -42,32 +34,20 @@ public class ClimbIOTalonFX implements ClimbIO {
         climbMotorPosition,
         climbMotorSupplyCurrent,
         climbMotorStatorCurrent);
-    climbMotor.optimizeBusUtilization(4, 0.100);
-  }
 
-  @Override
-  public void updateInputs(ClimbIOInputs inputs) {
-    BaseStatusSignal.refreshAll(
+    PhoenixUtil.registerSignals(
+        false,
         climbMotorVoltage,
         climbMotorVelocity,
         climbMotorPosition,
         climbMotorSupplyCurrent,
         climbMotorStatorCurrent);
-
-    inputs.climbMotorVoltage = climbMotorVoltage.getValueAsDouble();
-    inputs.climbMotorVelocity = climbMotorVelocity.getValue().in(RotationsPerSecond);
-    inputs.climbMotorPosition = climbMotorPosition.getValue().in(Rotations);
-    inputs.climbMotorStatorCurrent = climbMotorStatorCurrent.getValueAsDouble();
-    inputs.climbMotorSupplyCurrent = climbMotorSupplyCurrent.getValueAsDouble();
+    climbMotor.optimizeBusUtilization();
   }
 
   @Override
   public void setPosition(Angle position) {
-    if (ClimbConstants.kUseMotionMagic) {
-      climbMotor.setControl(motionMagicRequest.withPosition(position));
-    } else {
-      climbMotor.setControl(positionRequest.withPosition(position));
-    }
+    climbMotor.setControl(motionMagicRequest.withPosition(position));
   }
 
   @Override
@@ -88,10 +68,5 @@ public class ClimbIOTalonFX implements ClimbIO {
   @Override
   public TalonFX getMotor() {
     return climbMotor;
-  }
-
-  @Override
-  public VoltageOut getVoltageRequest() {
-    return voltageRequest;
   }
 }
