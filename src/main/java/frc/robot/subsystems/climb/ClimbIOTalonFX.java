@@ -14,6 +14,8 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.*;
 import frc.robot.utils.PhoenixUtil;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
 
 public class ClimbIOTalonFX implements ClimbIO {
   private final TalonFX climbMotor = new TalonFX(ClimbConstants.kClimbMotorID);
@@ -44,6 +46,23 @@ public class ClimbIOTalonFX implements ClimbIO {
         climbMotorStatorCurrent);
     climbMotor.optimizeBusUtilization();
   }
+
+  @Override
+  public void updateInputs(ClimbIOInputs inputs) {
+    BaseStatusSignal.refreshAll(
+        climbMotorVoltage,
+        climbMotorVelocity,
+        climbMotorPosition,
+        climbMotorSupplyCurrent,
+        climbMotorStatorCurrent);
+
+    inputs.climbMotorVoltage = climbMotorVoltage.getValueAsDouble();
+    inputs.climbMotorVelocity = climbMotorVelocity.getValue().in(RotationsPerSecond);
+    inputs.climbMotorPosition = climbMotorPosition.getValue().in(Rotations);
+    inputs.climbMotorStatorCurrent = climbMotorStatorCurrent.getValueAsDouble();
+    inputs.climbMotorSupplyCurrent = climbMotorSupplyCurrent.getValueAsDouble();
+  }
+
 
   @Override
   public void setPosition(Angle position) {
