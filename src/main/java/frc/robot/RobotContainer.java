@@ -16,7 +16,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
@@ -24,9 +23,9 @@ import frc.robot.sim.SimMechs;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
-import frc.robot.subsystems.shooterpivot.ShooterPivot;
-import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
-import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
+import frc.robot.subsystems.shooter.shooterpivot.ShooterPivot;
+import frc.robot.subsystems.shooter.shooterpivot.ShooterPivotIOSim;
+import frc.robot.subsystems.shooter.shooterpivot.ShooterPivotIOTalonFX;
 import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
@@ -84,33 +83,37 @@ public class RobotContainer {
   }
 
   private void configureOperatorBinds() {
-    m_operatorController
-        .a()
-        .whileTrue(
-            Commands.parallel(
-                    shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()),
-                    shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
-                    drivetrain.applyRequest(
-                        () ->
-                            new SwerveRequest.FieldCentricFacingAngle()
-                                .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
-                                .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
-                                .withTargetDirection(
-                                    Rotation2d.fromRadians(
-                                        shotCalculator.getCurrentEffectiveYaw()))))
-                .withName("ShootOnTheMove"));
 
+    // Begin tracking
     m_operatorController
-        .b()
-        .whileTrue(
-            shooter.setVelocity(50.0) // replace w constant later
-            );
+        .leftTrigger()
+        .whileTrue(shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()));
 
+    // Fire
     m_operatorController
-        .x()
-        .whileTrue(
-            shooterPivot.setPosition(Math.toRadians(45)) // replace w constant later
-            );
+        .rightTrigger()
+        .whileTrue(shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()));
+
+    m_operatorController.rightBumper().whileTrue(shooter.setVelocity(50.0));
+
+    // Field Relative Azimuth
+    m_operatorController
+        .povUp()
+        .onTrue(shooterPivot.setPositionFieldRelative(new Rotation2d(0), drivetrain));
+    m_operatorController
+        .povLeft()
+        .onTrue(
+            shooterPivot.setPositionFieldRelative(new Rotation2d(Math.toRadians(90)), drivetrain));
+    m_operatorController
+        .povRight()
+        .onTrue(
+            shooterPivot.setPositionFieldRelative(new Rotation2d(Math.toRadians(180)), drivetrain));
+    m_operatorController
+        .povDown()
+        .onTrue(
+            shooterPivot.setPositionFieldRelative(new Rotation2d(Math.toRadians(270)), drivetrain));
+
+    m_operatorController.y().onTrue(shooterPivot.zero());
   }
 
   private void configureChoreoAutoChooser() {

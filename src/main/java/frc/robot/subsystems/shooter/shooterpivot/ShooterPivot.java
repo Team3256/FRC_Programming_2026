@@ -5,14 +5,16 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.shooterpivot;
+package frc.robot.subsystems.shooter.shooterpivot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
 import frc.robot.utils.Util;
-import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterPivot extends DisableSubsystem {
@@ -20,6 +22,9 @@ public class ShooterPivot extends DisableSubsystem {
   private final ShooterPivotIO shooterPivotIO;
   private final ShooterPivotIOInputsAutoLogged shooterPivotIOInputsAutoLogged =
       new ShooterPivotIOInputsAutoLogged();
+
+  private double shooterPivotOffset;
+  private boolean zeroed = false;
 
   public final Trigger reachedPosition = new Trigger(this::reachedPosition);
 
@@ -42,20 +47,39 @@ public class ShooterPivot extends DisableSubsystem {
     LoggedTracer.record("ShooterPivot");
   }
 
-  public Command setPosition(double position) {
+  public Command setPosition(Rotation2d position) {
     return setPosition(() -> position);
   }
 
-  public Command setPosition(DoubleSupplier position) {
+  public Command setPosition(Supplier<Rotation2d> position) {
     return this.run(
         () -> {
-          reqPosition = position.getAsDouble();
+          reqPosition = position.get().getRotations();
           shooterPivotIO.setPosition(reqPosition);
         });
   }
 
+  public Command setPositionFieldRelative(Rotation2d position, CommandSwerveDrivetrain swerve) {
+    return this.run(
+        () ->
+            shooterPivotIO.setPosition(
+                position.minus(swerve.getState().Pose.getRotation()).getRotations()));
+  }
+
+  public double getPosition() {
+    return shooterPivotIOInputsAutoLogged.shooterPivotMotorPosition;
+  }
+
   public Command setVoltage(double voltage) {
     return this.run(() -> shooterPivotIO.setVoltage(voltage));
+  }
+
+  public double getVoltage() {
+    return shooterPivotIOInputsAutoLogged.shooterPivotMotorVoltage;
+  }
+
+  public Command zero() {
+    return this.runOnce(shooterPivotIO::zero);
   }
 
   public Command off() {

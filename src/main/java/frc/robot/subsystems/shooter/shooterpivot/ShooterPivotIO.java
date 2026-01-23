@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.shooterpivot;
+package frc.robot.subsystems.shooter.shooterpivot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
@@ -22,17 +22,19 @@ public interface ShooterPivotIO {
     public double shooterPivotMotorSupplyCurrent = 0.0;
   }
 
-  public default void updateInputs(ShooterPivotIOInputs inputs) {}
+  default void updateInputs(ShooterPivotIOInputs inputs) {}
 
-  public default void setPosition(double position) {}
+  default void setPosition(double position) {}
 
-  public default void setVoltage(double voltage) {}
+  default void setVoltage(double voltage) {}
 
-  public default TalonFX getMotor() {
+  default TalonFX getMotor() {
     return new TalonFX(0);
   }
 
-  public default void resetPosition(Angle angle) {}
+  default void zero() {}
 
-  public default void off() {}
+  default void resetPosition(Angle angle) {}
+
+  default void off() {}
 }
