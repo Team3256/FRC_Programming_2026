@@ -162,6 +162,51 @@ public class RobotContainer {
     // sets the heading to wherever the robot is facing
     m_driverController.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
+    m_driverController
+        .povUp()
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(AzimuthTargets.forward))
+                .withTimeout(AzimuthTargets.timeout));
+    m_driverController
+        .povLeft()
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(AzimuthTargets.left))
+                .withTimeout(AzimuthTargets.timeout));
+    m_driverController
+        .povRight()
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(AzimuthTargets.right))
+                .withTimeout(AzimuthTargets.timeout));
+    m_driverController
+        .povDown()
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(AzimuthTargets.back))
+                .withTimeout(AzimuthTargets.timeout));
+
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
