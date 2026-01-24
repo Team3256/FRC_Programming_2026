@@ -92,4 +92,9 @@ public final class SimMechs {
   public void publishToNT() {
     SmartDashboard.putData("RobotSim", mech);
   }
+
+  public void updateClimb(Angle of) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'updateClimb'");
+  }
 }
