@@ -23,7 +23,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 
 public class ShooterPivotConstants {
-  public static final int pivotMotorId = 0;
+  public static final int pivotMotorId = 5;
 
   public static final boolean kUseFOC = false;
   public static final boolean kUseMotionMagic = true;
