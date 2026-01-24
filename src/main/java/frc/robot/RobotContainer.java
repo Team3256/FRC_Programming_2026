@@ -90,14 +90,13 @@ public class RobotContainer {
 
   private void configureOperatorBinds() {
 
-    // Begin Tracking Target
+    // Begin Tracking Hub
     m_operatorController
         .leftTrigger()
         .whileTrue(
             Commands.parallel(
-                    shooterPivot.setPosition(
-                        () -> shotCalculator.getCurrentPivotAngle().getRotations()),
-                    turret.trackTarget(shotCalculator, FieldConstants.Hub.topCenterPoint))
+                    shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
+                    turret.trackTarget(shotCalculator))
                 .withName("ShootOnTheMove"));
 
     // Primary Fire

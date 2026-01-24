@@ -8,10 +8,7 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.sotm.ShotCalculator;
@@ -88,9 +85,7 @@ public class Turret extends DisableSubsystem {
     return TurretIOInputsAutoLogged.turretMotorVoltage;
   }
 
-  public Command trackTarget(ShotCalculator calc, Translation3d target) {
-
-    calc.setTarget(new Pose3d(target, Rotation3d.kZero));
+  public Command trackTarget(ShotCalculator calc) {
     return run(
         () -> {
           pivotRotationController.calculate(
