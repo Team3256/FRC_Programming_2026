@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems.climb;
 
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -14,8 +17,6 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.*;
 import frc.robot.utils.PhoenixUtil;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Rotations;
 
 public class ClimbIOTalonFX implements ClimbIO {
   private final TalonFX climbMotor = new TalonFX(ClimbConstants.kClimbMotorID);
@@ -62,7 +63,6 @@ public class ClimbIOTalonFX implements ClimbIO {
     inputs.climbMotorStatorCurrent = climbMotorStatorCurrent.getValueAsDouble();
     inputs.climbMotorSupplyCurrent = climbMotorSupplyCurrent.getValueAsDouble();
   }
-
 
   @Override
   public void setPosition(Angle position) {

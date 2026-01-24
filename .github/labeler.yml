@@ -15,6 +15,9 @@
 'component: Drivers':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/drivers/**
+'component: Climb':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/climb/**
 'component: Feeder':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/feeder/**
