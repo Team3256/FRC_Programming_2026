@@ -95,7 +95,11 @@ public class Superstructure {
     stateTriggers.get(StructureState.SHOOT).onTrue(shooter.setVoltage(12));
 
     // intake fuel with rollers, unsure how pivot will work yet....
-    stateTriggers.get(StructureState.INTAKE).onTrue(intakeRollers.setVoltage(12));
+    stateTriggers
+        .get(StructureState.INTAKE)
+        .onTrue(intakeRollers.setVoltage(12))
+        .onTrue(indexer.setVoltage(12))
+        .onTrue(feeder.setVoltage(12));
 
     // climb
     stateTriggers.get(StructureState.CLIMB).onTrue(climb.setPosition(0.5));
