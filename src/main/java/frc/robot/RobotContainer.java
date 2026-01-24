@@ -24,9 +24,11 @@ import frc.robot.sim.SimMechs;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
-import frc.robot.subsystems.shooterpivot.ShooterPivot;
-import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
-import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
+import frc.robot.subsystems.shooter.shooterpivot.ShooterPivot;
+import frc.robot.subsystems.shooter.shooterpivot.ShooterPivotIOSim;
+import frc.robot.subsystems.shooter.shooterpivot.ShooterPivotIOTalonFX;
+import frc.robot.subsystems.shooter.turret.Turret;
+import frc.robot.subsystems.shooter.turret.TurretIOSim;
 import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
@@ -53,6 +55,7 @@ public class RobotContainer {
 
   private final Shooter shooter;
   private final ShooterPivot shooterPivot;
+  private final Turret turret;
   private final ShotCalculator shotCalculator;
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
@@ -66,9 +69,11 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
       shooter = new Shooter(false, new ShooterIOSim());
       shooterPivot = new ShooterPivot(false, new ShooterPivotIOSim());
+      turret = new Turret(false, new TurretIOSim());
     } else {
       shooter = new Shooter(false, new ShooterIOTalonFX());
       shooterPivot = new ShooterPivot(false, new ShooterPivotIOTalonFX());
+      turret = new Turret(false, new TurretIOSim());
     }
 
     shotCalculator = new ShotCalculator(drivetrain);
@@ -84,24 +89,25 @@ public class RobotContainer {
   }
 
   private void configureOperatorBinds() {
+
+    // Begin Tracking Target
     m_operatorController
-        .a()
+        .leftTrigger()
         .whileTrue(
             Commands.parallel(
-                    shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()),
-                    shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
-                    drivetrain.applyRequest(
-                        () ->
-                            new SwerveRequest.FieldCentricFacingAngle()
-                                .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
-                                .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
-                                .withTargetDirection(
-                                    Rotation2d.fromRadians(
-                                        shotCalculator.getCurrentEffectiveYaw()))))
+                    shooterPivot.setPosition(
+                        () -> shotCalculator.getCurrentPivotAngle().getRotations()),
+                    turret.trackTarget(shotCalculator, FieldConstants.Hub.topCenterPoint))
                 .withName("ShootOnTheMove"));
 
+    // Primary Fire
     m_operatorController
-        .b()
+        .rightTrigger()
+        .whileTrue(shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()));
+
+    // Alt Fire
+    m_operatorController
+        .rightBumper()
         .whileTrue(
             shooter.setVelocity(50.0) // replace w constant later
             );
@@ -111,6 +117,22 @@ public class RobotContainer {
         .whileTrue(
             shooterPivot.setPosition(Math.toRadians(45)) // replace w constant later
             );
+
+    // Field Relative Azimuth
+    m_operatorController
+        .povUp()
+        .onTrue(turret.setPositionFieldRelative(new Rotation2d(0), drivetrain));
+    m_operatorController
+        .povLeft()
+        .onTrue(turret.setPositionFieldRelative(new Rotation2d(Math.toRadians(90)), drivetrain));
+    m_operatorController
+        .povRight()
+        .onTrue(turret.setPositionFieldRelative(new Rotation2d(Math.toRadians(180)), drivetrain));
+    m_operatorController
+        .povDown()
+        .onTrue(turret.setPositionFieldRelative(new Rotation2d(Math.toRadians(270)), drivetrain));
+
+    m_operatorController.y().onTrue(turret.zero());
   }
 
   private void configureChoreoAutoChooser() {

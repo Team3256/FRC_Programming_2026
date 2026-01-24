@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.shooterpivot;
+package frc.robot.subsystems.shooter.turret;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -22,14 +22,19 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 
-public class ShooterPivotConstants {
-  public static final int pivotMotorId = 0;
+public class TurretConstants {
+  public static final int turretMotorId = 0;
 
   public static final boolean kUseFOC = false;
   public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
 
   public static double updateFrequency = 50;
+
+  // TODO: TUNE
+  public static final double trackingP = 0.0;
+  public static final double trackingI = 0.0;
+  public static final double trackingD = 0.0;
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
@@ -57,11 +62,11 @@ public class ShooterPivotConstants {
                   .withStatorCurrentLimit(80))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(27.32));
 
-  public static final class PivotSim {
-    public static final double pivotSimGearing = 0;
+  public static final class TurretSim {
+    public static final double turretSimGearing = 0.1;
 
-    public static final Distance shooterPivotLength = Inches.of(24);
-    public static final Mass shooterPivotMass = Kilograms.of(1);
+    public static final Distance turretLength = Inches.of(24);
+    public static final Mass turretMass = Kilograms.of(1);
     public static final double jkGMetersSquared = .5;
 
     public static final Rotation2d minAngle = Rotation2d.fromDegrees(45);
