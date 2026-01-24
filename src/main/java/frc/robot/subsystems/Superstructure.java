@@ -1,4 +1,4 @@
-// Copyright (c) 2026 FRC 3256
+// Copyright (c) 2025 FRC 3256
 // https://github.com/Team3256
 //
 // Use of this source code is governed by a 
@@ -7,27 +7,19 @@
 
 package frc.robot.subsystems;
 
-import choreo.util.ChoreoAllianceFlipUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.FieldConstants;
-import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intakepivot.IntakePivot;
-
 import frc.robot.subsystems.intakerollers.IntakeRollers;
-
 import frc.robot.subsystems.shooter.Shooter;
-
 import frc.robot.subsystems.shooterpivot.ShooterPivot;
 import frc.robot.utils.LoggedTracer;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -42,7 +34,6 @@ public class Superstructure {
     CLIMB,
     CANCEL_ALL,
   }
-
 
   private StructureState state = StructureState.IDLE;
   private StructureState prevState = StructureState.IDLE;
@@ -59,7 +50,7 @@ public class Superstructure {
   private final IntakeRollers intakeRollers;
   private final IntakePivot intakePivot;
   private final Climb climb;
-  private final Feeder feeder; 
+  private final Feeder feeder;
 
   private final Supplier<Pose2d> robotPoseSupplier;
 
@@ -71,7 +62,7 @@ public class Superstructure {
       IntakePivot intakePivot,
       Climb climb,
       Feeder feeder,
-    //  ShotCalculator shotCalculator;
+      //  ShotCalculator shotCalculator;
       Supplier<Pose2d> robotPoseSupplier) {
     this.indexer = indexer;
     this.shooterPivot = shooterPivot;
@@ -80,10 +71,10 @@ public class Superstructure {
     this.intakePivot = intakePivot;
     this.climb = climb;
     this.feeder = feeder;
-   // this.shotCalculator = shotCalculator; 
+    // this.shotCalculator = shotCalculator;
     this.robotPoseSupplier = robotPoseSupplier;
-  
-// intake --> indexer --> feeder --> shooter
+
+    // intake --> indexer --> feeder --> shooter
 
     stateTimer.start();
 
@@ -102,17 +93,14 @@ public class Superstructure {
 
     // shoot fuel, dk how shooterpivot will work
     stateTriggers.get(StructureState.SHOOT).onTrue(shooter.setVoltage(12));
-      
+
     // intake fuel with rollers, unsure how pivot will work yet....
     stateTriggers.get(StructureState.INTAKE).onTrue(intakeRollers.setVoltage(12));
 
     // climb
     stateTriggers.get(StructureState.CLIMB).onTrue(climb.setPosition(0.5));
 
-
-    stateTriggers.get(StructureState.IDLE)
-        .onTrue(intakeRollers.off())
-        .onTrue(shooter.off());
+    stateTriggers.get(StructureState.IDLE).onTrue(intakeRollers.off()).onTrue(shooter.off());
 
     // Kills all subsystems
     stateTriggers
@@ -129,7 +117,6 @@ public class Superstructure {
         .get(StructureState.HOME)
         .onTrue(intakePivot.setPosition(0))
         .onTrue(shooterPivot.setPosition(0));
-    
   }
 
   // call manually
@@ -157,5 +144,4 @@ public class Superstructure {
   public StructureState getPrevState() {
     return this.prevState;
   }
-
 }
