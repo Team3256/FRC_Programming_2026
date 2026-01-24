@@ -17,6 +17,7 @@ import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 public final class SwerveConstants {
   // LinearVelocity is a vector, so we need to get the magnitude
+  public static final double deadbandMultiplier = 0.15;
   public static final double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
   public static final double MaxAngularRate = 1.5 * Math.PI;
   public static final double SlowMaxSpeed = MaxSpeed * 0.3;
@@ -37,6 +38,9 @@ public final class SwerveConstants {
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY);
 
   public static final class AzimuthTargets {
+    public static final double aziKP = 6.0;
+    public static final double aziKi = 0.0;
+    public static final double aziKD = 0.0;
     public static final double timeout = 0.3;
     public static final Rotation2d forward = new Rotation2d(Math.toRadians(0));
     public static final Rotation2d left = new Rotation2d(Math.toRadians(90));
