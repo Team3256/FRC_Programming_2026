@@ -64,8 +64,8 @@ public class ShooterPivotConstants {
     public static final Mass shooterPivotMass = Kilograms.of(1);
     public static final double jkGMetersSquared = 1;
 
-    public static final Rotation2d minAngle = Rotation2d.fromDegrees(20);
-    public static final Rotation2d maxAngle = Rotation2d.fromDegrees(180);
+    public static final Rotation2d minAngle = Rotation2d.fromDegrees(0.0);
+    public static final Rotation2d maxAngle = Rotation2d.fromDegrees(45);
     public static final Rotation2d startingAngle = Rotation2d.fromDegrees(0);
   }
 }

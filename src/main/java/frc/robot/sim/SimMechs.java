@@ -51,7 +51,7 @@ private final MechanismRoot2d groundIntakeRoot =
           new MechanismLigament2d(
               "Intake Roller",
               Inches.of(2).in(Meters),
-              90.0,
+              0.0,
               3,
               new Color8Bit(Color.kRed)));
 
@@ -66,7 +66,7 @@ private final MechanismRoot2d shooterRoot =
           new MechanismLigament2d(
               "Shooter Pivot",
               Inches.of(10).in(Meters),
-              45.0,
+              0.0,
               7,
               new Color8Bit(Color.kGreen)));
 

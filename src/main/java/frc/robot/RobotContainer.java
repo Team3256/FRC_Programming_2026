@@ -103,21 +103,21 @@ public class RobotContainer {
   private void configureOperatorBinds() {
 
     
-  //  m_operatorController
-   //     .a()
-     //   .onTrue(shooter.setVoltage(12));  
+ m_operatorController
+       .x()
+      .onTrue(shooter.setVoltage(12));  
 
    m_operatorController
-        .a()
+        .y()
         .onTrue(shooterPivot.setVoltage(12));
 
     m_operatorController
-       .b()
+       .a()
        .onTrue(groundIntakePivot.setVoltage(12));
 
-   // m_operatorController
-     //   .b()
-     //   .onTrue(groundIntake.setVoltage(12));
+   m_operatorController
+      .b()
+       .onTrue(groundIntake.setVoltage(12));
   }
 
   private void configureChoreoAutoChooser() {
