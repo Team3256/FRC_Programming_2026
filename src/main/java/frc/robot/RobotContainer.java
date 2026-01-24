@@ -21,6 +21,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.sim.SimMechs;
+import frc.robot.subsystems.intakepivot.IntakePivot;
+import frc.robot.subsystems.intakepivot.IntakePivotIOSim;
+import frc.robot.subsystems.intakepivot.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intakerollers.IntakeRollers;
+import frc.robot.subsystems.intakerollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intakerollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
@@ -54,6 +60,8 @@ public class RobotContainer {
   private final Shooter shooter;
   private final ShooterPivot shooterPivot;
   private final ShotCalculator shotCalculator;
+  private final IntakePivot groundIntakePivot;
+  private final IntakeRollers groundIntake;
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -65,11 +73,20 @@ public class RobotContainer {
   public RobotContainer() {
     if (Utils.isSimulation()) {
       shooter = new Shooter(false, new ShooterIOSim());
-      shooterPivot = new ShooterPivot(false, new ShooterPivotIOSim());
+      shooterPivot = new ShooterPivot(true, new ShooterPivotIOSim());
     } else {
       shooter = new Shooter(false, new ShooterIOTalonFX());
-      shooterPivot = new ShooterPivot(false, new ShooterPivotIOTalonFX());
+      shooterPivot = new ShooterPivot(true, new ShooterPivotIOTalonFX());
+    } 
+
+    if (Utils.isSimulation()) {
+      groundIntakePivot = new IntakePivot(true, new IntakePivotIOSim());
+      groundIntake = new IntakeRollers(true, new IntakeRollersIOSim());
+    } else {
+      groundIntakePivot = new IntakePivot(true, new IntakePivotIOTalonFX());
+      groundIntake = new IntakeRollers(true, new IntakeRollersIOTalonFX());
     }
+    
 
     shotCalculator = new ShotCalculator(drivetrain);
 
@@ -84,33 +101,23 @@ public class RobotContainer {
   }
 
   private void configureOperatorBinds() {
-    m_operatorController
+
+    
+  //  m_operatorController
+   //     .a()
+     //   .onTrue(shooter.setVoltage(12));  
+
+   m_operatorController
         .a()
-        .whileTrue(
-            Commands.parallel(
-                    shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()),
-                    shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
-                    drivetrain.applyRequest(
-                        () ->
-                            new SwerveRequest.FieldCentricFacingAngle()
-                                .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
-                                .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
-                                .withTargetDirection(
-                                    Rotation2d.fromRadians(
-                                        shotCalculator.getCurrentEffectiveYaw()))))
-                .withName("ShootOnTheMove"));
+        .onTrue(shooterPivot.setVoltage(12));
 
     m_operatorController
-        .b()
-        .whileTrue(
-            shooter.setVelocity(50.0) // replace w constant later
-            );
+       .b()
+       .onTrue(groundIntakePivot.setVoltage(12));
 
-    m_operatorController
-        .x()
-        .whileTrue(
-            shooterPivot.setPosition(Math.toRadians(45)) // replace w constant later
-            );
+   // m_operatorController
+     //   .b()
+     //   .onTrue(groundIntake.setVoltage(12));
   }
 
   private void configureChoreoAutoChooser() {

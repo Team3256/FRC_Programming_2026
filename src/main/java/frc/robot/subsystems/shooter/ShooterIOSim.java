@@ -29,8 +29,8 @@ public class ShooterIOSim extends ShooterIOTalonFX {
   private final LinearSystem<N1, N1, N1> flywheelSystem =
       LinearSystemId.createFlywheelSystem(
           motor,
-          ShooterConstants.SimulationConstants.kLeftGearingRatio,
-          ShooterConstants.SimulationConstants.kLeftMomentOfInertia);
+          ShooterConstants.SimulationConstants.kLeftMomentOfInertia,
+          ShooterConstants.SimulationConstants.kLeftGearingRatio);
 
   private final FlywheelSim flywheelSim = new FlywheelSim(flywheelSystem, motor);
 
