@@ -134,16 +134,17 @@ public class RobotContainer {
     // Request to drive normally using input for both translation and rotation
     SwerveRequest.FieldCentric drive =
         new SwerveRequest.FieldCentric()
-            .withDeadband(0.15 * MaxSpeed)
-            .withRotationalRate(0.15 * MaxAngularRate);
+            .withDeadband(deadbandMultiplier * MaxSpeed)
+            .withRotationalRate(deadbandMultiplier * MaxAngularRate);
 
     // Request to control translation, with rotation being controlled by a heading controller
     SwerveRequest.FieldCentricFacingAngle azimuth =
-        new SwerveRequest.FieldCentricFacingAngle().withDeadband(0.15 * MaxSpeed);
+        new SwerveRequest.FieldCentricFacingAngle().withDeadband(deadbandMultiplier * MaxSpeed);
 
     // Heading controller to control azimuth rotations
     azimuth.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
-    azimuth.HeadingController.setPID(6, 0, 0);
+    azimuth.HeadingController.setPID(
+        AzimuthTargets.aziKP, AzimuthTargets.aziKi, AzimuthTargets.aziKD);
 
     // Default Swerve Command, run periodically every 20ms
     drivetrain.setDefaultCommand(
@@ -166,6 +167,51 @@ public class RobotContainer {
 
     // sets the heading to wherever the robot is facing
     m_driverController.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+    m_driverController
+        .povUp()
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(AzimuthTargets.forward))
+                .withTimeout(AzimuthTargets.timeout));
+    m_driverController
+        .povLeft()
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(AzimuthTargets.left))
+                .withTimeout(AzimuthTargets.timeout));
+    m_driverController
+        .povRight()
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(AzimuthTargets.right))
+                .withTimeout(AzimuthTargets.timeout));
+    m_driverController
+        .povDown()
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withTargetDirection(AzimuthTargets.back))
+                .withTimeout(AzimuthTargets.timeout));
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
