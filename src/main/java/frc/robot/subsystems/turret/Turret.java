@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.shooter.turret;
+package frc.robot.subsystems.turret;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,8 +21,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class Turret extends DisableSubsystem {
 
-  private final TurretIO TurretIO;
-  private final TurretIOInputsAutoLogged TurretIOInputsAutoLogged = new TurretIOInputsAutoLogged();
+  private final TurretIO turretIO;
+  private final TurretIOInputsAutoLogged turretIOInputsAutoLogged = new TurretIOInputsAutoLogged();
 
   public final Trigger reachedPosition = new Trigger(this::reachedPosition);
 
@@ -37,17 +37,17 @@ public class Turret extends DisableSubsystem {
 
   private double reqPosition = 0.0;
 
-  public Turret(boolean enabled, TurretIO TurretIO) {
+  public Turret(boolean enabled, TurretIO turretIO) {
     super(enabled);
 
-    this.TurretIO = TurretIO;
+    this.turretIO = turretIO;
   }
 
   @Override
   public void periodic() {
     super.periodic();
-    TurretIO.updateInputs(TurretIOInputsAutoLogged);
-    Logger.processInputs("Turret", TurretIOInputsAutoLogged);
+    turretIO.updateInputs(turretIOInputsAutoLogged);
+    Logger.processInputs("Turret", turretIOInputsAutoLogged);
 
     Logger.recordOutput(this.getClass().getSimpleName() + "/reqPosition", reqPosition);
 
@@ -62,46 +62,46 @@ public class Turret extends DisableSubsystem {
     return this.run(
         () -> {
           reqPosition = position.get().getRotations();
-          TurretIO.setPosition(reqPosition);
+          turretIO.setPosition(reqPosition);
         });
   }
 
   public Command setPositionFieldRelative(Rotation2d position, CommandSwerveDrivetrain swerve) {
     return this.run(
         () ->
-            TurretIO.setPosition(
+            turretIO.setPosition(
                 position.minus(swerve.getState().Pose.getRotation()).getRotations()));
   }
 
   public double getPosition() {
-    return TurretIOInputsAutoLogged.turretMotorPosition;
+    return turretIOInputsAutoLogged.turretMotorPosition;
   }
 
   public Command setVoltage(double voltage) {
-    return this.run(() -> TurretIO.setVoltage(voltage));
+    return this.run(() -> turretIO.setVoltage(voltage));
   }
 
   public double getVoltage() {
-    return TurretIOInputsAutoLogged.turretMotorVoltage;
+    return turretIOInputsAutoLogged.turretMotorVoltage;
   }
 
   public Command trackTarget(ShotCalculator calc) {
     return run(
         () -> {
           pivotRotationController.calculate(
-              TurretIOInputsAutoLogged.turretMotorPosition, calc.getCurrentEffectiveYaw());
+              turretIOInputsAutoLogged.turretMotorPosition, calc.getCurrentEffectiveYaw());
         });
   }
 
   public Command zero() {
-    return this.runOnce(TurretIO::zero);
+    return this.runOnce(turretIO::zero);
   }
 
   public Command off() {
-    return this.runOnce(TurretIO::off).withName("off");
+    return this.runOnce(turretIO::off).withName("off");
   }
 
   public boolean reachedPosition() {
-    return Util.epsilonEquals(TurretIOInputsAutoLogged.turretMotorPosition, reqPosition, 0.01);
+    return Util.epsilonEquals(turretIOInputsAutoLogged.turretMotorPosition, reqPosition, 0.01);
   }
 }

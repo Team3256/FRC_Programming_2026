@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.shooter.shooterpivot;
+package frc.robot.subsystems.shooterpivot;
 
 import static edu.wpi.first.units.Units.*;
 

@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.shooter.turret;
+package frc.robot.subsystems.turret;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
