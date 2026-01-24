@@ -94,7 +94,7 @@ public class RobotContainer {
     // Fire
     m_operatorController
         .rightTrigger()
-        .whileTrue(shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()));
+        .whileTrue(shooter.setVelocity(shotCalculator::getCurrentShooterSpeed));
 
     m_operatorController.rightBumper().whileTrue(shooter.setVelocity(50.0));
 
