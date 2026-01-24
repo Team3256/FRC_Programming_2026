@@ -10,8 +10,6 @@ package frc.robot.sim;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Radian;
-import static edu.wpi.first.units.Units.Radians;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -26,16 +24,13 @@ import frc.robot.subsystems.intakepivot.IntakePivotConstants;
 public final class SimMechs {
 
   public final Mechanism2d mech =
-      new Mechanism2d(
-          Constants.SimulationConstants.kDrivebaseWidth.in(Meters),
-          1.0);
+      new Mechanism2d(Constants.SimulationConstants.kDrivebaseWidth.in(Meters), 1.0);
 
- 
-private final MechanismRoot2d groundIntakeRoot =
-    mech.getRoot(
-        "Ground Intake",
-        Constants.SimulationConstants.kDrivebaseWidth.in(Meters) / 2 - 0.15,
-        Inches.of(2).in(Meters));
+  private final MechanismRoot2d groundIntakeRoot =
+      mech.getRoot(
+          "Ground Intake",
+          Constants.SimulationConstants.kDrivebaseWidth.in(Meters) / 2 - 0.15,
+          Inches.of(2).in(Meters));
 
   private final MechanismLigament2d intakePivotViz =
       groundIntakeRoot.append(
@@ -49,36 +44,23 @@ private final MechanismRoot2d groundIntakeRoot =
   private final MechanismLigament2d groundIntakeRollerViz =
       intakePivotViz.append(
           new MechanismLigament2d(
-              "Intake Roller",
-              Inches.of(2).in(Meters),
-              0.0,
-              3,
-              new Color8Bit(Color.kRed)));
+              "Intake Roller", Inches.of(2).in(Meters), 0.0, 3, new Color8Bit(Color.kRed)));
 
-private final MechanismRoot2d shooterRoot =
-    mech.getRoot(
-        "Shooter",
-        Constants.SimulationConstants.kDrivebaseWidth.in(Meters) / 2 - 0.05,
-        Inches.of(14).in(Meters));
+  private final MechanismRoot2d shooterRoot =
+      mech.getRoot(
+          "Shooter",
+          Constants.SimulationConstants.kDrivebaseWidth.in(Meters) / 2 - 0.05,
+          Inches.of(14).in(Meters));
 
   private final MechanismLigament2d shooterPivotViz =
       shooterRoot.append(
           new MechanismLigament2d(
-              "Shooter Pivot",
-              Inches.of(10).in(Meters),
-              0.0,
-              7,
-              new Color8Bit(Color.kGreen)));
+              "Shooter Pivot", Inches.of(10).in(Meters), 0.0, 7, new Color8Bit(Color.kGreen)));
 
   private final MechanismLigament2d shooterWheelViz =
       shooterPivotViz.append(
           new MechanismLigament2d(
-              "Shooter Wheel",
-              Inches.of(4).in(Meters),
-              0.0,
-              4,
-              new Color8Bit(Color.kOrange)));
-
+              "Shooter Wheel", Inches.of(4).in(Meters), 0.0, 4, new Color8Bit(Color.kOrange)));
 
   private static SimMechs instance = null;
 
@@ -91,8 +73,6 @@ private final MechanismRoot2d shooterRoot =
     return instance;
   }
 
-
-
   public void updatePivot(Angle angle) {
     intakePivotViz.setAngle(angle.in(Degrees));
   }
@@ -103,12 +83,10 @@ private final MechanismRoot2d shooterRoot =
 
   public void updateShooterPivot(Angle angle) {
     shooterPivotViz.setAngle(angle.in(Degrees)); // flips direction
-}
-
+  }
 
   public void updateShooterWheel(Angle delta) {
-    shooterWheelViz.setAngle(
-        shooterWheelViz.getAngle() + delta.in(Degrees));
+    shooterWheelViz.setAngle(shooterWheelViz.getAngle() + delta.in(Degrees));
   }
 
   public void publishToNT() {

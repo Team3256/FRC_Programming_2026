@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.system.LinearSystem;
@@ -17,8 +19,6 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.robot.sim.SimMechs;
-import static edu.wpi.first.units.Units.Degrees;
-
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class ShooterIOSim extends ShooterIOTalonFX {
@@ -64,14 +64,12 @@ public class ShooterIOSim extends ShooterIOTalonFX {
         BatterySim.calculateDefaultBatteryLoadedVoltage(flywheelSim.getCurrentDrawAmps()));
     super.updateInputs(inputs);
 
-
- SimMechs.getInstance()
-    .updateShooterWheel(
-        Degrees.of(
-            motor1Rps
-            * 360
-            * LoggedRobot.defaultPeriodSecs
-            * ShooterConstants.SimulationConstants.kAngularVelocityScalar));
-
+    SimMechs.getInstance()
+        .updateShooterWheel(
+            Degrees.of(
+                motor1Rps
+                    * 360
+                    * LoggedRobot.defaultPeriodSecs
+                    * ShooterConstants.SimulationConstants.kAngularVelocityScalar));
   }
 }

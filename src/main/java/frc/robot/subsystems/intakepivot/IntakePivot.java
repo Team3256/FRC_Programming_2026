@@ -65,6 +65,7 @@ public class IntakePivot extends DisableSubsystem {
   public Command goToStow() {
     return this.setPosition(IntakePivotConstants.stowPosition);
   }
+
   public Command goToGroundIntake() {
     return this.setPosition(IntakePivotConstants.groundIntakePosition);
   }

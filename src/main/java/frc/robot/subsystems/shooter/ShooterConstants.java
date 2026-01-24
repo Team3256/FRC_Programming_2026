@@ -37,7 +37,8 @@ public final class ShooterConstants {
   // pid
   public static TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
-          .withSlot0(new Slot0Configs().withKS(0).withKV(1.2).withKA(0).withKP(8).withKI(0).withKD(0))
+          .withSlot0(
+              new Slot0Configs().withKS(0).withKV(1.2).withKA(0).withKP(8).withKI(0).withKD(0))
           // For regenerative braking
           // we need to make sure that the backcurrent is below the breaker limit
           // P = 2 gives us like 102 amps so that's good enough
@@ -56,9 +57,8 @@ public final class ShooterConstants {
               new TorqueCurrentConfigs()
                   .withPeakForwardTorqueCurrent(80)
                   .withPeakReverseTorqueCurrent(80))
-        .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1));
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1));
   public static TalonFXConfiguration followerMotorConfigs = motorConfigs;
-
 
   public static final class SimulationConstants {
     public static double kLeftGearingRatio = 1; // TODO: Update this value

@@ -13,10 +13,8 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
@@ -77,7 +75,7 @@ public class RobotContainer {
     } else {
       shooter = new Shooter(false, new ShooterIOTalonFX());
       shooterPivot = new ShooterPivot(true, new ShooterPivotIOTalonFX());
-    } 
+    }
 
     if (Utils.isSimulation()) {
       groundIntakePivot = new IntakePivot(true, new IntakePivotIOSim());
@@ -86,7 +84,6 @@ public class RobotContainer {
       groundIntakePivot = new IntakePivot(true, new IntakePivotIOTalonFX());
       groundIntake = new IntakeRollers(true, new IntakeRollersIOTalonFX());
     }
-    
 
     shotCalculator = new ShotCalculator(drivetrain);
 
@@ -102,22 +99,13 @@ public class RobotContainer {
 
   private void configureOperatorBinds() {
 
-    
- m_operatorController
-       .x()
-      .onTrue(shooter.setVoltage(12));  
+    m_operatorController.x().onTrue(shooter.setVoltage(12));
 
-   m_operatorController
-        .y()
-        .onTrue(shooterPivot.setVoltage(12));
+    m_operatorController.y().onTrue(shooterPivot.setVoltage(12));
 
-    m_operatorController
-       .a()
-       .onTrue(groundIntakePivot.setVoltage(12));
+    m_operatorController.a().onTrue(groundIntakePivot.setVoltage(12));
 
-   m_operatorController
-      .b()
-       .onTrue(groundIntake.setVoltage(12));
+    m_operatorController.b().onTrue(groundIntake.setVoltage(12));
   }
 
   private void configureChoreoAutoChooser() {

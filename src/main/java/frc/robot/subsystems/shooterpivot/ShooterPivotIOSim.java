@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.sim.SimMechs;
-
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class ShooterPivotIOSim extends ShooterPivotIOTalonFX {
