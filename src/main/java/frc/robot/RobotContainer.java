@@ -13,7 +13,6 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -116,7 +115,6 @@ public class RobotContainer {
         .whileTrue(
             shooterPivot.setPosition(Math.toRadians(45)) // replace w constant later
             );
-
 
     m_operatorController.y().onTrue(turret.zero());
   }

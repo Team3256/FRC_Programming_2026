@@ -10,7 +10,6 @@ package frc.robot.subsystems.turret;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.utils.DisableSubsystem;
@@ -24,15 +23,11 @@ public class Turret extends DisableSubsystem {
   private final TurretIO turretIO;
   private final TurretIOInputsAutoLogged turretIOInputsAutoLogged = new TurretIOInputsAutoLogged();
 
-
-  //    private final SimpleMotorFeedforward m_shooterFeedforward =
-  //            new SimpleMotorFeedforward(
-  //                    TurretConstants.kSVolts,
-  // TurretConstants.kVVoltSecondsPerRotation);
-
-
-
   private double reqPosition = 0.0;
+
+  private final PIDController turretRotationController =
+      new PIDController(
+          TurretConstants.trackingP, TurretConstants.trackingI, TurretConstants.trackingD);
 
   public Turret(boolean enabled, TurretIO turretIO) {
     super(enabled);
@@ -82,6 +77,13 @@ public class Turret extends DisableSubsystem {
     return turretIOInputsAutoLogged.turretMotorVoltage;
   }
 
+  public Command trackTarget(ShotCalculator calc) {
+    return run(
+        () -> {
+          turretRotationController.calculate(
+              turretIOInputsAutoLogged.turretMotorPosition, calc.getCurrentEffectiveYaw());
+        });
+  }
 
   public Command zero() {
     return this.runOnce(turretIO::zero);

@@ -18,9 +18,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.Mass;
 
 public class TurretConstants {
   public static final int turretMotorId = 30;
@@ -31,7 +28,9 @@ public class TurretConstants {
 
   public static double updateFrequency = 50;
 
-
+  public static final double trackingP = 0.0;
+  public static final double trackingI = 0.0;
+  public static final double trackingD = 0.0;
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
@@ -65,11 +64,10 @@ public class TurretConstants {
     public static double kMomentOfInertia = 0.01; // TODO: Update this value
     public static double kAngularVelocityScalar = 0.03;
 
-
-/*     public static final Distance turretLength = Inches.of(24);
+    /*     public static final Distance turretLength = Inches.of(24);
     public static final Mass turretMass = Kilograms.of(1);
     public static final double jkGMetersSquared = .5; */
-/* 
+    /*
     public static final Rotation2d minAngle = Rotation2d.fromDegrees(45);
     public static final Rotation2d maxAngle = Rotation2d.fromDegrees(180);
     public static final Rotation2d startingAngle = Rotation2d.fromDegrees(150); */
