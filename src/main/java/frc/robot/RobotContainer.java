@@ -15,6 +15,7 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
@@ -60,9 +61,9 @@ public class RobotContainer {
   private final Shooter shooter;
   private final ShooterPivot shooterPivot;
   private final Turret turret;
-  private final ShotCalculator shotCalculator;
   private final IntakePivot groundIntakePivot;
   private final IntakeRollers groundIntake;
+  private final ShotCalculator shotCalculator;
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -75,21 +76,15 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
       shooter = new Shooter(false, new ShooterIOSim());
       shooterPivot = new ShooterPivot(true, new ShooterPivotIOSim());
-      shooterPivot = new ShooterPivot(false, new ShooterPivotIOSim());
-      turret = new Turret(false, new TurretIOSim());
-    } else {
-      shooter = new Shooter(false, new ShooterIOTalonFX());
-      shooterPivot = new ShooterPivot(true, new ShooterPivotIOTalonFX());
-    }
-
-    if (Utils.isSimulation()) {
+      turret = new Turret(true, new TurretIOSim());
       groundIntakePivot = new IntakePivot(true, new IntakePivotIOSim());
       groundIntake = new IntakeRollers(true, new IntakeRollersIOSim());
     } else {
+      shooter = new Shooter(false, new ShooterIOTalonFX());
+      shooterPivot = new ShooterPivot(true, new ShooterPivotIOTalonFX());
+      turret = new Turret(true, new TurretIOSim());
       groundIntakePivot = new IntakePivot(true, new IntakePivotIOTalonFX());
       groundIntake = new IntakeRollers(true, new IntakeRollersIOTalonFX());
-      shooterPivot = new ShooterPivot(false, new ShooterPivotIOTalonFX());
-      turret = new Turret(false, new TurretIOSim());
     }
 
     shotCalculator = new ShotCalculator(drivetrain);
