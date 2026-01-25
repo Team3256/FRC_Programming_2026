@@ -15,11 +15,16 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.sim.SimMechs;
+import frc.robot.subsystems.intakepivot.IntakePivot;
+import frc.robot.subsystems.intakepivot.IntakePivotIOSim;
+import frc.robot.subsystems.intakepivot.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intakerollers.IntakeRollers;
+import frc.robot.subsystems.intakerollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intakerollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
@@ -56,6 +61,8 @@ public class RobotContainer {
   private final ShooterPivot shooterPivot;
   private final Turret turret;
   private final ShotCalculator shotCalculator;
+  private final IntakePivot groundIntakePivot;
+  private final IntakeRollers groundIntake;
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -67,10 +74,20 @@ public class RobotContainer {
   public RobotContainer() {
     if (Utils.isSimulation()) {
       shooter = new Shooter(false, new ShooterIOSim());
+      shooterPivot = new ShooterPivot(true, new ShooterPivotIOSim());
       shooterPivot = new ShooterPivot(false, new ShooterPivotIOSim());
       turret = new Turret(false, new TurretIOSim());
     } else {
       shooter = new Shooter(false, new ShooterIOTalonFX());
+      shooterPivot = new ShooterPivot(true, new ShooterPivotIOTalonFX());
+    }
+
+    if (Utils.isSimulation()) {
+      groundIntakePivot = new IntakePivot(true, new IntakePivotIOSim());
+      groundIntake = new IntakeRollers(true, new IntakeRollersIOSim());
+    } else {
+      groundIntakePivot = new IntakePivot(true, new IntakePivotIOTalonFX());
+      groundIntake = new IntakeRollers(true, new IntakeRollersIOTalonFX());
       shooterPivot = new ShooterPivot(false, new ShooterPivotIOTalonFX());
       turret = new Turret(false, new TurretIOSim());
     }
@@ -98,6 +115,8 @@ public class RobotContainer {
                     turret.trackTarget(shotCalculator))
                 .withName("ShootOnTheMove"));
 
+    m_operatorController.x().onTrue(shooter.setVoltage(12));
+
     // Primary Fire
     m_operatorController
         .rightTrigger()
@@ -109,6 +128,7 @@ public class RobotContainer {
         .whileTrue(
             shooter.setVelocity(50.0) // replace w constant later
             );
+    m_operatorController.y().onTrue(shooterPivot.setVoltage(12));
 
     m_operatorController
         .x()
@@ -117,6 +137,9 @@ public class RobotContainer {
             );
 
     m_operatorController.y().onTrue(turret.zero());
+    m_operatorController.a().onTrue(groundIntakePivot.setVoltage(12));
+
+    m_operatorController.b().onTrue(groundIntake.setVoltage(12));
   }
 
   private void configureChoreoAutoChooser() {
