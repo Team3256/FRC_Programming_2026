@@ -117,19 +117,6 @@ public class RobotContainer {
             shooterPivot.setPosition(Math.toRadians(45)) // replace w constant later
             );
 
-    // Field Relative Azimuth
-    m_operatorController
-        .povUp()
-        .onTrue(turret.setPositionFieldRelative(new Rotation2d(0), drivetrain));
-    m_operatorController
-        .povLeft()
-        .onTrue(turret.setPositionFieldRelative(new Rotation2d(Math.toRadians(90)), drivetrain));
-    m_operatorController
-        .povRight()
-        .onTrue(turret.setPositionFieldRelative(new Rotation2d(Math.toRadians(180)), drivetrain));
-    m_operatorController
-        .povDown()
-        .onTrue(turret.setPositionFieldRelative(new Rotation2d(Math.toRadians(270)), drivetrain));
 
     m_operatorController.y().onTrue(turret.zero());
   }

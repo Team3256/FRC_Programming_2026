@@ -24,16 +24,13 @@ public class Turret extends DisableSubsystem {
   private final TurretIO turretIO;
   private final TurretIOInputsAutoLogged turretIOInputsAutoLogged = new TurretIOInputsAutoLogged();
 
-  public final Trigger reachedPosition = new Trigger(this::reachedPosition);
 
   //    private final SimpleMotorFeedforward m_shooterFeedforward =
   //            new SimpleMotorFeedforward(
   //                    TurretConstants.kSVolts,
   // TurretConstants.kVVoltSecondsPerRotation);
 
-  private final PIDController pivotRotationController =
-      new PIDController(
-          TurretConstants.trackingP, TurretConstants.trackingI, TurretConstants.trackingD);
+
 
   private double reqPosition = 0.0;
 
@@ -85,13 +82,6 @@ public class Turret extends DisableSubsystem {
     return turretIOInputsAutoLogged.turretMotorVoltage;
   }
 
-  public Command trackTarget(ShotCalculator calc) {
-    return run(
-        () -> {
-          pivotRotationController.calculate(
-              turretIOInputsAutoLogged.turretMotorPosition, calc.getCurrentEffectiveYaw());
-        });
-  }
 
   public Command zero() {
     return this.runOnce(turretIO::zero);
