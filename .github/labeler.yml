@@ -39,6 +39,9 @@
 'component: Swerve':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/swerve/**
+'component: Turret':
+  - changed-files:
+      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/turret/**
 'component: Vision':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/vision/**
