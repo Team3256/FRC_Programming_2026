@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems.turret;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -53,7 +54,7 @@ public class Turret extends DisableSubsystem {
     return this.run(() -> turretIO.setVoltage(voltage));
   }
 
-  public Command trackTarget(Translation3d target) {
+  public Command trackTarget(Pose2d target) {
     return this.runOnce(
         () -> {
           reqPosition = new Rotation2d(Math.atan2(target.getY(), target.getX())).getRotations();
