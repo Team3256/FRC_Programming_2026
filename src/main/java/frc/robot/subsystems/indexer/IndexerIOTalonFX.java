@@ -20,7 +20,8 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.utils.PhoenixUtil;
 
 public class IndexerIOTalonFX implements IndexerIO {
-  private final TalonFX indexMotor = new TalonFX(IndexerConstants.kIndexerMotorID, new CANBus("Gordito"));
+  private final TalonFX indexMotor =
+      new TalonFX(IndexerConstants.kIndexerMotorID, new CANBus("Gordito"));
   final VelocityVoltage velReq = new VelocityVoltage(0).withSlot(0);
 
   private final StatusSignal<Voltage> indexerMotorVoltage = indexMotor.getMotorVoltage();
