@@ -8,6 +8,8 @@
 package frc.robot.subsystems.turret;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.utils.DisableSubsystem;
@@ -51,11 +53,10 @@ public class Turret extends DisableSubsystem {
     return this.run(() -> turretIO.setVoltage(voltage));
   }
 
-  public Command trackTarget(ShotCalculator calc, double targetSpeed, Pose3d target) {
-    calc.setTarget(target, targetSpeed);
-    return this.run(
+  public Command trackTarget(Translation3d target) {
+    return this.runOnce(
         () -> {
-          reqPosition = calc.getCurrentEffectiveYaw();
+          reqPosition = new Rotation2d(Math.atan2(target.getY(), target.getX())).getRotations();
           this.setPosition(reqPosition);
         });
   }
