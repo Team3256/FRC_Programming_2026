@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems.turret;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
@@ -47,6 +48,13 @@ public class Turret extends DisableSubsystem {
 
   public Command setVoltage(double voltage) {
     return this.run(() -> turretIO.setVoltage(voltage));
+  }
+
+  public Command turnToPose(Pose2d pose) {
+    return run(
+        () -> {
+          this.setPosition(pose.getRotation().getRotations());
+        });
   }
 
   public Command zero() {
