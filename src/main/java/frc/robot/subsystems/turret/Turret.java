@@ -10,6 +10,7 @@ package frc.robot.subsystems.turret;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
 import frc.robot.utils.Util;
@@ -51,10 +52,13 @@ public class Turret extends DisableSubsystem {
     return this.run(() -> turretIO.setVoltage(voltage));
   }
 
-  public Command trackTarget(Pose2d target) {
+  public Command turnToPose(CommandSwerveDrivetrain drivetrain, Pose2d target) {
     return this.runOnce(
         () -> {
-          reqPosition = new Rotation2d(Math.atan2(target.getY(), target.getX())).getRotations();
+          reqPosition =
+              new Rotation2d(Math.atan2(target.getY(), target.getX()))
+                  .minus(drivetrain.getState().Pose.getRotation())
+                  .getRotations();
           this.setPosition(reqPosition);
         });
   }
