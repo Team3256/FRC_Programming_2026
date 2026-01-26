@@ -53,7 +53,7 @@ public class Turret extends DisableSubsystem {
   }
 
   public Command turnToPose(CommandSwerveDrivetrain drivetrain, Pose2d target) {
-    return this.runOnce(
+    return this.run(
         () -> {
           reqPosition =
               new Rotation2d(Math.atan2(target.getY(), target.getX()))
