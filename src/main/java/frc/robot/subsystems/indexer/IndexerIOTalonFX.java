@@ -8,6 +8,7 @@
 package frc.robot.subsystems.indexer;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -19,7 +20,7 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.utils.PhoenixUtil;
 
 public class IndexerIOTalonFX implements IndexerIO {
-  private final TalonFX indexMotor = new TalonFX(IndexerConstants.kIndexerMotorID);
+  private final TalonFX indexMotor = new TalonFX(IndexerConstants.kIndexerMotorID, new CANBus("Gordito"));
   final VelocityVoltage velReq = new VelocityVoltage(0).withSlot(0);
 
   private final StatusSignal<Voltage> indexerMotorVoltage = indexMotor.getMotorVoltage();
