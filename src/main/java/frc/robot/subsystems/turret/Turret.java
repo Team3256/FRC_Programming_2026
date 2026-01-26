@@ -51,7 +51,7 @@ public class Turret extends DisableSubsystem {
     return this.run(() -> turretIO.setVoltage(voltage));
   }
 
-  public Command trackTarget(ShotCalculator calc, Pose3d target, double targetSpeed) {
+  public Command trackTarget(ShotCalculator calc, double targetSpeed, Pose3d target) {
     calc.setTarget(target, targetSpeed);
     return this.run(
         () -> {
