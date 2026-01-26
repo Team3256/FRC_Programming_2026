@@ -32,17 +32,6 @@ public class TurretIOSim extends TurretIOTalonFX {
   private final FlywheelSim turretSimModel =
       new FlywheelSim(flywheelSystem, DCMotor.getKrakenX60(1));
 
-  /*  private final SingleJointedArmSim turretSimModel =
-       new SingleJointedArmSim(
-           DCMotor.getKrakenX60(1),
-           TurretConstants.TurretSim.turretSimGearing,
-           TurretConstants.TurretSim.jkGMetersSquared,
-           TurretConstants.TurretSim.turretLength.in(Meters),
-           TurretConstants.TurretSim.minAngle.getRadians(),
-           TurretConstants.TurretSim.maxAngle.getRadians(),
-           true,
-           TurretConstants.TurretSim.startingAngle.getRadians());
-  */
   private TalonFXSimState turretSimState;
 
   public TurretIOSim() {
