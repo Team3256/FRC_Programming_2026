@@ -15,7 +15,6 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
@@ -99,43 +98,7 @@ public class RobotContainer {
     }
   }
 
-  private void configureOperatorBinds() {
-
-    // Begin Tracking Hub
-    m_operatorController
-        .leftTrigger()
-        .whileTrue(
-            Commands.parallel(
-                    shooterPivot.setPosition(() -> shotCalculator.getCurrentPivotAngle()),
-                    turret.trackTarget(shotCalculator))
-                .withName("ShootOnTheMove"));
-
-    m_operatorController.x().onTrue(shooter.setVoltage(12));
-
-    // Primary Fire
-    m_operatorController
-        .rightTrigger()
-        .whileTrue(shooter.setVelocity(() -> shotCalculator.getCurrentShooterSpeed()));
-
-    // Alt Fire
-    m_operatorController
-        .rightBumper()
-        .whileTrue(
-            shooter.setVelocity(50.0) // replace w constant later
-            );
-    m_operatorController.y().onTrue(shooterPivot.setVoltage(12));
-
-    m_operatorController
-        .x()
-        .whileTrue(
-            shooterPivot.setPosition(Math.toRadians(45)) // replace w constant later
-            );
-
-    m_operatorController.y().onTrue(turret.zero());
-    m_operatorController.a().onTrue(groundIntakePivot.setVoltage(12));
-
-    m_operatorController.b().onTrue(groundIntake.setVoltage(12));
-  }
+  private void configureOperatorBinds() {}
 
   private void configureChoreoAutoChooser() {
 

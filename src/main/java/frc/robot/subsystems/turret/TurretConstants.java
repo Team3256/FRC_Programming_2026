@@ -28,10 +28,6 @@ public class TurretConstants {
 
   public static double updateFrequency = 50;
 
-  public static final double trackingP = 0.0;
-  public static final double trackingI = 0.0;
-  public static final double trackingD = 0.0;
-
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
           .withSlot0(
@@ -63,13 +59,5 @@ public class TurretConstants {
     public static double turretSimGearing = 1.0; // TODO: Update this value
     public static double kMomentOfInertia = 0.01; // TODO: Update this value
     public static double kAngularVelocityScalar = 0.03;
-
-    /*     public static final Distance turretLength = Inches.of(24);
-    public static final Mass turretMass = Kilograms.of(1);
-    public static final double jkGMetersSquared = .5; */
-    /*
-    public static final Rotation2d minAngle = Rotation2d.fromDegrees(45);
-    public static final Rotation2d maxAngle = Rotation2d.fromDegrees(180);
-    public static final Rotation2d startingAngle = Rotation2d.fromDegrees(150); */
   }
 }
