@@ -8,11 +8,8 @@
 package frc.robot.subsystems.turret;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
 import frc.robot.utils.Util;
