@@ -20,7 +20,8 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.utils.PhoenixUtil;
 
 public class ShooterIOTalonFX implements ShooterIO {
-  private final TalonFX shooterMotor = new TalonFX(ShooterConstants.shooterMain, new CANBus("Gordito"));
+  private final TalonFX shooterMotor =
+      new TalonFX(ShooterConstants.shooterMain, new CANBus("Gordito"));
   final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);
