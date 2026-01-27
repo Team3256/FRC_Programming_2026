@@ -46,7 +46,7 @@ public class TurretIOTalonFX implements TurretIO {
         turretMotorStatorCurrent);
 
     PhoenixUtil.registerSignals(
-        true,
+        false,
         turretMotorVoltage,
         turretMotorVelocity,
         turretMotorPosition,
