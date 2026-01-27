@@ -8,6 +8,7 @@
 package frc.robot.subsystems.turret;
 
 import static frc.robot.subsystems.turret.TurretConstants.turretOffset;
+import static frc.robot.subsystems.turret.TurretConstants.turretToDrivebase;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -58,8 +59,8 @@ public class Turret extends DisableSubsystem {
 
   public Rotation2d getAbsAngle(CommandSwerveDrivetrain swerve, Supplier<Pose2d> targetPose) {
     return new Rotation2d(
-            (swerve.getState().Pose.getX() - targetPose.get().getX()),
-            (swerve.getState().Pose.getY() - targetPose.get().getY()))
+            (swerve.getState().Pose.transformBy(turretToDrivebase).getX() - targetPose.get().getX()),
+            (swerve.getState().Pose.transformBy(turretToDrivebase).getY() - targetPose.get().getY()))
         .minus(swerve.getState().Pose.getRotation())
         .plus(new Rotation2d(turretOffset));
   }
