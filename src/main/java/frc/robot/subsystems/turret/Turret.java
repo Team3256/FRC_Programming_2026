@@ -64,7 +64,7 @@ public class Turret extends DisableSubsystem {
             (swerve.getState().Pose.transformBy(turretToDrivebase).getY()
                 - targetPose.get().getY()))
         .minus(swerve.getState().Pose.getRotation())
-        .plus(new Rotation2d(turretOffset));
+        .plus(turretOffset);
   }
 
   public Command setPositionFieldRelative(
