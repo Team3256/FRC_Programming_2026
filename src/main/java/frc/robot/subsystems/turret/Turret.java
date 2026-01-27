@@ -69,7 +69,8 @@ public class Turret extends DisableSubsystem {
 
   public Command setPositionFieldRelative(
       CommandSwerveDrivetrain swerve, Supplier<Pose2d> targetPose) {
-    return run(() -> this.setPosition(getAbsAngle(swerve, targetPose).getRotations()));}
+    return run(() -> this.setPosition(getAbsAngle(swerve, targetPose).getRotations()));
+  }
 
   public Command zero() {
     return this.runOnce(turretIO::zero);
