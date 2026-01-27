@@ -19,6 +19,9 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import frc.robot.sim.SimMechs;
+import frc.robot.subsystems.shooter.ShooterConstants;
+
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class TurretIOSim extends TurretIOTalonFX {
@@ -59,13 +62,12 @@ public class TurretIOSim extends TurretIOTalonFX {
 
     super.updateInputs(inputs);
 
-    // I WILL UPDATE THIS IN SIM BRANCH WHEN MAKING TURRET SIM - otherwise build error
-    /*  SimMechs.getInstance()
-    .updateShooterWheel(
-        Degrees.of(
-            motor1Rps
-                * 360
-                * LoggedRobot.defaultPeriodSecs
-                * ShooterConstants.SimulationConstants.kAngularVelocityScalar)); */
+    SimMechs.getInstance()
+        .updateTurret(
+            Degrees.of(
+                motor1Rps
+                    * 360
+                    * LoggedRobot.defaultPeriodSecs
+                    * TurretConstants.SimulationConstants.kAngularVelocityScalar));
   }
 }
