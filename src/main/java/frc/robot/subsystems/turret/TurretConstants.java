@@ -28,6 +28,8 @@ public class TurretConstants {
 
   public static double updateFrequency = 50;
 
+  public static final double turretOffset = Math.toRadians(0.0);
+
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
           .withSlot0(
