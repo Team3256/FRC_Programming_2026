@@ -19,19 +19,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.sim.SimMechs;
-import frc.robot.subsystems.intakepivot.IntakePivot;
-import frc.robot.subsystems.intakepivot.IntakePivotIOSim;
-import frc.robot.subsystems.intakepivot.IntakePivotIOTalonFX;
-import frc.robot.subsystems.intakerollers.IntakeRollers;
-import frc.robot.subsystems.intakerollers.IntakeRollersIOSim;
-import frc.robot.subsystems.intakerollers.IntakeRollersIOTalonFX;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.indexer.IndexerIOSim;
+import frc.robot.subsystems.indexer.IndexerIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
-import frc.robot.subsystems.shooterpivot.ShooterPivot;
-import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
-import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
-import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 
@@ -55,11 +48,11 @@ public class RobotContainer {
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  private final Shooter shooter;
-  private final ShooterPivot shooterPivot;
-  private final ShotCalculator shotCalculator;
-  private final IntakePivot groundIntakePivot;
-  private final IntakeRollers groundIntake;
+  private final Shooter shooter =
+      new Shooter(true, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
+
+  private final Indexer indexer =
+      new Indexer(true, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -69,23 +62,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    if (Utils.isSimulation()) {
-      shooter = new Shooter(false, new ShooterIOSim());
-      shooterPivot = new ShooterPivot(true, new ShooterPivotIOSim());
-    } else {
-      shooter = new Shooter(false, new ShooterIOTalonFX());
-      shooterPivot = new ShooterPivot(true, new ShooterPivotIOTalonFX());
-    }
-
-    if (Utils.isSimulation()) {
-      groundIntakePivot = new IntakePivot(true, new IntakePivotIOSim());
-      groundIntake = new IntakeRollers(true, new IntakeRollersIOSim());
-    } else {
-      groundIntakePivot = new IntakePivot(true, new IntakePivotIOTalonFX());
-      groundIntake = new IntakeRollers(true, new IntakeRollersIOTalonFX());
-    }
-
-    shotCalculator = new ShotCalculator(drivetrain);
 
     // Configure the trigger bindings
     configureOperatorBinds();
@@ -99,13 +75,8 @@ public class RobotContainer {
 
   private void configureOperatorBinds() {
 
-    m_operatorController.x().onTrue(shooter.setVoltage(12));
-
-    m_operatorController.y().onTrue(shooterPivot.setVoltage(12));
-
-    m_operatorController.a().onTrue(groundIntakePivot.setVoltage(12));
-
-    m_operatorController.b().onTrue(groundIntake.setVoltage(12));
+    m_operatorController.a().whileTrue(shooter.setVoltage(12));
+    m_operatorController.b().whileTrue(indexer.setVoltage(12));
   }
 
   private void configureChoreoAutoChooser() {
