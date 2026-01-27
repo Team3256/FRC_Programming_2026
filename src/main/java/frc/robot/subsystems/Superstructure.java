@@ -127,9 +127,7 @@ public class Superstructure {
         .onTrue(intakePivot.setPosition(0))
         .onTrue(shooterPivot.setPosition(0));
 
-    stateTriggers
-        .get(StructureState.REV)
-        .onTrue(shooter.setVelocity(12));
+    stateTriggers.get(StructureState.REV).onTrue(shooter.setVelocity(12));
   }
 
   // call manually
