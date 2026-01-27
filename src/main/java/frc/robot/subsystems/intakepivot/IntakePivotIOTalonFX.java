@@ -46,7 +46,7 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
         supplyCurrent);
 
     PhoenixUtil.registerSignals(
-        true, motorVoltage, velocity, position, statorCurrent, supplyCurrent);
+        false, motorVoltage, velocity, position, statorCurrent, supplyCurrent);
   }
 
   @Override

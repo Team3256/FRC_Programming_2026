@@ -83,7 +83,7 @@ public class RobotContainer {
 
     m_operatorController.a().whileTrue(shooter.setVoltage(12));
     m_operatorController.b().whileTrue(indexer.setVoltage(12));
-    m_operatorController.x().whileTrue(turret.setVoltage(12));
+    m_operatorController.x().onTrue(turret.setPosition(.25));
   }
 
   private void configureChoreoAutoChooser() {

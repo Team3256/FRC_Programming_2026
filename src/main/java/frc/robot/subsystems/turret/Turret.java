@@ -45,6 +45,9 @@ public class Turret extends DisableSubsystem {
         });
   }
 
+
+  // takes in rot2
+
   public Command setVoltage(double voltage) {
     return this.run(() -> turretIO.setVoltage(voltage));
   }

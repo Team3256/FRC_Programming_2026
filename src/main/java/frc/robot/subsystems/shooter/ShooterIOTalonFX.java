@@ -71,7 +71,7 @@ public class ShooterIOTalonFX implements ShooterIO {
         shooterMotorFollowerSupplyCurrent,
         shooterMotorFollowerTemperature);
     PhoenixUtil.registerSignals(
-        false,
+        true,
         shooterMotorVoltage,
         shooterMotorVelocity,
         shooterMotorStatorCurrent,

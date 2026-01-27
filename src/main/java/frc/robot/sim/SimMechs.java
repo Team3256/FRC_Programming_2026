@@ -95,7 +95,7 @@ public final class SimMechs {
   }
 
   public void updateTurret(Angle x) {
-    turretViz.setAngle(turretViz.getAngle() + x.in(Degrees));
+    turretViz.setAngle(x.in(Degrees));
   }
 
   public void updateShooterPivot(Angle angle) {
