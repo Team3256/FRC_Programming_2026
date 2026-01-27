@@ -52,7 +52,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         shooterPivotMotorStatorCurrent);
 
     PhoenixUtil.registerSignals(
-        true,
+        false,
         shooterPivotMotorVoltage,
         shooterPivotMotorVelocity,
         shooterPivotMotorPosition,

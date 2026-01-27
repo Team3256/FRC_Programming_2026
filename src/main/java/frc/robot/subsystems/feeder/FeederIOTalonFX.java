@@ -40,7 +40,7 @@ public class FeederIOTalonFX implements FeederIO {
         feederMotorSupplyCurrent,
         feederMotorTemperature);
     PhoenixUtil.registerSignals(
-        true,
+        false,
         feederMotorVoltage,
         feederMotorVelocity,
         feederMotorSupplyCurrent,

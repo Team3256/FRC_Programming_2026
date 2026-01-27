@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import frc.robot.sim.SimMechs;
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class TurretIOSim extends TurretIOTalonFX {
@@ -32,7 +33,7 @@ public class TurretIOSim extends TurretIOTalonFX {
   private final FlywheelSim turretSimModel =
       new FlywheelSim(flywheelSystem, DCMotor.getKrakenX60(1));
 
-  private TalonFXSimState turretSimState;
+  private final TalonFXSimState turretSimState;
 
   public TurretIOSim() {
     super();
@@ -41,15 +42,16 @@ public class TurretIOSim extends TurretIOTalonFX {
   }
 
   @Override
-  public void updateInputs(TurretIO.TurretIOInputs inputs) {
+  public void updateInputs(TurretIOInputs inputs) {
 
     // Update battery voltage
     turretSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
     // Update physics models
     turretSimModel.setInput(turretSimState.getMotorVoltage());
+
     turretSimModel.update(LoggedRobot.defaultPeriodSecs);
 
-    double motor1Rps = turretSimModel.getAngularVelocityRPM() / 60;
+    double motor1Rps = turretSimModel.getAngularVelocityRPM() / 60 * TurretConstants.SimulationConstants.turretSimGearing;
     turretSimState.setRotorVelocity(motor1Rps);
     turretSimState.addRotorPosition(motor1Rps * LoggedRobot.defaultPeriodSecs);
 
@@ -59,13 +61,9 @@ public class TurretIOSim extends TurretIOTalonFX {
 
     super.updateInputs(inputs);
 
-    // I WILL UPDATE THIS IN SIM BRANCH WHEN MAKING TURRET SIM - otherwise build error
-    /*  SimMechs.getInstance()
-    .updateShooterWheel(
-        Degrees.of(
-            motor1Rps
-                * 360
-                * LoggedRobot.defaultPeriodSecs
-                * ShooterConstants.SimulationConstants.kAngularVelocityScalar)); */
+    SimMechs.getInstance()
+        .updateTurret(
+            Rotations.of(
+                inputs.turretMotorPosition));
   }
 }

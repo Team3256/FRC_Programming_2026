@@ -62,7 +62,20 @@ public final class SimMechs {
           new MechanismLigament2d(
               "Shooter Wheel", Inches.of(4).in(Meters), 0.0, 4, new Color8Bit(Color.kOrange)));
 
+  public final Mechanism2d turretMech =
+      new Mechanism2d(Constants.SimulationConstants.kDrivebaseWidth.in(Meters), 1.0);
   private static SimMechs instance = null;
+
+  private final MechanismRoot2d turretRoot =
+      mech.getRoot(
+          "Turret",
+          Constants.SimulationConstants.kDrivebaseWidth.in(Meters) / 2 - 0.15,
+          Inches.of(7).in(Meters));
+
+  private final MechanismLigament2d turretViz =
+      turretRoot.append(
+          new MechanismLigament2d(
+              "Turret", Inches.of(3).in(Meters), 0.0, 5, new Color8Bit(Color.kPink)));
 
   private SimMechs() {}
 
@@ -79,6 +92,10 @@ public final class SimMechs {
 
   public void updateRollers(Angle x) {
     groundIntakeRollerViz.setAngle(groundIntakeRollerViz.getAngle() + x.in(Degrees));
+  }
+
+  public void updateTurret(Angle x) {
+    turretViz.setAngle(x.in(Degrees));
   }
 
   public void updateShooterPivot(Angle angle) {

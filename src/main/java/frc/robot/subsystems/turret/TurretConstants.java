@@ -22,9 +22,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 
 public class TurretConstants {
-  public static final int turretMotorId = 30;
+  public static final int turretMotorId = 51;
 
-  public static final boolean kUseFOC = false;
+  public static final boolean kUseFOC = true;
   public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
 
@@ -40,12 +40,11 @@ public class TurretConstants {
               new Slot0Configs()
                   .withKS(0)
                   .withKV(0)
-                  .withKP(0)
+                  .withKP(2)
                   .withKI(0)
                   .withKD(0)
                   .withKA(0)
-                  .withKG(0)
-                  .withGravityType(GravityTypeValue.Arm_Cosine))
+                  .withKG(0))
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)
@@ -58,12 +57,12 @@ public class TurretConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(80))
-          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(27.32));
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1));
 
   public static final class SimulationConstants {
 
     public static double turretSimGearing = 1.0; // TODO: Update this value
-    public static double kMomentOfInertia = 0.01; // TODO: Update this value
+    public static double kMomentOfInertia = 0.0001; // TODO: Update this value
     public static double kAngularVelocityScalar = 0.03;
   }
 }

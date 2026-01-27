@@ -19,6 +19,7 @@ import frc.robot.subsystems.intakepivot.IntakePivot;
 import frc.robot.subsystems.intakerollers.IntakeRollers;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooterpivot.ShooterPivot;
+import frc.robot.subsystems.turret.Turret;
 import frc.robot.utils.LoggedTracer;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class Superstructure {
     IDLE,
     CLIMB,
     CANCEL_ALL,
+    REV,
   }
 
   private StructureState state = StructureState.IDLE;
@@ -51,6 +53,7 @@ public class Superstructure {
   private final IntakePivot intakePivot;
   private final Climb climb;
   private final Feeder feeder;
+  private final Turret turret;
 
   private final Supplier<Pose2d> robotPoseSupplier;
 
@@ -62,6 +65,7 @@ public class Superstructure {
       IntakePivot intakePivot,
       Climb climb,
       Feeder feeder,
+      Turret turret,
       //  ShotCalculator shotCalculator;
       Supplier<Pose2d> robotPoseSupplier) {
     this.indexer = indexer;
@@ -71,6 +75,7 @@ public class Superstructure {
     this.intakePivot = intakePivot;
     this.climb = climb;
     this.feeder = feeder;
+    this.turret = turret;
     // this.shotCalculator = shotCalculator;
     this.robotPoseSupplier = robotPoseSupplier;
 
@@ -121,6 +126,8 @@ public class Superstructure {
         .get(StructureState.HOME)
         .onTrue(intakePivot.setPosition(0))
         .onTrue(shooterPivot.setPosition(0));
+
+    stateTriggers.get(StructureState.REV).onTrue(shooter.setVelocity(12));
   }
 
   // call manually
