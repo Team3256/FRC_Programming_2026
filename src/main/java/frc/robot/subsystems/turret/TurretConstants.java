@@ -34,7 +34,7 @@ public class TurretConstants {
               new Slot0Configs()
                   .withKS(0)
                   .withKV(0)
-                  .withKP(0)
+                  .withKP(10)
                   .withKI(0)
                   .withKD(0)
                   .withKA(0)
@@ -56,7 +56,7 @@ public class TurretConstants {
 
   public static final class SimulationConstants {
 
-    public static double turretSimGearing = 1.0; // TODO: Update this value
+    public static double turretSimGearing = 67.0; // TODO: Update this value
     public static double kMomentOfInertia = 0.01; // TODO: Update this value
     public static double kAngularVelocityScalar = 0.03;
   }
