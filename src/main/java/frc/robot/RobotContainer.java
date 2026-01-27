@@ -28,7 +28,6 @@ import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.turret.Turret;
-import frc.robot.subsystems.turret.TurretIO;
 import frc.robot.subsystems.turret.TurretIOSim;
 import frc.robot.subsystems.turret.TurretIOTalonFX;
 
@@ -84,6 +83,7 @@ public class RobotContainer {
 
     m_operatorController.a().whileTrue(shooter.setVoltage(12));
     m_operatorController.b().whileTrue(indexer.setVoltage(12));
+    m_operatorController.x().whileTrue(turret.setPosition(0.25));
   }
 
   private void configureChoreoAutoChooser() {

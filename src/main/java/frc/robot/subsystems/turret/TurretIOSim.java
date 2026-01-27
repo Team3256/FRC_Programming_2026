@@ -20,8 +20,6 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.robot.sim.SimMechs;
-import frc.robot.subsystems.shooter.ShooterConstants;
-
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class TurretIOSim extends TurretIOTalonFX {
