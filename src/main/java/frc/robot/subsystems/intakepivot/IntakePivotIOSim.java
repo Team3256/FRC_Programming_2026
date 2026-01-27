@@ -15,7 +15,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.sim.SimMechs;
 
 public class IntakePivotIOSim extends IntakePivotIOTalonFX {
 
@@ -57,6 +56,5 @@ public class IntakePivotIOSim extends IntakePivotIOTalonFX {
     pivotSimState.setRotorVelocity(rotorVelRps);
 
     super.updateInputs(inputs);
-    SimMechs.getInstance().updatePivot(Radians.of(pivotSimModel.getAngleRads()));
   }
 }

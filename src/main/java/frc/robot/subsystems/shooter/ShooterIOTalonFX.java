@@ -8,7 +8,6 @@
 package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -20,8 +19,7 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.utils.PhoenixUtil;
 
 public class ShooterIOTalonFX implements ShooterIO {
-  private final TalonFX shooterMotor =
-      new TalonFX(ShooterConstants.shooterMain, new CANBus("Gordito"));
+  private final TalonFX shooterMotor = new TalonFX(ShooterConstants.shooterMain);
   final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);

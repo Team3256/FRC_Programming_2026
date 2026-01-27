@@ -12,7 +12,6 @@ import static frc.robot.subsystems.sotm.ShotCalculatorConstants.ROBOT_TO_SHOOTER
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.FieldConstants;
@@ -30,7 +29,7 @@ public class ShotCalculator extends SubsystemBase {
   private double currentEffectiveYaw;
   private InterceptSolution currentInterceptSolution;
 
-  private Pose3d targetLocation = new Pose3d(FieldConstants.Hub.topCenterPoint, Rotation3d.kZero);
+  private Pose3d targetLocation = new Pose3d(FieldConstants.Processor.centerFace);
   private double targetDistance = 0.0;
   private double targetSpeedRps = 8;
 

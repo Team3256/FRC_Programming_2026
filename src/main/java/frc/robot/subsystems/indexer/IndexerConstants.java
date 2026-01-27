@@ -20,7 +20,7 @@ public class IndexerConstants {
 
   public static final boolean kUseFOC = false;
 
-  public static final int kIndexerMotorID = 47; // TODO: FILL
+  public static final int kIndexerMotorID = 0; // TODO: FILL
 
   public static final double indexerVoltage = 0.0;
 

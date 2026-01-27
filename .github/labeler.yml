@@ -8,64 +8,40 @@
 'type: ci':
   - changed-files:
       - any-glob-to-any-file: .github/*
-'component: autos':
+'component: Autos':
   - changed-files:
       - any-glob-to-any-file: src/main/deploy/Choreo/**
       - any-glob-to-any-file: src/main/java/frc/robot/commands/**
-'component: drivers':
+'component: Drivers':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/drivers/**
-
-'subsystem: climb':
-  - changed-files:
-      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/climb/**
-
-'subsystem: intake':
+'component: Feeder':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/feeder/**
-      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/indexer/**
-      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/intakepivot/**
-      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/intakerollers/**
-'component: feeder':
-  - changed-files:
-      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/feeder/**
-'component: indexer':
+'component: Indexer':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/indexer/**
-'component: intake pivot':
+'component: Intake Pivot':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/intakepivot/**
-'component: intake rollers':
+'component: Intake Rollers':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/intakerollers/**
-
-'subsystem: shooter':
+'component: Shooter Pivot':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/shooterpivot/**
-      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/shooter/**
-      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/turret/**
-'component: shooter pivot':
-  - changed-files:
-      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/shooterpivot/**
-'component: shooter':
+'component: Shooter':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/shooter/**
-'component: turret':
-  - changed-files:
-      - any-glob-to-any-file: src/main/java/frc/robot/subsystems/turret/**
-
-'subsystem: swerve':
+'component: Swerve':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/swerve/**
-
-'component: vision':
+'component: Vision':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/vision/**
-
 'component: superstructure':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/subsystems/Superstructure.java
-
 'type: utils':
   - changed-files:
       - any-glob-to-any-file: src/main/java/frc/robot/utils/**

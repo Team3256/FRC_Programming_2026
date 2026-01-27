@@ -25,10 +25,8 @@ public final class Constants {
     public static final int kOperatorControllerPort = 1;
 
     public static class DriverConstants {
-      public static final double kDriverStickDeadband = 0.1;
-      public static final double kDriverRotationalDeadband = 0.12;
-      public static final double kOperatorLeftDeadband = 0.0;
-      public static final double kOperatorRightDeadband = 0.0;
+      public static final double kStickDeadband = 0.1;
+      public static final double kRotationalDeadband = 0.12;
     }
   }
 

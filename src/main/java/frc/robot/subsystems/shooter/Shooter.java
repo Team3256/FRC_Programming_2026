@@ -18,8 +18,8 @@ public class Shooter extends DisableSubsystem {
   private final ShooterIO shooterIO;
   private final ShooterIOInputsAutoLogged shooterIOAutoLogged = new ShooterIOInputsAutoLogged();
 
-  public Shooter(boolean enabled, ShooterIO shooterIO) {
-    super(enabled);
+  public Shooter(boolean disabled, ShooterIO shooterIO) {
+    super(disabled);
     this.shooterIO = shooterIO;
   }
 
