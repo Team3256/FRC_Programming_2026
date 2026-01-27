@@ -20,10 +20,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class TurretConstants {
-  public static final int turretMotorId = 45;
+  public static final int turretMotorId = 51;
 
   public static final boolean kUseFOC = true;
-  public static final boolean kUseMotionMagic = false;
+  public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
 
   public static double updateFrequency = 50;
@@ -34,12 +34,11 @@ public class TurretConstants {
               new Slot0Configs()
                   .withKS(0)
                   .withKV(0)
-                  .withKP(10)
+                  .withKP(2)
                   .withKI(0)
                   .withKD(0)
                   .withKA(0)
-                  .withKG(0)
-                  .withGravityType(GravityTypeValue.Arm_Cosine))
+                  .withKG(0))
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)

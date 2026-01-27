@@ -45,7 +45,7 @@ public class IntakeRollersIOTalonFX implements IntakeRollersIO {
         intakeRollerMotorSupplyCurrent,
         intakeRollerMotorTemperature);
     PhoenixUtil.registerSignals(
-        true,
+        false,
         intakeRollerMotorVoltage,
         intakeRollerMotorVelocity,
         intakeRollerMotorStatorCurrent,
