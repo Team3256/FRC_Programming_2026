@@ -18,6 +18,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Transform3d;
 
 public class TurretConstants {
   public static final int turretMotorId = 30;
@@ -29,6 +30,8 @@ public class TurretConstants {
   public static double updateFrequency = 50;
 
   public static final double turretOffset = Math.toRadians(0.0);
+
+  public static final Transform3d turretToDrivebase = new Transform3d();
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()

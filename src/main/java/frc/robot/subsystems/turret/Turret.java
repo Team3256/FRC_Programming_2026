@@ -11,7 +11,6 @@ import static frc.robot.subsystems.turret.TurretConstants.turretOffset;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.utils.DisableSubsystem;
@@ -44,6 +43,11 @@ public class Turret extends DisableSubsystem {
     LoggedTracer.record("Turret");
   }
 
+  public Command setVoltage(double voltage) {
+    return this.run(() -> turretIO.setVoltage(voltage));
+  }
+
+  // Base
   public Command setPosition(double position) {
     return this.run(
         () -> {
@@ -52,19 +56,18 @@ public class Turret extends DisableSubsystem {
         });
   }
 
-  public Command setVoltage(double voltage) {
-    return this.run(() -> turretIO.setVoltage(voltage));
+  public Rotation2d getAbsAngle(CommandSwerveDrivetrain swerve, Supplier<Pose2d> targetPose) {
+    return new Rotation2d(
+            (swerve.getState().Pose.getX() - targetPose.get().getX()),
+            (swerve.getState().Pose.getY() - targetPose.get().getY()))
+        .minus(swerve.getState().Pose.getRotation())
+        .plus(new Rotation2d(turretOffset));
   }
 
-  public Command targetPoseCommand(CommandSwerveDrivetrain swerve, Supplier<Pose2d> targetPose) {
+  public Command setPositionFieldRelative(
+      CommandSwerveDrivetrain swerve, Supplier<Pose2d> targetPose) {
     return run(
-        () -> {
-          Transform2d difference = swerve.getState().Pose.minus(targetPose.get());
-          Rotation2d targetRot =
-              new Rotation2d(difference.getX(), difference.getY())
-                  .plus(new Rotation2d(Math.PI + turretOffset));
-          this.setPosition(targetRot.getRotations());
-        });
+        () -> this.setPosition(getAbsAngle(swerve, targetPose).getRotations()));
   }
 
   public Command zero() {
