@@ -292,7 +292,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     double dt = previousTime > 0 ? currentTime - previousTime : 0.02;
 
     ChassisSpeeds currentSpeeds = getState().Speeds;
-    
 
     return new frc.robot.utils.sotm.ChassisAccelerations(currentSpeeds, previousSpeeds, dt);
   }

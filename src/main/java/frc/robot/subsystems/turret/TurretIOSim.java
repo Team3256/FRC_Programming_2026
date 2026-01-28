@@ -51,7 +51,10 @@ public class TurretIOSim extends TurretIOTalonFX {
 
     turretSimModel.update(LoggedRobot.defaultPeriodSecs);
 
-    double motor1Rps = turretSimModel.getAngularVelocityRPM() / 60 * TurretConstants.SimulationConstants.turretSimGearing;
+    double motor1Rps =
+        turretSimModel.getAngularVelocityRPM()
+            / 60
+            * TurretConstants.SimulationConstants.turretSimGearing;
     turretSimState.setRotorVelocity(motor1Rps);
     turretSimState.addRotorPosition(motor1Rps * LoggedRobot.defaultPeriodSecs);
 
@@ -61,9 +64,6 @@ public class TurretIOSim extends TurretIOTalonFX {
 
     super.updateInputs(inputs);
 
-    SimMechs.getInstance()
-        .updateTurret(
-            Rotations.of(
-                inputs.turretMotorPosition));
+    SimMechs.getInstance().updateTurret(Rotations.of(inputs.turretMotorPosition));
   }
 }

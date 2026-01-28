@@ -7,10 +7,17 @@
 
 package frc.robot.subsystems.turret;
 
+import static frc.robot.subsystems.turret.TurretConstants.turretOffset;
+import static frc.robot.subsystems.turret.TurretConstants.turretToDrivebase;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
 import frc.robot.utils.Util;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class Turret extends DisableSubsystem {
@@ -37,6 +44,11 @@ public class Turret extends DisableSubsystem {
     LoggedTracer.record("Turret");
   }
 
+  public Command setVoltage(double voltage) {
+    return this.run(() -> turretIO.setVoltage(voltage));
+  }
+
+  // Base
   public Command setPosition(double position) {
     return this.run(
         () -> {
@@ -45,11 +57,19 @@ public class Turret extends DisableSubsystem {
         });
   }
 
+  public Rotation2d getAbsAngle(CommandSwerveDrivetrain swerve, Supplier<Pose2d> targetPose) {
+    return new Rotation2d(
+            (swerve.getState().Pose.transformBy(turretToDrivebase).getX()
+                - targetPose.get().getX()),
+            (swerve.getState().Pose.transformBy(turretToDrivebase).getY()
+                - targetPose.get().getY()))
+        .minus(swerve.getState().Pose.getRotation())
+        .plus(turretOffset);
+  }
 
-  // takes in rot2
-
-  public Command setVoltage(double voltage) {
-    return this.run(() -> turretIO.setVoltage(voltage));
+  public Command setPositionFieldRelative(
+      CommandSwerveDrivetrain swerve, Supplier<Pose2d> targetPose) {
+    return run(() -> this.setPosition(getAbsAngle(swerve, targetPose).getRotations()));
   }
 
   public Command zero() {

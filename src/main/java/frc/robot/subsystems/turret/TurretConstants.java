@@ -15,9 +15,10 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 
 public class TurretConstants {
   public static final int turretMotorId = 51;
@@ -27,6 +28,10 @@ public class TurretConstants {
   public static final int flashConfigRetries = 5;
 
   public static double updateFrequency = 50;
+
+  public static final Rotation2d turretOffset = new Rotation2d();
+
+  public static final Transform2d turretToDrivebase = new Transform2d();
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
