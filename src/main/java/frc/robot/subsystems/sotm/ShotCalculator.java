@@ -43,14 +43,11 @@ public class ShotCalculator extends SubsystemBase {
   public void periodic() {
     Pose2d drivetrainPose = drivetrain.getState().Pose;
 
-
     targetDistance =
         drivetrainPose.getTranslation().getDistance(targetLocation.toPose2d().getTranslation());
     targetSpeedRps = DISTANCE_TO_SHOOTER_SPEED.get(targetDistance);
 
-
     Pose3d shooterPose = new Pose3d(drivetrainPose).plus(ROBOT_TO_SHOOTER);
-
 
     ChassisSpeeds drivetrainSpeeds = drivetrain.getState().Speeds;
     ChassisAccelerations drivetrainAccelerations = drivetrain.getFieldRelativeAccelerations();

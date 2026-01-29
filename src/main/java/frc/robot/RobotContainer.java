@@ -13,8 +13,6 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -33,9 +31,6 @@ import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretIOSim;
 import frc.robot.subsystems.turret.TurretIOTalonFX;
-import org.littletonrobotics.junction.Logger;
-
-import java.lang.reflect.Field;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -91,7 +86,12 @@ public class RobotContainer {
 
     m_operatorController.a().whileTrue(shooter.setVoltage(12));
     m_operatorController.b().whileTrue(indexer.setVoltage(12));
-    m_operatorController.x().onTrue(turret.pointToPose(()->drivetrain.getState().Pose, ()->shotCalculator.getCurrentEffectiveTargetPose().toPose2d()));
+    m_operatorController
+        .x()
+        .onTrue(
+            turret.pointToPose(
+                () -> drivetrain.getState().Pose,
+                () -> shotCalculator.getCurrentEffectiveTargetPose().toPose2d()));
   }
 
   private void configureChoreoAutoChooser() {

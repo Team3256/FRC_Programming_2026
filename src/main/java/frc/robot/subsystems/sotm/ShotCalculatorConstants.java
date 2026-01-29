@@ -34,7 +34,6 @@ public final class ShotCalculatorConstants {
     DISTANCE_TO_SHOOTER_SPEED.put(2.07, 7.0);
     DISTANCE_TO_SHOOTER_SPEED.put(4.92, 9.0);
 
-
     // distance to pivot angle
     // meters to radians
     DISTANCE_TO_PIVOT_ANGLE.put(1.0, Math.toRadians(45));
@@ -42,5 +41,4 @@ public final class ShotCalculatorConstants {
     DISTANCE_TO_PIVOT_ANGLE.put(3.0, Math.toRadians(45));
     DISTANCE_TO_PIVOT_ANGLE.put(4.0, Math.toRadians(45));
   }
-
 }

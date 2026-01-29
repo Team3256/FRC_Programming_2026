@@ -69,7 +69,7 @@ public class Superstructure {
       Climb climb,
       Feeder feeder,
       Turret turret,
-        ShotCalculator shotCalculator,
+      ShotCalculator shotCalculator,
       Supplier<Pose2d> robotPoseSupplier) {
     this.indexer = indexer;
     this.shooterPivot = shooterPivot;
@@ -79,7 +79,7 @@ public class Superstructure {
     this.climb = climb;
     this.feeder = feeder;
     this.turret = turret;
-     this.shotCalculator = shotCalculator;
+    this.shotCalculator = shotCalculator;
     this.robotPoseSupplier = robotPoseSupplier;
 
     // intake --> indexer --> feeder --> shooter
@@ -140,7 +140,6 @@ public class Superstructure {
     Logger.recordOutput("Superstructure/StateTime", this.stateTimer.get());
 
     LoggedTracer.record(this.getClass().getSimpleName());
-
   }
 
   public Command setState(StructureState state) {
