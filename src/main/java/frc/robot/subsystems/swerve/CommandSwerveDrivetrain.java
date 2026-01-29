@@ -39,6 +39,8 @@ import frc.robot.subsystems.swerve.generated.TunerConstants.TunerSwerveDrivetrai
 import frc.robot.utils.LoggedTracer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import frc.robot.utils.sotm.ChassisAccelerations;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -262,15 +264,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
               });
     }
 
-    double currentTime = Logger.getTimestamp() / 1e6;
-    ChassisSpeeds currentSpeeds = getState().Speeds;
 
-    if (previousTime > 0) {
-      double dt = currentTime - previousTime;
-    }
 
-    previousSpeeds = currentSpeeds;
-    previousTime = currentTime;
+
+    previousSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getState().RawHeading);
+    previousTime = getState().Timestamp;
 
     LoggedTracer.record(this.getClass().getSimpleName());
   }
@@ -287,13 +285,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     // }
   }
 
-  public frc.robot.utils.sotm.ChassisAccelerations getFieldRelativeAccelerations() {
-    double currentTime = Logger.getTimestamp() / 1e6;
-    double dt = previousTime > 0 ? currentTime - previousTime : 0.02;
+  public ChassisAccelerations getFieldRelativeAccelerations() {
 
-    ChassisSpeeds currentSpeeds = getState().Speeds;
+    return new ChassisAccelerations(getFieldRelativeSpeeds(), previousSpeeds, getState().Timestamp-previousTime);
+  }
 
-    return new frc.robot.utils.sotm.ChassisAccelerations(currentSpeeds, previousSpeeds, dt);
+  public ChassisSpeeds getFieldRelativeSpeeds() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getState().RawHeading);
   }
 
   /**

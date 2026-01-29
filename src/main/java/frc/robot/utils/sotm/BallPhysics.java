@@ -15,28 +15,37 @@ import edu.wpi.first.math.geometry.Translation3d;
 public final class BallPhysics {
   public static final double GRAVITY = 9.81;
 
-  public record ShotSolution(double launchPitchRad, double launchSpeed, double flightTimeSeconds) {}
+  public record ShotSolution(
+          double launchPitchRad,
+          double launchSpeed,
+          double flightTimeSeconds) {
+  }
 
-  private BallPhysics() {}
+  private BallPhysics() {
+  }
 
   private static Translation3d gravityForce(BallConstants c) {
     return new Translation3d(0, 0, -c.mass * c.gravity);
   }
 
-  private static Translation3d dragForce(Translation3d v, BallConstants c) {
+  private static Translation3d dragForce(
+          Translation3d v, BallConstants c) {
 
     double speed = v.getNorm();
-    if (speed < 1e-6) return new Translation3d();
+    if (speed < 1e-6)
+      return new Translation3d();
 
     double scale = -0.5 * c.rho * c.cd * c.area * speed;
     return v.times(scale);
   }
 
-  private static Translation3d magnusForce(Translation3d v, Translation3d omega, BallConstants c) {
+  private static Translation3d magnusForce(
+          Translation3d v, Translation3d omega, BallConstants c) {
 
     double speed = v.getNorm();
     double wMag = omega.getNorm();
-    if (speed < 1e-6 || wMag < 1e-6) return new Translation3d();
+    if (speed < 1e-6 || wMag < 1e-6)
+      return new Translation3d();
 
     double spinRatio = wMag * c.radius / speed;
     double cl = Math.min(c.clGain * spinRatio, c.clMax);
@@ -50,17 +59,25 @@ public final class BallPhysics {
     return direction.times(magnitude);
   }
 
-  private static Rotation3d integrateRotation(Rotation3d current, Translation3d omega, double dt) {
+  private static Rotation3d integrateRotation(
+          Rotation3d current,
+          Translation3d omega,
+          double dt) {
 
-    Rotation3d delta = new Rotation3d(omega.getX() * dt, omega.getY() * dt, omega.getZ() * dt);
+    Rotation3d delta = new Rotation3d(
+            omega.getX() * dt,
+            omega.getY() * dt,
+            omega.getZ() * dt);
 
     return current.plus(delta);
   }
 
-  public static void step(BallState s, BallConstants c, double dt) {
+  public static void step(
+          BallState s, BallConstants c, double dt) {
 
-    Translation3d force =
-        gravityForce(c).plus(dragForce(s.velocity, c)).plus(magnusForce(s.velocity, s.omega, c));
+    Translation3d force = gravityForce(c)
+            .plus(dragForce(s.velocity, c))
+            .plus(magnusForce(s.velocity, s.omega, c));
 
     Translation3d accel = force.div(c.mass);
 
@@ -69,14 +86,14 @@ public final class BallPhysics {
 
     s.velocity = s.velocity.plus(accel.times(dt));
 
-    s.pose =
-        new Pose3d(
-            s.pose.getTranslation().plus(s.velocity.times(dt)),
+    s.pose = new Pose3d(s.pose.getTranslation().plus(s.velocity.times(dt)),
             integrateRotation(s.pose.getRotation(), s.omega, dt));
   }
 
   public static ShotSolution solveBallisticWithIncomingAngle(
-      Pose3d shooterPose, Pose3d targetPose, double incomingPitchRad) {
+          Pose3d shooterPose,
+          Pose3d targetPose,
+          double incomingPitchRad) {
 
     Translation3d s = shooterPose.getTranslation();
     Translation3d t = targetPose.getTranslation();
@@ -94,7 +111,8 @@ public final class BallPhysics {
 
     double rhs = dz - d * tanThetaT;
     if (rhs <= 0) {
-      throw new IllegalArgumentException("No physical solution: dz - d*tan(thetaT) must be > 0");
+      throw new IllegalArgumentException(
+              "No physical solution: dz - d*tan(thetaT) must be > 0");
     }
 
     double T = Math.sqrt(2.0 * rhs / GRAVITY);
@@ -109,7 +127,9 @@ public final class BallPhysics {
   }
 
   public static ShotSolution solveBallisticWithSpeed(
-      Pose3d shooterPose, Pose3d targetPose, double launchSpeed) {
+          Pose3d shooterPose,
+          Pose3d targetPose,
+          double launchSpeed) {
 
     Translation3d s = shooterPose.getTranslation();
     Translation3d t = targetPose.getTranslation();
@@ -142,7 +162,9 @@ public final class BallPhysics {
     return new ShotSolution(launchPitch, launchSpeed, time);
   }
 
-  public static double minSpeedForAnyArc(Pose3d shooterPose, Pose3d targetPose) {
+  public static double minSpeedForAnyArc(
+          Pose3d shooterPose,
+          Pose3d targetPose) {
 
     Translation3d s = shooterPose.getTranslation();
     Translation3d t = targetPose.getTranslation();
@@ -153,6 +175,7 @@ public final class BallPhysics {
 
     double d = Math.hypot(dx, dy);
 
-    return Math.sqrt(GRAVITY * (Math.hypot(d, dz) + dz));
+    return Math.sqrt(
+            GRAVITY * (Math.hypot(d, dz) + dz));
   }
 }

@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.FieldConstants;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import frc.robot.utils.LoggedTracer;
 import frc.robot.utils.sotm.ChassisAccelerations;
 import frc.robot.utils.sotm.ShootOnTheFlyCalculator;
 import frc.robot.utils.sotm.ShootOnTheFlyCalculator.InterceptSolution;
@@ -42,11 +43,14 @@ public class ShotCalculator extends SubsystemBase {
   public void periodic() {
     Pose2d drivetrainPose = drivetrain.getState().Pose;
 
+
     targetDistance =
         drivetrainPose.getTranslation().getDistance(targetLocation.toPose2d().getTranslation());
     targetSpeedRps = DISTANCE_TO_SHOOTER_SPEED.get(targetDistance);
 
+
     Pose3d shooterPose = new Pose3d(drivetrainPose).plus(ROBOT_TO_SHOOTER);
+
 
     ChassisSpeeds drivetrainSpeeds = drivetrain.getState().Speeds;
     ChassisAccelerations drivetrainAccelerations = drivetrain.getFieldRelativeAccelerations();
@@ -69,6 +73,8 @@ public class ShotCalculator extends SubsystemBase {
     Logger.recordOutput("ShotCalculator/TargetDistance", targetDistance);
     Logger.recordOutput("ShotCalculator/TargetLocation", targetLocation);
     Logger.recordOutput("ShotCalculator/TargetSpeedRps", targetSpeedRps);
+
+    LoggedTracer.record("ShotCalculator");
   }
 
   public void setTarget(Pose3d targetLocation, double targetSpeedRps) {

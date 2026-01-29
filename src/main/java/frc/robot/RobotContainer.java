@@ -27,6 +27,7 @@ import frc.robot.subsystems.indexer.IndexerIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.turret.Turret;
@@ -65,6 +66,8 @@ public class RobotContainer {
   private final Turret turret =
       new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
 
+  private final ShotCalculator shotCalculator = new ShotCalculator(drivetrain);
+
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
@@ -88,7 +91,7 @@ public class RobotContainer {
 
     m_operatorController.a().whileTrue(shooter.setVoltage(12));
     m_operatorController.b().whileTrue(indexer.setVoltage(12));
-    m_operatorController.x().onTrue(turret.pointToPose(()->drivetrain.getState().Pose, ()-> new Pose2d(FieldConstants.Hub.innerCenterPoint.toTranslation2d(), Rotation2d.kZero)));
+    m_operatorController.x().onTrue(turret.pointToPose(()->drivetrain.getState().Pose, ()->shotCalculator.getCurrentEffectiveTargetPose().toPose2d()));
   }
 
   private void configureChoreoAutoChooser() {
@@ -145,5 +148,6 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    shotCalculator.periodic();
   }
 }
