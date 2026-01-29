@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems.turret;
 
-import static edu.wpi.first.units.Units.*;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -29,9 +27,9 @@ public class TurretConstants {
 
   public static double updateFrequency = 50;
 
-  public static final Rotation2d turretOffset = new Rotation2d();
+  public static final Rotation2d turretOffset = Rotation2d.kPi;
 
-  public static final Transform2d turretToDrivebase = new Transform2d();
+  public static final Transform2d driveBaseToTurret = new Transform2d();
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()

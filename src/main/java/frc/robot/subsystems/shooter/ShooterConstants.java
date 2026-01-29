@@ -25,8 +25,8 @@ public final class ShooterConstants {
   public static final boolean kUseShooterRegenBraking = true;
 
   // can IDs
-  public static int shooterFollower = 61;
-  public static int shooterMain = 54;
+  public static int shooterFollower = 60;
+  public static int shooterMain = 59;
 
   // motor output behavior
   public static MotorOutputConfigs motorOutputConfigs =

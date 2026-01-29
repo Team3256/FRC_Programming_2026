@@ -21,7 +21,7 @@ import frc.robot.utils.PhoenixUtil;
 
 public class IndexerIOTalonFX implements IndexerIO {
   private final TalonFX indexMotor =
-      new TalonFX(IndexerConstants.kIndexerMotorID, new CANBus("Gordito"));
+      new TalonFX(IndexerConstants.kIndexerMotorID);
   final VelocityVoltage velReq = new VelocityVoltage(0).withSlot(0);
 
   private final StatusSignal<Voltage> indexerMotorVoltage = indexMotor.getMotorVoltage();
@@ -42,7 +42,7 @@ public class IndexerIOTalonFX implements IndexerIO {
         indexerMotorSupplyCurrent,
         indexerMotorTemperature);
     PhoenixUtil.registerSignals(
-        true,
+        false,
         indexerMotorVoltage,
         indexerMotorVelocity,
         indexerMotorStatorCurrent,

@@ -7,11 +7,11 @@
 
 package frc.robot.subsystems.turret;
 
-import static frc.robot.subsystems.turret.TurretConstants.turretOffset;
-import static frc.robot.subsystems.turret.TurretConstants.turretToDrivebase;
+import static frc.robot.subsystems.turret.TurretConstants.driveBaseToTurret;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.utils.DisableSubsystem;
@@ -57,20 +57,25 @@ public class Turret extends DisableSubsystem {
         });
   }
 
-  public Rotation2d getAbsAngle(CommandSwerveDrivetrain swerve, Supplier<Pose2d> targetPose) {
-    return new Rotation2d(
-            (swerve.getState().Pose.transformBy(turretToDrivebase).getX()
-                - targetPose.get().getX()),
-            (swerve.getState().Pose.transformBy(turretToDrivebase).getY()
-                - targetPose.get().getY()))
-        .minus(swerve.getState().Pose.getRotation())
-        .plus(turretOffset);
+  public Command pointToPose(Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
+    return this.run(()->{
+      Transform2d diff = robotPose.get().transformBy(TurretConstants.driveBaseToTurret).minus(targetPose.get());
+      Rotation2d rotation = new Rotation2d(diff.getX(), diff.getY()).plus(TurretConstants.turretOffset);
+      setPositionFieldRelative(rotation, robotPose.get().getRotation());
+    });
   }
 
-  public Command setPositionFieldRelative(
-      CommandSwerveDrivetrain swerve, Supplier<Pose2d> targetPose) {
-    return run(() -> this.setPosition(getAbsAngle(swerve, targetPose).getRotations()));
+  private void setPositionFieldRelative(Rotation2d targetRot, Rotation2d robotRot) {
+    reqPosition = targetRot.minus(robotRot).getRotations();
+    turretIO.setPosition(reqPosition);
   }
+
+  public Command setPositionFieldRelative(Supplier<Rotation2d> position, Supplier<Rotation2d> robotRot) {
+    return this.run(
+            () ->
+                    setPositionFieldRelative(position.get(),robotRot.get() ));
+  }
+
 
   public Command zero() {
     return this.runOnce(turretIO::zero);

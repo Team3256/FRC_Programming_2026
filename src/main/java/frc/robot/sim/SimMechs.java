@@ -75,7 +75,7 @@ public final class SimMechs {
   private final MechanismLigament2d turretViz =
       turretRoot.append(
           new MechanismLigament2d(
-              "Turret", Inches.of(3).in(Meters), 0.0, 5, new Color8Bit(Color.kPink)));
+              "Turret", Inches.of(6).in(Meters), 0.0, 5, new Color8Bit(Color.kPink)));
 
   private SimMechs() {}
 

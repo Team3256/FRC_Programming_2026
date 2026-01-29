@@ -21,7 +21,7 @@ import frc.robot.utils.PhoenixUtil;
 
 public class ShooterIOTalonFX implements ShooterIO {
   private final TalonFX shooterMotor =
-      new TalonFX(ShooterConstants.shooterMain, new CANBus("Gordito"));
+      new TalonFX(ShooterConstants.shooterMain);
   final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);
@@ -71,7 +71,7 @@ public class ShooterIOTalonFX implements ShooterIO {
         shooterMotorFollowerSupplyCurrent,
         shooterMotorFollowerTemperature);
     PhoenixUtil.registerSignals(
-        true,
+        false,
         shooterMotorVoltage,
         shooterMotorVelocity,
         shooterMotorStatorCurrent,
