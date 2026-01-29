@@ -19,6 +19,7 @@ import frc.robot.subsystems.intakepivot.IntakePivot;
 import frc.robot.subsystems.intakerollers.IntakeRollers;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooterpivot.ShooterPivot;
+import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.utils.LoggedTracer;
 import java.util.HashMap;
@@ -55,6 +56,8 @@ public class Superstructure {
   private final Feeder feeder;
   private final Turret turret;
 
+  private final ShotCalculator shotCalculator;
+
   private final Supplier<Pose2d> robotPoseSupplier;
 
   public Superstructure(
@@ -66,7 +69,7 @@ public class Superstructure {
       Climb climb,
       Feeder feeder,
       Turret turret,
-      //  ShotCalculator shotCalculator;
+        ShotCalculator shotCalculator,
       Supplier<Pose2d> robotPoseSupplier) {
     this.indexer = indexer;
     this.shooterPivot = shooterPivot;
@@ -76,7 +79,7 @@ public class Superstructure {
     this.climb = climb;
     this.feeder = feeder;
     this.turret = turret;
-    // this.shotCalculator = shotCalculator;
+     this.shotCalculator = shotCalculator;
     this.robotPoseSupplier = robotPoseSupplier;
 
     // intake --> indexer --> feeder --> shooter
@@ -137,6 +140,7 @@ public class Superstructure {
     Logger.recordOutput("Superstructure/StateTime", this.stateTimer.get());
 
     LoggedTracer.record(this.getClass().getSimpleName());
+
   }
 
   public Command setState(StructureState state) {
