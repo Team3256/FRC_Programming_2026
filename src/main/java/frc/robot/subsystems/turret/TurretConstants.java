@@ -62,4 +62,15 @@ public class TurretConstants {
     public static double kMomentOfInertia = 0.0001; // TODO: Update this value
     public static double kAngularVelocityScalar = 0.03;
   }
+
+  // CRT constants
+  public static final int drivingGear1 = 29;
+  public static final int drivenGear1 = 29;
+  public static final int drivingGear2 = 29;
+  public static final int drivenGear2 = 28;
+
+  public static final double ratio1 = (double) drivingGear1 / drivenGear1;
+  public static final double ratio2 = (double) drivingGear2 / drivenGear2;
+  public static final double differenceDegrees = (ratio2 - ratio1) * 360;
 }
+

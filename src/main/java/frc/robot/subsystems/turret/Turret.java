@@ -52,7 +52,8 @@ public class Turret extends DisableSubsystem {
           reqPosition = position;
           turretIO.setPosition(reqPosition);
         });
-  }
+      }
+  
 
   public Command pointToPose(Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
     return this.run(
@@ -66,7 +67,7 @@ public class Turret extends DisableSubsystem {
               new Rotation2d(diff.getX(), diff.getY()).plus(TurretConstants.turretOffset);
           setPositionFieldRelative(rotation, robotPose.get().getRotation());
         });
-  }
+      }
 
   private void setPositionFieldRelative(Rotation2d targetRot, Rotation2d robotRot) {
     reqPosition = targetRot.minus(robotRot).getRotations();
@@ -76,6 +77,20 @@ public class Turret extends DisableSubsystem {
   public Command setPositionFieldRelative(
       Supplier<Rotation2d> position, Supplier<Rotation2d> robotRot) {
     return this.run(() -> setPositionFieldRelative(position.get(), robotRot.get()));
+  }
+
+  public static Rotation2d getTurretPosition(Rotation2d cancoder1, Rotation2d cancoder2) {
+      Rotation2d diff = cancoder2.minus(cancoder1);
+      double drivingRotRaw = diff.getDegrees() / TurretConstants.differenceDegrees;
+      double expectedG1 = (drivingRotRaw * TurretConstants.ratio1) % 1;
+      double g1Diff = expectedG1 - (cancoder1.getRotations() % 1);
+      if (g1Diff > 0.5) {
+        g1Diff -= 1;
+      } else if (g1Diff < -0.5) {
+        g1Diff += 1;
+    }
+    double drivingRem = g1Diff / TurretConstants.ratio1;
+    return Rotation2d.fromRotations(drivingRotRaw - drivingRem);
   }
 
   public Command zero() {
