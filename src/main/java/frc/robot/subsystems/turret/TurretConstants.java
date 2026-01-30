@@ -26,6 +26,8 @@ public class TurretConstants {
   public static final int flashConfigRetries = 5;
 
   public static double updateFrequency = 50;
+public static final int turretEncoder1 = 0;
+public static final int turretEncoder2 = 1;
 
   public static final Rotation2d turretOffset = Rotation2d.kPi;
 

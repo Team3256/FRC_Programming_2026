@@ -13,6 +13,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -32,6 +33,19 @@ public class TurretIOTalonFX implements TurretIO {
   private final StatusSignal<Current> turretMotorStatorCurrent = turretMotor.getStatorCurrent();
   private final StatusSignal<Current> turretMotorSupplyCurrent = turretMotor.getSupplyCurrent();
 
+
+  private final CANcoder cancoder1 = new CANcoder(TurretConstants.turretEncoder1);
+  private final CANcoder cancoder2 = new CANcoder(TurretConstants.turretEncoder2);
+
+  private final StatusSignal<Angle> cancoder1AbsolutePosition = cancoder1.getAbsolutePosition();
+  private final StatusSignal<Angle> cancoder1Position = cancoder1.getPosition();
+  private final StatusSignal<AngularVelocity> cancoder1Velocity = cancoder1.getVelocity();
+
+  private final StatusSignal<Angle> cancoder2AbsolutePosition = cancoder1.getAbsolutePosition();
+  private final StatusSignal<Angle> cancoder2Position = cancoder1.getPosition();
+  private final StatusSignal<AngularVelocity> cancoder2Velocity = cancoder1.getVelocity();
+
+  
   public TurretIOTalonFX() {
 
     PhoenixUtil.applyMotorConfigs(
@@ -61,6 +75,13 @@ public class TurretIOTalonFX implements TurretIO {
     inputs.turretMotorPosition = turretMotorPosition.getValue().in(Rotations);
     inputs.turretMotorStatorCurrent = turretMotorStatorCurrent.getValue().in(Amps);
     inputs.turretMotorSupplyCurrent = turretMotorSupplyCurrent.getValue().in(Amps);
+    inputs.turretEncoder1Position = cancoder1Position.getValue().in(Rotations);
+    inputs.turretEncoder1Velocity = cancoder1Velocity.getValue().in(RotationsPerSecond);
+    inputs.turretEncoder1Position = cancoder1AbsolutePosition.getValue().in(Rotations);
+
+    inputs.turretEncoder2Position = cancoder2Position.getValue().in(Rotations);
+    inputs.turretEncoder2Velocity = cancoder2Velocity.getValue().in(RotationsPerSecond);
+    inputs.turretEncoder2Position = cancoder2AbsolutePosition.getValue().in(Rotations);
   }
 
   @Override
