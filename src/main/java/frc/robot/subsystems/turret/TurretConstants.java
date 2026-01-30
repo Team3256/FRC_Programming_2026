@@ -73,4 +73,3 @@ public class TurretConstants {
   public static final double ratio2 = (double) drivingGear2 / drivenGear2;
   public static final double differenceDegrees = (ratio2 - ratio1) * 360;
 }
-
