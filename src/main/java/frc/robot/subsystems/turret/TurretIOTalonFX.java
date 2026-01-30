@@ -11,7 +11,6 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -34,11 +33,6 @@ public class TurretIOTalonFX implements TurretIO {
   private final StatusSignal<Current> turretMotorSupplyCurrent = turretMotor.getSupplyCurrent();
 
   public TurretIOTalonFX() {
-    var motorConfig = TurretConstants.motorConfigs;
-    ClosedLoopGeneralConfigs closedLoopGeneralConfigs = new ClosedLoopGeneralConfigs();
-    closedLoopGeneralConfigs.ContinuousWrap = true;
-    motorConfig.ClosedLoopGeneral = closedLoopGeneralConfigs;
-    PhoenixUtil.applyMotorConfigs(turretMotor, motorConfig, TurretConstants.flashConfigRetries);
 
     PhoenixUtil.applyMotorConfigs(
         turretMotor, TurretConstants.motorConfigs, TurretConstants.flashConfigRetries);
