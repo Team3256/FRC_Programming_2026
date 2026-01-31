@@ -20,6 +20,14 @@ public interface TurretIO {
     public double turretMotorPosition = 0.0;
     public double turretMotorStatorCurrent = 0.0;
     public double turretMotorSupplyCurrent = 0.0;
+
+    public double turrentEncoder1AbsolutePosition = 0.0;
+    public double turretEncoder1Position = 0.0;
+    public double turretEncoder1Velocity = 0.0;
+
+    public double turrentEncoder2AbsolutePosition = 0.0;
+    public double turretEncoder2Position = 0.0;
+    public double turretEncoder2Velocity = 0.0;
   }
 
   default void updateInputs(TurretIOInputs inputs) {}

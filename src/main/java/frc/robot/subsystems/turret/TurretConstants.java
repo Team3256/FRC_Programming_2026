@@ -7,14 +7,19 @@
 
 package frc.robot.subsystems.turret;
 
+import static edu.wpi.first.units.Units.Rotations;
+
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 
@@ -26,10 +31,28 @@ public class TurretConstants {
   public static final int flashConfigRetries = 5;
 
   public static double updateFrequency = 50;
+  public static final int turretEncoder1 = 0;
+  public static final int turretEncoder2 = 1;
 
   public static final Rotation2d turretOffset = Rotation2d.kPi;
 
   public static final Transform2d driveBaseToTurret = new Transform2d();
+
+  public static final CANcoderConfiguration cancoderConfiguration1 =
+      new CANcoderConfiguration()
+          .withMagnetSensor(
+              new MagnetSensorConfigs()
+                  .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+                  .withMagnetOffset(0)
+                  .withAbsoluteSensorDiscontinuityPoint(Rotations.of(1)));
+
+  public static final CANcoderConfiguration cancoderConfiguration2 =
+      new CANcoderConfiguration()
+          .withMagnetSensor(
+              new MagnetSensorConfigs()
+                  .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+                  .withMagnetOffset(0)
+                  .withAbsoluteSensorDiscontinuityPoint(Rotations.of(1)));
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
@@ -62,4 +85,14 @@ public class TurretConstants {
     public static double kMomentOfInertia = 0.0001; // TODO: Update this value
     public static double kAngularVelocityScalar = 0.03;
   }
+
+  // CRT constants
+  public static final int drivingGear1 = 29;
+  public static final int drivenGear1 = 29;
+  public static final int drivingGear2 = 29;
+  public static final int drivenGear2 = 28;
+
+  public static final double ratio1 = (double) drivingGear1 / drivenGear1;
+  public static final double ratio2 = (double) drivingGear2 / drivenGear2;
+  public static final double differenceDegrees = (ratio2 - ratio1) * 360;
 }

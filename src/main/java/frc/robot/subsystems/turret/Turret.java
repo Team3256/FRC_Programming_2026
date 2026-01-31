@@ -78,6 +78,20 @@ public class Turret extends DisableSubsystem {
     return this.run(() -> setPositionFieldRelative(position.get(), robotRot.get()));
   }
 
+  public static Rotation2d getTurretPosition(Rotation2d cancoder1, Rotation2d cancoder2) {
+    Rotation2d diff = cancoder2.minus(cancoder1);
+    double drivingRotRaw = diff.getDegrees() / TurretConstants.differenceDegrees;
+    double expectedG1 = (drivingRotRaw * TurretConstants.ratio1) % 1;
+    double g1Diff = expectedG1 - (cancoder1.getRotations() % 1);
+    if (g1Diff > 0.5) {
+      g1Diff -= 1;
+    } else if (g1Diff < -0.5) {
+      g1Diff += 1;
+    }
+    double drivingRem = g1Diff / TurretConstants.ratio1;
+    return Rotation2d.fromRotations(drivingRotRaw - drivingRem);
+  }
+
   public Command zero() {
     return this.runOnce(turretIO::zero);
   }
