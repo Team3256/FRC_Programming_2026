@@ -33,7 +33,6 @@ public class TurretIOTalonFX implements TurretIO {
   private final StatusSignal<Current> turretMotorStatorCurrent = turretMotor.getStatorCurrent();
   private final StatusSignal<Current> turretMotorSupplyCurrent = turretMotor.getSupplyCurrent();
 
-
   private final CANcoder cancoder1 = new CANcoder(TurretConstants.turretEncoder1);
   private final CANcoder cancoder2 = new CANcoder(TurretConstants.turretEncoder2);
 
@@ -45,18 +44,16 @@ public class TurretIOTalonFX implements TurretIO {
   private final StatusSignal<Angle> cancoder2Position = cancoder2.getPosition();
   private final StatusSignal<AngularVelocity> cancoder2Velocity = cancoder2.getVelocity();
 
-  
   public TurretIOTalonFX() {
 
     PhoenixUtil.applyMotorConfigs(
         turretMotor, TurretConstants.motorConfigs, TurretConstants.flashConfigRetries);
 
     PhoenixUtil.applyCancoderConfig(
-      cancoder1, TurretConstants.cancoderConfiguration1, TurretConstants.flashConfigRetries);
+        cancoder1, TurretConstants.cancoderConfiguration1, TurretConstants.flashConfigRetries);
 
     PhoenixUtil.applyCancoderConfig(
-      cancoder2, TurretConstants.cancoderConfiguration2, TurretConstants.flashConfigRetries);
-
+        cancoder2, TurretConstants.cancoderConfiguration2, TurretConstants.flashConfigRetries);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         TurretConstants.updateFrequency,

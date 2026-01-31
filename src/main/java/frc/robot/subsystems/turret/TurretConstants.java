@@ -20,11 +20,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 
@@ -36,13 +31,12 @@ public class TurretConstants {
   public static final int flashConfigRetries = 5;
 
   public static double updateFrequency = 50;
-public static final int turretEncoder1 = 0;
-public static final int turretEncoder2 = 1;
+  public static final int turretEncoder1 = 0;
+  public static final int turretEncoder2 = 1;
 
   public static final Rotation2d turretOffset = Rotation2d.kPi;
 
   public static final Transform2d driveBaseToTurret = new Transform2d();
-  
 
   public static final CANcoderConfiguration cancoderConfiguration1 =
       new CANcoderConfiguration()
@@ -52,7 +46,7 @@ public static final int turretEncoder2 = 1;
                   .withMagnetOffset(0)
                   .withAbsoluteSensorDiscontinuityPoint(Rotations.of(1)));
 
-public static final CANcoderConfiguration cancoderConfiguration2 =
+  public static final CANcoderConfiguration cancoderConfiguration2 =
       new CANcoderConfiguration()
           .withMagnetSensor(
               new MagnetSensorConfigs()
