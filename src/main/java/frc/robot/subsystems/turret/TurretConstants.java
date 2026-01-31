@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.turret;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -41,7 +43,8 @@ public static final int turretEncoder2 = 1;
 
   public static final Transform2d driveBaseToTurret = new Transform2d();
   
-public static final CANcoderConfiguration cancoderConfiguration2 =
+
+  public static final CANcoderConfiguration cancoderConfiguration1 =
       new CANcoderConfiguration()
           .withMagnetSensor(
               new MagnetSensorConfigs()
@@ -49,7 +52,7 @@ public static final CANcoderConfiguration cancoderConfiguration2 =
                   .withMagnetOffset(0)
                   .withAbsoluteSensorDiscontinuityPoint(Rotations.of(1)));
 
- public static final CANcoderConfiguration cancoderConfiguration2 =
+public static final CANcoderConfiguration cancoderConfiguration2 =
       new CANcoderConfiguration()
           .withMagnetSensor(
               new MagnetSensorConfigs()
