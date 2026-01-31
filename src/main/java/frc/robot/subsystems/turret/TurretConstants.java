@@ -41,14 +41,13 @@ public static final int turretEncoder2 = 1;
 
   public static final Transform2d driveBaseToTurret = new Transform2d();
   
-   public static final  cancoderConfiguration1 =
+public static final CANcoderConfiguration cancoderConfiguration2 =
       new CANcoderConfiguration()
           .withMagnetSensor(
               new MagnetSensorConfigs()
                   .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                   .withMagnetOffset(0)
                   .withAbsoluteSensorDiscontinuityPoint(Rotations.of(1)));
-
 
  public static final CANcoderConfiguration cancoderConfiguration2 =
       new CANcoderConfiguration()
