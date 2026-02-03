@@ -6,6 +6,8 @@ import static frc.robot.subsystems.sotm.ShotCalculatorConstants.ROBOT_TO_SHOOTER
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
@@ -96,7 +98,7 @@ public class ShotCalculator {
    * @return ShootingParameters for this shot
    */
   public ShootingParameters getParameters(
-      Pose2d robotPose, ChassisSpeeds robotVelocity, Pose2d robotToTurret) {
+      Pose2d robotPose, ChassisSpeeds robotVelocity, Transform2d robotToTurret) {
     // Reset cache
     if (latestParameters != null) return latestParameters;
 
@@ -109,7 +111,7 @@ public class ShotCalculator {
                 robotVelocity.omegaRadiansPerSecond * phaseDelay));
 
     // Turret position
-    Pose2d turretPosition = estimatedPose.transformBy(robotToTurret.toTransform2d());
+    Pose2d turretPosition = estimatedPose.transformBy(robotToTurret);
 
     // Target
     Translation2d target =
