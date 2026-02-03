@@ -5,9 +5,6 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package org.littletonrobotics.frc2026.subsystems.shooter;
-
-import static org.littletonrobotics.frc2026.subsystems.shooter.ShooterConstants.*;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,22 +15,16 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import lombok.experimental.ExtensionMethod;
-import org.littletonrobotics.frc2026.Constants;
-import org.littletonrobotics.frc2026.FieldConstants;
-import org.littletonrobotics.frc2026.RobotState;
-import org.littletonrobotics.frc2026.util.geometry.AllianceFlipUtil;
-import org.littletonrobotics.frc2026.util.geometry.GeomUtil;
+import frc.robot.subsystems.turret.TurretConstants;
 import org.littletonrobotics.junction.Logger;
 
-@ExtensionMethod({GeomUtil.class})
 public class ShotCalculator {
   private static ShotCalculator instance;
 
   private final LinearFilter turretAngleFilter =
-      LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));
+      LinearFilter.movingAverage((int) (0.1 / TurretConstants.loopPeriodSecs));
   private final LinearFilter hoodAngleFilter =
-      LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));
+      LinearFilter.movingAverage((int) (0.1 / TurretConstants.loopPeriodSecs));
 
   private Rotation2d lastTurretAngle;
   private double lastHoodAngle;
