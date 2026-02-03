@@ -8,12 +8,13 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.FieldConstants;
-
 import org.littletonrobotics.junction.Logger;
 
-public class ShotCalculator {
-  private static ShotCalculator instance;
+import java.util.function.Supplier;
 
+public class ShotCalculator {
+
+  private static ShotCalculator instance;
 
   public static ShotCalculator getInstance() {
     if (instance == null) instance = new ShotCalculator();
@@ -30,13 +31,11 @@ public class ShotCalculator {
 
   private ShootingParameters latestParameters = null;
 
-
   private static double phaseDelay;
   private static final InterpolatingDoubleTreeMap timeOfFlightMap =
       new InterpolatingDoubleTreeMap();
 
   static {
- 
     phaseDelay = 0.03;
     timeOfFlightMap.put(5.68, 1.16);
     timeOfFlightMap.put(4.55, 1.12);
@@ -45,18 +44,26 @@ public class ShotCalculator {
     timeOfFlightMap.put(1.38, 0.90);
   }
 
-  /**
-   * Calculates shooting parameters based on provided robot pose and velocity.
-   *
-   * @param robotPose Robot's current pose
-   * @param robotVelocity Robot's field-relative velocity
-   * @param robotToTurret Robot-to-turret transform
-   * @return ShootingParameters for this shot
-   */
-  public ShootingParameters getParameters(
-      Pose2d robotPose, ChassisSpeeds robotVelocity, Transform2d robotToTurret) {
-    // Reset cache
-    if (latestParameters != null) return latestParameters;
+  // Suppliers for pose and velocity
+  private Supplier<Pose2d> robotPoseSupplier;
+  private Supplier<ChassisSpeeds> robotVelocitySupplier;
+  private Transform2d robotToTurret;
+
+  public void setInputs(
+      Supplier<Pose2d> robotPoseSupplier,
+      Supplier<ChassisSpeeds> robotVelocitySupplier,
+      Transform2d robotToTurret) {
+    this.robotPoseSupplier = robotPoseSupplier;
+    this.robotVelocitySupplier = robotVelocitySupplier;
+    this.robotToTurret = robotToTurret;
+  }
+
+  /** Call this in a periodic loop */
+  public void periodic() {
+    if (robotPoseSupplier == null || robotVelocitySupplier == null) return;
+
+    Pose2d robotPose = robotPoseSupplier.get();
+    ChassisSpeeds robotVelocity = robotVelocitySupplier.get();
 
     // Phase delay
     Pose2d estimatedPose =
@@ -70,8 +77,7 @@ public class ShotCalculator {
     Pose2d turretPosition = estimatedPose.transformBy(robotToTurret);
 
     // Target
-    Translation2d target =
-        FieldConstants.Hub.topCenterPoint.toTranslation2d();
+    Translation2d target = FieldConstants.Hub.topCenterPoint.toTranslation2d();
 
     // Distance from turret to target
     double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
@@ -91,10 +97,9 @@ public class ShotCalculator {
 
     // Iteratively calculate lookahead pose
     Pose2d lookaheadPose = turretPosition;
-    double lookaheadTurretToTargetDistance = turretToTargetDistance;
     double timeOfFlight = 0.0;
     for (int i = 0; i < 20; i++) {
-      timeOfFlight = timeOfFlightMap.get(lookaheadTurretToTargetDistance);
+      timeOfFlight = timeOfFlightMap.get(turretToTargetDistance);
       double offsetX = turretVelocityX * timeOfFlight;
       double offsetY = turretVelocityY * timeOfFlight;
       lookaheadPose =
@@ -103,16 +108,16 @@ public class ShotCalculator {
               turretPosition.getRotation());
     }
 
-
     Logger.recordOutput("ShotCalculator/LookaheadPose", lookaheadPose);
-    Logger.recordOutput("ShotCalculator/TurretToTargetDistance", lookaheadTurretToTargetDistance);
+    Logger.recordOutput("ShotCalculator/TurretToTargetDistance", turretToTargetDistance);
 
-    return latestParameters;
+    // Store result
+    latestParameters =
+        new ShootingParameters(
+            true, Rotation2d.fromRadians(0), turretVelocityX, 0, turretVelocityY, 0);
   }
 
+  public ShootingParameters getLatestParameters() {
+    return latestParameters;
+  }
 }
-
-
-//get pose
-//do calculations in perioid
-// take everything except last one as suppliers
