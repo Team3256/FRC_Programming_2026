@@ -13,6 +13,8 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -29,6 +31,7 @@ import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.turret.Turret;
+import frc.robot.subsystems.turret.TurretConstants;
 import frc.robot.subsystems.turret.TurretIOSim;
 import frc.robot.subsystems.turret.TurretIOTalonFX;
 
@@ -61,7 +64,11 @@ public class RobotContainer {
   private final Turret turret =
       new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
 
-  private final ShotCalculator shotCalculator = new ShotCalculator(drivetrain);
+  private final ShotCalculator shotCalculator =
+      new ShotCalculator(
+          () -> drivetrain.getState().Pose,
+          drivetrain::getFieldRelativeSpeeds,
+          TurretConstants.driveBaseToTurret);
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -90,8 +97,10 @@ public class RobotContainer {
         .x()
         .onTrue(
             turret.pointToPose(
-                () -> drivetrain.getState().Pose,
-                () -> shotCalculator.getCurrentEffectiveTargetPose().toPose2d()));
+                shotCalculator::getLookaheadPose,
+                () ->
+                    new Pose2d(
+                        FieldConstants.Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero)));
   }
 
   private void configureChoreoAutoChooser() {

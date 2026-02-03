@@ -1,3 +1,10 @@
+// Copyright (c) 2025 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems.sotm;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -7,19 +14,29 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.FieldConstants;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.function.Supplier;
-
 public class ShotCalculator {
-
-
 
   private static double phaseDelay;
   private static final InterpolatingDoubleTreeMap timeOfFlightMap =
       new InterpolatingDoubleTreeMap();
+  private final Supplier<Pose2d> robotPoseSupplier;
+  private final Supplier<ChassisSpeeds> robotVelocitySupplier;
+  private final Transform2d robotToTurret;
 
-  static {
+  private Pose2d lookaheadPose;
+
+  private Translation2d target = FieldConstants.Hub.topCenterPoint.toTranslation2d();
+
+  public ShotCalculator(
+      Supplier<Pose2d> robotPoseSupplier,
+      Supplier<ChassisSpeeds> robotVelocitySupplier,
+      Transform2d robotToTurret) {
+    this.robotPoseSupplier = robotPoseSupplier;
+    this.robotVelocitySupplier = robotVelocitySupplier;
+    this.robotToTurret = robotToTurret;
     phaseDelay = 0.03;
     timeOfFlightMap.put(5.68, 1.16);
     timeOfFlightMap.put(4.55, 1.12);
@@ -28,19 +45,7 @@ public class ShotCalculator {
     timeOfFlightMap.put(1.38, 0.90);
   }
 
-  // Suppliers for pose and velocity
-  private Supplier<Pose2d> robotPoseSupplier;
-  private Supplier<ChassisSpeeds> robotVelocitySupplier;
-  private Transform2d robotToTurret;
-
-  public void setInputs(
-      Supplier<Pose2d> robotPoseSupplier,
-      Supplier<ChassisSpeeds> robotVelocitySupplier,
-      Transform2d robotToTurret) {
-    this.robotPoseSupplier = robotPoseSupplier;
-    this.robotVelocitySupplier = robotVelocitySupplier;
-    this.robotToTurret = robotToTurret;
-  }
+  // Suppliers for pose and velocit
 
   /** Call this in a periodic loop */
   public void periodic() {
@@ -61,7 +66,6 @@ public class ShotCalculator {
     Pose2d turretPosition = estimatedPose.transformBy(robotToTurret);
 
     // Target
-    Translation2d target = FieldConstants.Hub.topCenterPoint.toTranslation2d();
 
     // Distance from turret to target
     double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
@@ -92,12 +96,17 @@ public class ShotCalculator {
               turretPosition.getRotation());
     }
 
+    this.lookaheadPose = lookaheadPose;
+
     Logger.recordOutput("ShotCalculator/LookaheadPose", lookaheadPose);
     Logger.recordOutput("ShotCalculator/TurretToTargetDistance", turretToTargetDistance);
-
-    // Store result
-    
   }
 
+  public Pose2d getLookaheadPose() {
+    return lookaheadPose;
+  }
 
+  public void setTarget(Translation2d target) {
+    this.target = target;
+  }
 }
