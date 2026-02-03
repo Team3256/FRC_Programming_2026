@@ -1,105 +1,143 @@
-// Copyright (c) 2025 FRC 3256
-// https://github.com/Team3256
+// Copyright (c) 2025-2026 Littleton Robotics
+// http://github.com/Mechanical-Advantage
 //
-// Use of this source code is governed by a 
+// Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.sotm;
+package org.littletonrobotics.frc2026.subsystems.shooter;
 
-import static frc.robot.subsystems.sotm.ShotCalculatorConstants.DISTANCE_TO_SHOOTER_SPEED;
-import static frc.robot.subsystems.sotm.ShotCalculatorConstants.ROBOT_TO_SHOOTER;
+import static org.littletonrobotics.frc2026.subsystems.shooter.ShooterConstants.*;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.FieldConstants;
-import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import frc.robot.utils.LoggedTracer;
-import frc.robot.utils.sotm.ChassisAccelerations;
-import frc.robot.utils.sotm.ShootOnTheFlyCalculator;
-import frc.robot.utils.sotm.ShootOnTheFlyCalculator.InterceptSolution;
+import lombok.experimental.ExtensionMethod;
+import org.littletonrobotics.frc2026.Constants;
+import org.littletonrobotics.frc2026.FieldConstants;
+import org.littletonrobotics.frc2026.RobotState;
+import org.littletonrobotics.frc2026.util.geometry.AllianceFlipUtil;
+import org.littletonrobotics.frc2026.util.geometry.GeomUtil;
 import org.littletonrobotics.junction.Logger;
 
-// stores current target and actively computes effective target
-public class ShotCalculator extends SubsystemBase {
-  private final CommandSwerveDrivetrain drivetrain;
+@ExtensionMethod({GeomUtil.class})
+public class ShotCalculator {
+  private static ShotCalculator instance;
 
-  private Pose3d currentEffectiveTargetPose = Pose3d.kZero;
-  private double currentEffectiveYaw;
-  private InterceptSolution currentInterceptSolution;
+  private final LinearFilter turretAngleFilter =
+      LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));
+  private final LinearFilter hoodAngleFilter =
+      LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));
 
-  private Pose3d targetLocation = new Pose3d(FieldConstants.Hub.topCenterPoint, Rotation3d.kZero);
-  private double targetDistance = 0.0;
-  private double targetSpeedRps = 8;
+  private Rotation2d lastTurretAngle;
+  private double lastHoodAngle;
+  private Rotation2d turretAngle;
+  private double hoodAngle = Double.NaN;
+  private double turretVelocity;
+  private double hoodVelocity;
 
-  public ShotCalculator(CommandSwerveDrivetrain drivetrain) {
-    this.drivetrain = drivetrain;
+  public static ShotCalculator getInstance() {
+    if (instance == null) instance = new ShotCalculator();
+    return instance;
   }
 
-  @Override
-  public void periodic() {
-    Pose2d drivetrainPose = drivetrain.getState().Pose;
+  public record ShootingParameters(
+      boolean isValid,
+      Rotation2d turretAngle,
+      double turretVelocity,
+      double hoodAngle,
+      double hoodVelocity,
+      double flywheelSpeed) {}
 
-    targetDistance =
-        drivetrainPose.getTranslation().getDistance(targetLocation.toPose2d().getTranslation());
-    targetSpeedRps = DISTANCE_TO_SHOOTER_SPEED.get(targetDistance);
+  // Cache parameters
+  private ShootingParameters latestParameters = null;
 
-    Pose3d shooterPose = new Pose3d(drivetrainPose).plus(ROBOT_TO_SHOOTER);
+  private static double minDistance;
+  private static double maxDistance;
+  private static double phaseDelay;
+  private static final InterpolatingTreeMap<Double, Rotation2d> shotHoodAngleMap =
+      new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), Rotation2d::interpolate);
+  private static final InterpolatingDoubleTreeMap shotFlywheelSpeedMap =
+      new InterpolatingDoubleTreeMap();
+  private static final InterpolatingDoubleTreeMap timeOfFlightMap =
+      new InterpolatingDoubleTreeMap();
 
-    ChassisSpeeds drivetrainSpeeds = drivetrain.getState().Speeds;
-    ChassisAccelerations drivetrainAccelerations = drivetrain.getFieldRelativeAccelerations();
+  static {
+    minDistance = 1.34;
+    maxDistance = 5.60;
+    phaseDelay = 0.03;
 
-    currentInterceptSolution =
-        ShootOnTheFlyCalculator.solveShootOnTheFly(
-            shooterPose,
-            targetLocation,
-            drivetrainSpeeds,
-            drivetrainAccelerations,
-            targetSpeedRps,
-            5,
-            0.01);
+    shotHoodAngleMap.put(1.34, Rotation2d.fromDegrees(19.0));
+    shotHoodAngleMap.put(1.78, Rotation2d.fromDegrees(19.0));
+    shotHoodAngleMap.put(2.17, Rotation2d.fromDegrees(24.0));
+    shotHoodAngleMap.put(2.81, Rotation2d.fromDegrees(27.0));
+    shotHoodAngleMap.put(3.82, Rotation2d.fromDegrees(29.0));
+    shotHoodAngleMap.put(4.09, Rotation2d.fromDegrees(30.0));
+    shotHoodAngleMap.put(4.40, Rotation2d.fromDegrees(31.0));
+    shotHoodAngleMap.put(4.77, Rotation2d.fromDegrees(32.0));
+    shotHoodAngleMap.put(5.57, Rotation2d.fromDegrees(32.0));
+    shotHoodAngleMap.put(5.60, Rotation2d.fromDegrees(35.0));
 
-    currentEffectiveTargetPose = currentInterceptSolution.effectiveTargetPose();
-    currentEffectiveYaw = currentInterceptSolution.requiredYaw();
+    shotFlywheelSpeedMap.put(1.34, 210.0);
+    shotFlywheelSpeedMap.put(1.78, 220.0);
+    shotFlywheelSpeedMap.put(2.17, 220.0);
+    shotFlywheelSpeedMap.put(2.81, 230.0);
+    shotFlywheelSpeedMap.put(3.82, 250.0);
+    shotFlywheelSpeedMap.put(4.09, 255.0);
+    shotFlywheelSpeedMap.put(4.40, 260.0);
+    shotFlywheelSpeedMap.put(4.77, 265.0);
+    shotFlywheelSpeedMap.put(5.57, 275.0);
+    shotFlywheelSpeedMap.put(5.60, 290.0);
 
-    Logger.recordOutput("ShotCalculator/EffectiveTargetPose", currentEffectiveTargetPose);
-    Logger.recordOutput("ShotCalculator/EffectiveYaw", currentEffectiveYaw);
-    Logger.recordOutput("ShotCalculator/TargetDistance", targetDistance);
-    Logger.recordOutput("ShotCalculator/TargetLocation", targetLocation);
-    Logger.recordOutput("ShotCalculator/TargetSpeedRps", targetSpeedRps);
-
-    LoggedTracer.record("ShotCalculator");
+    timeOfFlightMap.put(5.68, 1.16);
+    timeOfFlightMap.put(4.55, 1.12);
+    timeOfFlightMap.put(3.15, 1.11);
+    timeOfFlightMap.put(1.88, 1.09);
+    timeOfFlightMap.put(1.38, 0.90);
   }
 
-  public void setTarget(Pose3d targetLocation, double targetSpeedRps) {
-    this.targetLocation = targetLocation;
-    this.targetSpeedRps = targetSpeedRps;
+  public ShootingParameters getParameters() {
+    if (latestParameters != null) {
+      return latestParameters;
+    }
+
+    // Calculate estimated pose while accounting for phase delay
+    Pose2d estimatedPose = RobotState.getInstance().getEstimatedPose();
+    ChassisSpeeds robotRelativeVelocity = RobotState.getInstance().getRobotVelocity();
+    estimatedPose =
+        estimatedPose.exp(
+            new Twist2d(
+                robotRelativeVelocity.vxMetersPerSecond * phaseDelay,
+                robotRelativeVelocity.vyMetersPerSecond * phaseDelay,
+                robotRelativeVelocity.omegaRadiansPerSecond * phaseDelay));
+
+    // Calculate distance from turret to target
+    Translation2d target =
+        AllianceFlipUtil.apply(FieldConstants.Hub.topCenterPoint.toTranslation2d());
+    Pose2d turretPosition = estimatedPose.transformBy(robotToTurret.toTransform2d());
+    double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
+
+    // Calculate field relative turret velocity
+    ChassisSpeeds robotVelocity = RobotState.getInstance().getFieldVelocity();
+    double robotAngle = estimatedPose.getRotation().getRadians();
+    double turretVelocityX =
+        robotVelocity.vxMetersPerSecond
+            + robotVelocity.omegaRadiansPerSecond
+                * (robotToTurret.getY() * Math.cos(robotAngle)
+                    - robotToTurret.getX() * Math.sin(robotAngle));
+    double turretVelocityY =
+        robotVelocity.vyMetersPerSecond
+            + robotVelocity.omegaRadiansPerSecond
+                * (robotToTurret.getX() * Math.cos(robotAngle)
+                    - robotToTurret.getY() * Math.sin(robotAngle));
+
+    
   }
 
-  public Pose3d getCurrentEffectiveTargetPose() {
-    return currentEffectiveTargetPose;
-  }
-
-  public double getCurrentEffectiveYaw() {
-    return currentEffectiveYaw;
-  }
-
-  public InterceptSolution getInterceptSolution() {
-    return currentInterceptSolution;
-  }
-
-  public double getCurrentPivotAngle() {
-    return currentInterceptSolution != null ? currentInterceptSolution.launchPitchRad() : 0.0;
-  }
-
-  public double getCurrentShooterSpeed() {
-    return targetSpeedRps;
-  }
-
-  public double getTargetDistance() {
-    return targetDistance;
-  }
 }
