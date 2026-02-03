@@ -34,6 +34,9 @@ public class TurretConstants {
   public static final int turretEncoder1 = 0;
   public static final int turretEncoder2 = 1;
 
+
+  public static final double loopPeriodSecs = 0.02;
+
   public static final Rotation2d turretOffset = Rotation2d.kPi;
 
   public static final Transform2d driveBaseToTurret = new Transform2d();
