@@ -1,7 +1,6 @@
 package frc.robot.subsystems.sotm;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -15,15 +14,6 @@ import java.util.function.Supplier;
 public class ShotCalculator {
 
 
-  public record ShootingParameters(
-      boolean isValid,
-      Rotation2d turretAngle,
-      double turretVelocity,
-      double hoodAngle,
-      double hoodVelocity,
-      double flywheelSpeed) {}
-
-  private ShootingParameters latestParameters = null;
 
   private static double phaseDelay;
   private static final InterpolatingDoubleTreeMap timeOfFlightMap =
@@ -106,12 +96,8 @@ public class ShotCalculator {
     Logger.recordOutput("ShotCalculator/TurretToTargetDistance", turretToTargetDistance);
 
     // Store result
-    latestParameters =
-        new ShootingParameters(
-            true, Rotation2d.fromRadians(0), turretVelocityX, 0, turretVelocityY, 0);
+    
   }
 
-  public ShootingParameters getLatestParameters() {
-    return latestParameters;
-  }
+
 }
