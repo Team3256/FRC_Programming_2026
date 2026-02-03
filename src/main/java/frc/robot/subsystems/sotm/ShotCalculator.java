@@ -14,12 +14,6 @@ import java.util.function.Supplier;
 
 public class ShotCalculator {
 
-  private static ShotCalculator instance;
-
-  public static ShotCalculator getInstance() {
-    if (instance == null) instance = new ShotCalculator();
-    return instance;
-  }
 
   public record ShootingParameters(
       boolean isValid,
