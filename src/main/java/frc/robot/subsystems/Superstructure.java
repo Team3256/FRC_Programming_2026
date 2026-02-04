@@ -7,12 +7,16 @@
 
 package frc.robot.subsystems;
 
+import choreo.util.ChoreoAllianceFlipUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.climb.Climb;
+import frc.robot.FieldConstants;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intakepivot.IntakePivot;
@@ -52,7 +56,6 @@ public class Superstructure {
   private final Shooter shooter;
   private final IntakeRollers intakeRollers;
   private final IntakePivot intakePivot;
-  private final Climb climb;
   private final Feeder feeder;
   private final Turret turret;
 
@@ -60,13 +63,25 @@ public class Superstructure {
 
   private final Supplier<Pose2d> robotPoseSupplier;
 
+  private final Trigger targetBlueHub = new Trigger(this::targetBlueHub);
+  private final Trigger targetRedHub = new Trigger(this::targetRedHub);
+
+  private final Trigger feedTopCorner =
+      targetBlueHub.or(targetRedHub).negate().and(this::isRobotTopHalf);
+  private final Trigger feedBottomCorner =
+      targetBlueHub.or(targetRedHub).or(feedTopCorner).negate();
+
+  private final Translation2d topCorner = new Translation2d(1.5, 6.8);
+  private final Translation2d bottomCorner = new Translation2d(1.5, 1.5);
+
+  private Pose2d target;
+
   public Superstructure(
       Indexer indexer,
       ShooterPivot shooterPivot,
       Shooter shooter,
       IntakeRollers intakeRollers,
       IntakePivot intakePivot,
-      Climb climb,
       Feeder feeder,
       Turret turret,
       ShotCalculator shotCalculator,
@@ -76,13 +91,10 @@ public class Superstructure {
     this.shooter = shooter;
     this.intakeRollers = intakeRollers;
     this.intakePivot = intakePivot;
-    this.climb = climb;
     this.feeder = feeder;
     this.turret = turret;
     this.shotCalculator = shotCalculator;
     this.robotPoseSupplier = robotPoseSupplier;
-
-    // intake --> indexer --> feeder --> shooter
 
     stateTimer.start();
 
@@ -97,27 +109,48 @@ public class Superstructure {
   }
 
   public void configStateTransitions() {
-    stateTriggers.get(StructureState.IDLE);
 
-    // shoot fuel, dk how shooterpivot will work
-    stateTriggers.get(StructureState.SHOOT).onTrue(shooter.setVoltage(12));
+    new Trigger(DriverStation::isEnabled)
+        .whileTrue(turret.pointToPose(shotCalculator::getLookaheadPose, () -> target));
 
-    // intake fuel with rollers, unsure how pivot will work yet....
+    targetBlueHub.onTrue(changeTarget(FieldConstants.Hub.topCenterPoint.toTranslation2d()));
+
+    targetRedHub.onTrue(changeTarget(FieldConstants.Hub.oppTopCenterPoint.toTranslation2d()));
+
+    feedTopCorner.onTrue(
+        changeTarget(
+            () -> getAllianceBlue() ? topCorner : ChoreoAllianceFlipUtil.flip(bottomCorner)));
+    feedBottomCorner.onTrue(
+        changeTarget(
+            () -> getAllianceBlue() ? bottomCorner : ChoreoAllianceFlipUtil.flip(topCorner)));
+
+    targetRedHub.or(targetBlueHub).whileTrue(shooterPivot.shootHub(shotCalculator::getDistance));
+    feedTopCorner
+        .or(feedBottomCorner)
+        .whileTrue(shooterPivot.feedCorner(shotCalculator::getDistance));
+
     stateTriggers
-        .get(StructureState.INTAKE)
-        .onTrue(intakeRollers.setVoltage(12))
-        .onTrue(indexer.setVoltage(12))
-        .onTrue(feeder.setVoltage(12));
+        .get(StructureState.SHOOT)
+        .and(targetRedHub.or(targetBlueHub))
+        .whileTrue(shooter.shootHub(shotCalculator::getDistance));
+    stateTriggers
+        .get(StructureState.SHOOT)
+        .and(feedTopCorner.or(feedBottomCorner))
+        .whileTrue(shooter.feedCorner(shotCalculator::getDistance));
 
-    // climb
-    stateTriggers.get(StructureState.CLIMB).onTrue(climb.setPosition(0.5));
+    stateTriggers
+        .get(StructureState.SHOOT)
+        .debounce(.05)
+        .whileTrue(indexer.startShooting())
+        .whileTrue(feeder.startFeeding());
+
+    stateTriggers.get(StructureState.INTAKE).onTrue(intakeRollers.setVoltage(12));
 
     stateTriggers.get(StructureState.IDLE).onTrue(intakeRollers.off()).onTrue(shooter.off());
 
     // Kills all subsystems
     stateTriggers
         .get(StructureState.CANCEL_ALL)
-        .onTrue(climb.off())
         .onTrue(intakeRollers.off())
         .onTrue(intakePivot.off())
         .onTrue(shooter.off())
@@ -135,11 +168,44 @@ public class Superstructure {
 
   // call manually
   public void periodic() {
+
     Logger.recordOutput("Superstructure/State", this.state.toString());
     Logger.recordOutput("Superstructure/PrevState", this.prevState.toString());
     Logger.recordOutput("Superstructure/StateTime", this.stateTimer.get());
 
+    Logger.recordOutput("Superstructure/Target", target);
+
     LoggedTracer.record(this.getClass().getSimpleName());
+  }
+
+  private Command changeTarget(Translation2d target) {
+    return changeTarget(() -> target);
+  }
+
+  private Command changeTarget(Supplier<Translation2d> target) {
+    return Commands.runOnce(
+        () -> {
+          this.target = new Pose2d(target.get(), Rotation2d.kZero);
+          shotCalculator.setTarget(target.get());
+        });
+  }
+
+  private boolean getAllianceBlue() {
+    return DriverStation.getAlliance()
+        .orElse(DriverStation.Alliance.Blue)
+        .equals(DriverStation.Alliance.Blue);
+  }
+
+  private boolean targetBlueHub() {
+    return (robotPoseSupplier.get().getX() < 4 && getAllianceBlue());
+  }
+
+  private boolean targetRedHub() {
+    return (robotPoseSupplier.get().getX() > 12.5 && !getAllianceBlue());
+  }
+
+  private boolean isRobotTopHalf() {
+    return robotPoseSupplier.get().getY() > 4;
   }
 
   public Command setState(StructureState state) {

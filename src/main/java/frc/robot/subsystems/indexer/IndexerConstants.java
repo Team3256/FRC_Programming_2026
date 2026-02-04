@@ -22,7 +22,7 @@ public class IndexerConstants {
 
   public static final int kIndexerMotorID = 47; // TODO: FILL
 
-  public static final double indexerVoltage = 0.0;
+  public static final double indexVolt = 5;
 
   public static double updateFrequency = 50;
 

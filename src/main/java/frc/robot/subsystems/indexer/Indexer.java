@@ -41,6 +41,10 @@ public class Indexer extends DisableSubsystem {
     return this.run(() -> indexerIO.setVelocity(velocity)).finallyDo(indexerIO::off);
   }
 
+  public Command startShooting() {
+    return setVoltage(IndexerConstants.indexVolt);
+  }
+
   public Command off() {
     return this.runOnce(indexerIO::off);
   }
