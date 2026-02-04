@@ -17,6 +17,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 
 public final class ShooterConstants {
   // field oriented control
@@ -59,6 +60,28 @@ public final class ShooterConstants {
                   .withPeakReverseTorqueCurrent(80))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1));
   public static TalonFXConfiguration followerMotorConfigs = motorConfigs;
+
+  public static final InterpolatingDoubleTreeMap hubLUT =
+      new InterpolatingDoubleTreeMap() {
+        {
+          put(2.0, 5.0);
+          put(3.0, 7.0);
+          put(4.0, 9.0);
+          put(5.0, 11.0);
+          put(6.0, 13.0);
+        }
+      };
+
+  public static final InterpolatingDoubleTreeMap feedLUT =
+      new InterpolatingDoubleTreeMap() {
+        {
+          put(2.0, 5.0);
+          put(3.0, 7.0);
+          put(4.0, 9.0);
+          put(5.0, 11.0);
+          put(6.0, 13.0);
+        }
+      };
 
   public static final class SimulationConstants {
     public static double kLeftGearingRatio = 1; // TODO: Update this value

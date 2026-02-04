@@ -45,6 +45,14 @@ public class Shooter extends DisableSubsystem {
         .finallyDo(shooterIO::off);
   }
 
+  public Command shootHub(DoubleSupplier distance) {
+    return setVelocity(() -> ShooterConstants.hubLUT.get(distance.getAsDouble()));
+  }
+
+  public Command feedCorner(DoubleSupplier distance) {
+    return setVelocity(() -> ShooterConstants.feedLUT.get(distance.getAsDouble()));
+  }
+
   public Command off() {
     return this.runOnce(shooterIO::off);
   }

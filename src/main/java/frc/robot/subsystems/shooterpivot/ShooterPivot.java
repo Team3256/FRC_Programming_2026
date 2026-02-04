@@ -62,6 +62,14 @@ public class ShooterPivot extends DisableSubsystem {
     return this.runOnce(shooterPivotIO::off).withName("off");
   }
 
+  public Command shootHub(DoubleSupplier distance) {
+    return setPosition(() -> ShooterPivotConstants.hubLUT.get(distance.getAsDouble()));
+  }
+
+  public Command feedCorner(DoubleSupplier distance) {
+    return setPosition(() -> ShooterPivotConstants.feedLUT.get(distance.getAsDouble()));
+  }
+
   public boolean reachedPosition() {
     return Util.epsilonEquals(
         shooterPivotIOInputsAutoLogged.shooterPivotMotorPosition, reqPosition, 0.01);

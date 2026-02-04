@@ -19,6 +19,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 
@@ -56,6 +57,23 @@ public class ShooterPivotConstants {
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(80))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(40));
+
+  public static final InterpolatingDoubleTreeMap hubLUT =
+      new InterpolatingDoubleTreeMap() {
+        {
+          put(0.0, 0.0);
+          put(1.0, 0.5);
+          put(2.0, 1.0);
+        }
+      };
+  public static final InterpolatingDoubleTreeMap feedLUT =
+      new InterpolatingDoubleTreeMap() {
+        {
+          put(0.0, 0.0);
+          put(1.0, 0.5);
+          put(2.0, 1.0);
+        }
+      };
 
   public static final class PivotSim {
     public static final double pivotSimGearing = 40;

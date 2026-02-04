@@ -20,8 +20,26 @@ import org.littletonrobotics.junction.Logger;
 public class ShotCalculator {
 
   private static double phaseDelay;
-  private static final InterpolatingDoubleTreeMap timeOfFlightMap =
-      new InterpolatingDoubleTreeMap();
+  private static final InterpolatingDoubleTreeMap timeOfFlightMapHub =
+      new InterpolatingDoubleTreeMap() {
+        {
+          put(5.68, 1.16);
+          put(4.55, 1.12);
+          put(3.15, 1.11);
+          put(1.88, 1.09);
+          put(1.38, 0.90);
+        }
+      };
+  private static final InterpolatingDoubleTreeMap timeOfFlightMapFeed =
+      new InterpolatingDoubleTreeMap() {
+        {
+          put(5.68, 1.16);
+          put(4.55, 1.12);
+          put(3.15, 1.11);
+          put(1.88, 1.09);
+          put(1.38, 0.90);
+        }
+      };
   private final Supplier<Pose2d> robotPoseSupplier;
   private final Supplier<ChassisSpeeds> robotVelocitySupplier;
   private final Transform2d robotToTurret;
@@ -38,11 +56,6 @@ public class ShotCalculator {
     this.robotVelocitySupplier = robotVelocitySupplier;
     this.robotToTurret = robotToTurret;
     phaseDelay = 0.03;
-    timeOfFlightMap.put(5.68, 1.16);
-    timeOfFlightMap.put(4.55, 1.12);
-    timeOfFlightMap.put(3.15, 1.11);
-    timeOfFlightMap.put(1.88, 1.09);
-    timeOfFlightMap.put(1.38, 0.90);
   }
 
   // Suppliers for pose and velocit
@@ -50,6 +63,12 @@ public class ShotCalculator {
   /** Call this in a periodic loop */
   public void periodic() {
     if (robotPoseSupplier == null || robotVelocitySupplier == null) return;
+
+    InterpolatingDoubleTreeMap timeOfFlightMap = timeOfFlightMapHub;
+    if (!(target.equals(FieldConstants.Hub.topCenterPoint.toTranslation2d())
+        || target.equals(FieldConstants.Hub.oppTopCenterPoint.toTranslation2d()))) {
+      timeOfFlightMap = timeOfFlightMapFeed;
+    }
 
     Pose2d robotPose = robotPoseSupplier.get();
     ChassisSpeeds robotVelocity = robotVelocitySupplier.get();
@@ -104,6 +123,10 @@ public class ShotCalculator {
 
   public Pose2d getLookaheadPose() {
     return lookaheadPose;
+  }
+
+  public double getDistance() {
+    return lookaheadPose.getTranslation().getDistance(target);
   }
 
   public void setTarget(Translation2d target) {
