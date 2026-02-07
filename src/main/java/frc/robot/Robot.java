@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import au.grapplerobotics.MitoCANdria;
+import au.grapplerobotics.interfaces.MitoCANdriaInterface;
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -49,6 +51,15 @@ public class Robot extends LoggedRobot {
     m_robotContainer = new RobotContainer();
     if (Constants.FeatureFlags.kAdvKitEnabled) {
       configureAdvantageKit();
+    }
+    try (MitoCANdria mito = new MitoCANdria(0)) {
+
+      mito.setChannelVoltage(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_ADJ, 19);
+      mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_ADJ, true);
+      // Device operations here
+
+    } catch (Exception e) {
+      System.out.println("An error occurred: " + e.getMessage());
     }
 
     Runtime.getRuntime()

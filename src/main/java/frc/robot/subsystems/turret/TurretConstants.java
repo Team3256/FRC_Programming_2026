@@ -24,7 +24,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 
 public class TurretConstants {
-  public static final int turretMotorId = 51;
+  public static final int turretMotorId = 20;
 
   public static final boolean kUseFOC = true;
   public static final boolean kUseMotionMagic = true;
@@ -79,7 +79,7 @@ public class TurretConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(80))
-          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1));
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(26));
 
   public static final class SimulationConstants {
 

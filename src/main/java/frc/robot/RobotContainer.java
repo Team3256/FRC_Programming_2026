@@ -68,29 +68,10 @@ public class RobotContainer {
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  private final Shooter shooter =
-      new Shooter(true, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
-
-  private final ShooterPivot shooterPivot =
-      new ShooterPivot(
-          true, Utils.isSimulation() ? new ShooterPivotIOSim() : new ShooterPivotIOTalonFX());
-
-  private final Indexer indexer =
-      new Indexer(true, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
 
   private final Turret turret =
       new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
 
-  private final Feeder feeder =
-      new Feeder(true, Utils.isSimulation() ? new FeederIOSim() : new FeederIOTalonFX());
-
-  private final IntakePivot intakePivot =
-      new IntakePivot(
-          false, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
-
-  private final IntakeRollers intakeRollers =
-      new IntakeRollers(
-          true, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
 
   private final ShotCalculator shotCalculator =
       new ShotCalculator(
@@ -98,17 +79,6 @@ public class RobotContainer {
           drivetrain::getFieldRelativeSpeeds,
           TurretConstants.driveBaseToTurret);
 
-  private final Superstructure superstructure =
-      new Superstructure(
-          indexer,
-          shooterPivot,
-          shooter,
-          intakeRollers,
-          intakePivot,
-          feeder,
-          turret,
-          shotCalculator,
-          () -> drivetrain.getState().Pose);
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -131,16 +101,10 @@ public class RobotContainer {
 
   private void configureOperatorBinds() {
 
-    m_operatorController.a().whileTrue(shooter.setVoltage(12));
-    m_operatorController.b().whileTrue(indexer.setVoltage(12));
     m_operatorController
         .x()
         .onTrue(
-            turret.pointToPose(
-                shotCalculator::getLookaheadPose,
-                () ->
-                    new Pose2d(
-                        FieldConstants.Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero)));
+            turret.setPositionFieldRelative(()->Rotation2d.kZero, ()->drivetrain.getState().Pose.getRotation()));
   }
 
   private void configureChoreoAutoChooser() {
@@ -198,6 +162,5 @@ public class RobotContainer {
 
   public void periodic() {
     shotCalculator.periodic();
-    superstructure.periodic();
   }
 }
