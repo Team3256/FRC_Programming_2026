@@ -28,15 +28,15 @@ public class VisionConstants {
   // (Not used by Limelight, configure in web UI instead)
   public static Transform3d robotToLeftCam =
       new Transform3d(
-          Units.inchesToMeters(3),
-          Units.inchesToMeters(6.565),
-          Units.inchesToMeters(6.123),
+          Units.inchesToMeters(0),
+          Units.inchesToMeters(13.376),
+          Units.inchesToMeters(6.467),
           new Rotation3d(0.0, Units.degreesToRadians(-25), Units.degreesToRadians(90)));
   public static Transform3d robotToRightCam =
       new Transform3d(
-          Units.inchesToMeters(-3),
-          Units.inchesToMeters(-6.53),
-          Units.inchesToMeters(6.109),
+          Units.inchesToMeters(0),
+          Units.inchesToMeters(-13.667),
+          Units.inchesToMeters(7.678),
           new Rotation3d(0.0, Units.degreesToRadians(-25), Units.degreesToRadians(-90)));
 
   // Basic filtering thresholds

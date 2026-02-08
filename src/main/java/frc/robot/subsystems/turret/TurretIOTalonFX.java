@@ -10,6 +10,7 @@ package frc.robot.subsystems.turret;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -23,7 +24,7 @@ import frc.robot.utils.PhoenixUtil;
 
 public class TurretIOTalonFX implements TurretIO {
 
-  private final TalonFX turretMotor = new TalonFX(TurretConstants.turretMotorId);
+  private final TalonFX turretMotor = new TalonFX(TurretConstants.turretMotorId, new CANBus("mani"));
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0).withSlot(0).withEnableFOC(TurretConstants.kUseFOC);
 
@@ -64,7 +65,7 @@ public class TurretIOTalonFX implements TurretIO {
         turretMotorStatorCurrent);
 
     PhoenixUtil.registerSignals(
-        false,
+        true,
         turretMotorVoltage,
         turretMotorVelocity,
         turretMotorPosition,

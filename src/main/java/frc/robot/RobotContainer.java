@@ -47,6 +47,9 @@ import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretConstants;
 import frc.robot.subsystems.turret.TurretIOSim;
 import frc.robot.subsystems.turret.TurretIOTalonFX;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -66,11 +69,14 @@ public class RobotContainer {
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final CommandSwerveDrivetrain drivetrain = TunerConstants. createDrivetrain();
 
 
   private final Turret turret =
       new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
+
+  private final Vision vision = new Vision(drivetrain::addVisionMeasurement, new VisionIOPhotonVision("left", VisionConstants.robotToLeftCam), new VisionIOPhotonVision("right", VisionConstants.robotToRightCam));
+
 
 
   private final ShotCalculator shotCalculator =
@@ -101,10 +107,11 @@ public class RobotContainer {
 
   private void configureOperatorBinds() {
 
-    m_operatorController
-        .x()
+    m_driverController
+        .a()
         .onTrue(
-            turret.setPositionFieldRelative(()->Rotation2d.kZero, ()->drivetrain.getState().Pose.getRotation()));
+            turret.pointToPose(()->drivetrain.getState().Pose, ()->new Pose2d(FieldConstants.Hub.innerCenterPoint.toTranslation2d(), Rotation2d.kZero)));
+
   }
 
   private void configureChoreoAutoChooser() {
@@ -145,7 +152,7 @@ public class RobotContainer {
                     .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate)));
 
     m_driverController
-        .a()
+        .leftBumper()
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
