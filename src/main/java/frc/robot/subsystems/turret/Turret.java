@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
 import frc.robot.utils.Util;
@@ -23,6 +24,8 @@ public class Turret extends DisableSubsystem {
   private final TurretIOInputsAutoLogged turretIOInputsAutoLogged = new TurretIOInputsAutoLogged();
 
   private double reqPosition = 0.0;
+
+  public final Trigger reachedPosition = new Trigger(this::reachedPosition);
 
   public Turret(boolean enabled, TurretIO turretIO) {
     super(enabled);
@@ -101,6 +104,6 @@ public class Turret extends DisableSubsystem {
   }
 
   public boolean reachedPosition() {
-    return Util.epsilonEquals(turretIOInputsAutoLogged.turretMotorPosition, reqPosition, 0.01);
+    return Util.epsilonEquals(turretIOInputsAutoLogged.turretMotorPosition, reqPosition, 0.05);
   }
 }
