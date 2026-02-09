@@ -24,7 +24,8 @@ import frc.robot.utils.PhoenixUtil;
 
 public class TurretIOTalonFX implements TurretIO {
 
-  private final TalonFX turretMotor = new TalonFX(TurretConstants.turretMotorId, new CANBus("mani"));
+  private final TalonFX turretMotor =
+      new TalonFX(TurretConstants.turretMotorId, new CANBus("mani"));
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0).withSlot(0).withEnableFOC(TurretConstants.kUseFOC);
 

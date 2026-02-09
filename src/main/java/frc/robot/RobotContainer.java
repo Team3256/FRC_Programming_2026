@@ -21,25 +21,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.sim.SimMechs;
-import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.feeder.Feeder;
-import frc.robot.subsystems.feeder.FeederIOSim;
-import frc.robot.subsystems.feeder.FeederIOTalonFX;
-import frc.robot.subsystems.indexer.Indexer;
-import frc.robot.subsystems.indexer.IndexerIOSim;
-import frc.robot.subsystems.indexer.IndexerIOTalonFX;
-import frc.robot.subsystems.intakepivot.IntakePivot;
-import frc.robot.subsystems.intakepivot.IntakePivotIOSim;
-import frc.robot.subsystems.intakepivot.IntakePivotIOTalonFX;
-import frc.robot.subsystems.intakerollers.IntakeRollers;
-import frc.robot.subsystems.intakerollers.IntakeRollersIOSim;
-import frc.robot.subsystems.intakerollers.IntakeRollersIOTalonFX;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterIOSim;
-import frc.robot.subsystems.shooter.ShooterIOTalonFX;
-import frc.robot.subsystems.shooterpivot.ShooterPivot;
-import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
-import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
 import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
@@ -69,22 +50,22 @@ public class RobotContainer {
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants. createDrivetrain();
-
+  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   private final Turret turret =
       new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
 
-  private final Vision vision = new Vision(drivetrain::addVisionMeasurement, new VisionIOPhotonVision("left", VisionConstants.robotToLeftCam), new VisionIOPhotonVision("right", VisionConstants.robotToRightCam));
-
-
+  private final Vision vision =
+      new Vision(
+          drivetrain::addVisionMeasurement,
+          new VisionIOPhotonVision("left", VisionConstants.robotToLeftCam),
+          new VisionIOPhotonVision("right", VisionConstants.robotToRightCam));
 
   private final ShotCalculator shotCalculator =
       new ShotCalculator(
           () -> drivetrain.getState().Pose,
           drivetrain::getFieldRelativeSpeeds,
           TurretConstants.driveBaseToTurret);
-
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -110,8 +91,11 @@ public class RobotContainer {
     m_driverController
         .a()
         .onTrue(
-            turret.pointToPose(()->drivetrain.getState().Pose, ()->new Pose2d(FieldConstants.Hub.innerCenterPoint.toTranslation2d(), Rotation2d.kZero)));
-
+            turret.pointToPose(
+                () -> drivetrain.getState().Pose,
+                () ->
+                    new Pose2d(
+                        FieldConstants.Hub.innerCenterPoint.toTranslation2d(), Rotation2d.kZero)));
   }
 
   private void configureChoreoAutoChooser() {
