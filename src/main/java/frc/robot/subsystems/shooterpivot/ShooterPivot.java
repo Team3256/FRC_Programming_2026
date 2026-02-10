@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems.shooterpivot;
 
-import static edu.wpi.first.units.Units.Rotations;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.utils.DisableSubsystem;
@@ -60,11 +58,17 @@ public class ShooterPivot extends DisableSubsystem {
     return this.run(() -> shooterPivotIO.setVoltage(voltage));
   }
 
-
   public Command off() {
     return this.runOnce(shooterPivotIO::off).withName("off");
   }
 
+  public Command shootHub(DoubleSupplier distance) {
+    return setPosition(() -> ShooterPivotConstants.hubLUT.get(distance.getAsDouble()));
+  }
+
+  public Command feedCorner(DoubleSupplier distance) {
+    return setPosition(() -> ShooterPivotConstants.feedLUT.get(distance.getAsDouble()));
+  }
 
   public boolean reachedPosition() {
     return Util.epsilonEquals(

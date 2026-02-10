@@ -11,27 +11,26 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 
 import choreo.auto.AutoChooser;
-import choreo.util.ChoreoAllianceFlipUtil;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.InternalButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.sim.SimMechs;
-
+import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
-
-import java.util.List;
+import frc.robot.subsystems.turret.Turret;
+import frc.robot.subsystems.turret.TurretConstants;
+import frc.robot.subsystems.turret.TurretIOSim;
+import frc.robot.subsystems.turret.TurretIOTalonFX;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,25 +43,39 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public final CommandXboxController m_driverController =
-          new CommandXboxController(ControllerConstants.kDriverControllerPort);
+      new CommandXboxController(ControllerConstants.kDriverControllerPort);
   public final CommandXboxController m_operatorController =
-          new CommandXboxController(ControllerConstants.kOperatorControllerPort);
+      new CommandXboxController(ControllerConstants.kOperatorControllerPort);
 
   private final Telemetry logger =
-          new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
+      new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+  private final Turret turret =
+      new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
+
+  private final Vision vision =
+      new Vision(
+          drivetrain::addVisionMeasurement,
+          new VisionIOPhotonVision("left", VisionConstants.robotToLeftCam),
+          new VisionIOPhotonVision("right", VisionConstants.robotToRightCam));
+
+  private final ShotCalculator shotCalculator =
+      new ShotCalculator(
+          () -> drivetrain.getState().Pose,
+          drivetrain::getFieldRelativeSpeeds,
+          TurretConstants.driveBaseToTurret);
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
 
-
   //  private final Limelight limelight = new Limelight("limelight");
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     // Configure the trigger bindings
     configureOperatorBinds();
     configureChoreoAutoChooser();
@@ -73,18 +86,22 @@ public class RobotContainer {
     }
   }
 
-
-
-
   private void configureOperatorBinds() {
 
+    m_driverController
+        .a()
+        .onTrue(
+            turret.pointToPose(
+                () -> drivetrain.getState().Pose,
+                () ->
+                    new Pose2d(
+                        FieldConstants.Hub.innerCenterPoint.toTranslation2d(), Rotation2d.kZero)));
   }
 
   private void configureChoreoAutoChooser() {
 
     // Add options to the chooser
     autoChooser.addCmd("Wheel Radius Change", () -> drivetrain.wheelRadiusCharacterization(1));
-
 
     SmartDashboard.putData("auto chooser", autoChooser);
 
@@ -96,48 +113,45 @@ public class RobotContainer {
 
     // Request to drive normally using input for both translation and rotation
     SwerveRequest.FieldCentric drive =
-            new SwerveRequest.FieldCentric()
-                    .withDeadband(0.15 * MaxSpeed)
-                    .withRotationalRate(0.15 * MaxAngularRate);
+        new SwerveRequest.FieldCentric()
+            .withDeadband(deadbandMultiplier * MaxSpeed)
+            .withRotationalRate(deadbandMultiplier * MaxAngularRate);
 
     // Request to control translation, with rotation being controlled by a heading controller
     SwerveRequest.FieldCentricFacingAngle azimuth =
-            new SwerveRequest.FieldCentricFacingAngle().withDeadband(0.15 * MaxSpeed);
+        new SwerveRequest.FieldCentricFacingAngle().withDeadband(deadbandMultiplier * MaxSpeed);
 
     // Heading controller to control azimuth rotations
     azimuth.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
-    azimuth.HeadingController.setPID(6, 0, 0);
+    azimuth.HeadingController.setPID(
+        AzimuthTargets.aziKP, AzimuthTargets.aziKi, AzimuthTargets.aziKD);
 
     // Default Swerve Command, run periodically every 20ms
     drivetrain.setDefaultCommand(
-            drivetrain.applyRequest(
-                    () ->
-                            drive
-                                    .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
-                                    .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
-                                    .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate)));
+        drivetrain.applyRequest(
+            () ->
+                drive
+                    .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                    .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                    .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate)));
 
     m_driverController
-            .a()
-            .whileTrue(
-                    drivetrain.applyRequest(
-                            () ->
-                                    drive
-                                            .withVelocityX(-m_driverController.getLeftY() * SlowMaxSpeed)
-                                            .withVelocityY(-m_driverController.getLeftX() * SlowMaxSpeed)
-                                            .withRotationalRate(-m_driverController.getRightX() * SlowMaxAngular)));
-
-
-    // Azimuth Barge Close
+        .leftBumper()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () ->
+                    drive
+                        .withVelocityX(-m_driverController.getLeftY() * SlowMaxSpeed)
+                        .withVelocityY(-m_driverController.getLeftX() * SlowMaxSpeed)
+                        .withRotationalRate(-m_driverController.getRightX() * SlowMaxAngular)));
 
     // sets the heading to wherever the robot is facing
-    // do this with the elevator side of the robot facing YOU
     m_driverController.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
   public void periodic() {
-
+    shotCalculator.periodic();
   }
 }

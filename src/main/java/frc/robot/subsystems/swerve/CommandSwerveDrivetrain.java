@@ -13,7 +13,6 @@ import choreo.Choreo.TrajectoryLogger;
 import choreo.auto.AutoFactory;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -28,8 +27,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -37,13 +34,12 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.swerve.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.utils.LoggedTracer;
+import frc.robot.utils.sotm.ChassisAccelerations;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-
-import frc.robot.utils.LoggedTracer;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -62,6 +58,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   @AutoLogOutput private double averageWheelPosition = 0;
   @AutoLogOutput private double[] startWheelPositions = new double[4];
   @AutoLogOutput private double currentEffectiveWheelRadius = 0;
+
+  private ChassisSpeeds previousSpeeds = new ChassisSpeeds();
+  private double previousTime = 0.0;
 
   /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
   private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -175,7 +174,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
   }
 
-
   /**
    * Creates a new auto factory for this drivetrain.
    *
@@ -240,7 +238,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             .withWheelForceFeedforwardsY(sample.moduleForcesY()));
   }
 
-
   @Override
   public void periodic() {
     /*
@@ -266,7 +263,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
               });
     }
 
-     LoggedTracer.record(this.getClass().getSimpleName());
+    previousSpeeds =
+        ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getState().RawHeading);
+    previousTime = getState().Timestamp;
+
+    LoggedTracer.record(this.getClass().getSimpleName());
   }
 
   public void addPhotonEstimate(
@@ -279,6 +280,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     // }
 
     // }
+  }
+
+  public ChassisAccelerations getFieldRelativeAccelerations() {
+
+    return new ChassisAccelerations(
+        getFieldRelativeSpeeds(), previousSpeeds, getState().Timestamp - previousTime);
+  }
+
+  public ChassisSpeeds getFieldRelativeSpeeds() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getState().RawHeading);
   }
 
   /**

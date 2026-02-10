@@ -7,9 +7,10 @@
 
 package frc.robot;
 
+import au.grapplerobotics.MitoCANdria;
+import au.grapplerobotics.interfaces.MitoCANdriaInterface;
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.epilogue.logging.errors.ErrorHandler;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -51,9 +52,18 @@ public class Robot extends LoggedRobot {
     if (Constants.FeatureFlags.kAdvKitEnabled) {
       configureAdvantageKit();
     }
+    try (MitoCANdria mito = new MitoCANdria(0)) {
+
+      mito.setChannelVoltage(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_ADJ, 19);
+      mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_ADJ, true);
+      // Device operations here
+
+    } catch (Exception e) {
+      System.out.println("An error occurred: " + e.getMessage());
+    }
 
     Runtime.getRuntime()
-            .gc(); // gc is a blocking call; robot constructor will not initialize until this is
+        .gc(); // gc is a blocking call; robot constructor will not initialize until this is
     // finished. this will cause "No Robot Code" until gc is finished.
 
   }
@@ -73,19 +83,19 @@ public class Robot extends LoggedRobot {
           System.out.println("USB directory created at " + usbLoc.getAbsolutePath());
         }
         Logger.addDataReceiver(
-                new WPILOGWriter("/home/lvuser/wpilogs")); // ensure this directory exists
+            new WPILOGWriter("/home/lvuser/wpilogs")); // ensure this directory exists
         // advantage kit should be created before driverStationConnected()
       }
       Logger.addDataReceiver(new NT4PublisherNoFMS()); // Publish data to NetworkTables
       // Enables power distribution logging
       new PowerDistribution(
-              1, ModuleType.kRev); // Ignore this "resource leak"; it was the example code from docs
+          1, ModuleType.kRev); // Ignore this "resource leak"; it was the example code from docs
     } else {
       if (Constants.Logging.kAdvkitUseReplayLogs) {
         setUseTiming(false); // Run as fast as possible
         String logPath =
-                LogFileUtil
-                        .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+            LogFileUtil
+                .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
         Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
         // Save outputs to a new log
         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
@@ -130,13 +140,10 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {
-  }
+  public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {
-
-  }
+  public void disabledPeriodic() {}
 
   @Override
   public void driverStationConnected() {

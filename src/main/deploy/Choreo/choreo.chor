@@ -1,0 +1,99 @@
+{
+ "name":"choreo",
+ "version":2,
+ "type":"Swerve",
+ "variables":{
+  "expressions":{},
+  "poses":{
+   "bottomStart":{
+    "x":{
+     "exp":"3.649766683578491 m",
+     "val":3.649766683578491
+    },
+    "y":{
+     "exp":"2.4246015548706055 m",
+     "val":2.4246015548706055
+    },
+    "heading":{
+     "exp":"-90 deg",
+     "val":-1.5707963267948966
+    }
+   }
+  }
+ },
+ "config":{
+  "frontLeft":{
+   "x":{
+    "exp":"10.891 in",
+    "val":0.27663139999999997
+   },
+   "y":{
+    "exp":"10.891 in",
+    "val":0.27663139999999997
+   }
+  },
+  "backLeft":{
+   "x":{
+    "exp":"-10.891 in",
+    "val":-0.27663139999999997
+   },
+   "y":{
+    "exp":"10.891 in",
+    "val":0.27663139999999997
+   }
+  },
+  "mass":{
+   "exp":"150 lbs",
+   "val":68.0388555
+  },
+  "inertia":{
+   "exp":"6 kg m ^ 2",
+   "val":6.0
+  },
+  "gearing":{
+   "exp":"6.03",
+   "val":6.03
+  },
+  "radius":{
+   "exp":"2 in",
+   "val":0.0508
+  },
+  "vmax":{
+   "exp":"6000 RPM",
+   "val":628.3185307179587
+  },
+  "tmax":{
+   "exp":"1.2 N * m",
+   "val":1.2
+  },
+  "cof":{
+   "exp":"1",
+   "val":1.0
+  },
+  "bumper":{
+   "front":{
+    "exp":"16 in",
+    "val":0.4064
+   },
+   "side":{
+    "exp":"16 in",
+    "val":0.4064
+   },
+   "back":{
+    "exp":"16 in",
+    "val":0.4064
+   }
+  },
+  "differentialTrackWidth":{
+   "exp":"22 in",
+   "val":0.5588
+  }
+ },
+ "generationFeatures":[],
+ "codegen":{
+  "root":"Users/ryanabraham/Downloads/FRC_Programming_2026/src/main/deploy/Choreo",
+  "genVars":true,
+  "genTrajData":true,
+  "useChoreoLib":true
+ }
+}

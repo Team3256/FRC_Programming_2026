@@ -33,7 +33,8 @@ public class ShooterIOTalonFX implements ShooterIO {
   private final StatusSignal<Temperature> shooterMotorTemperature = shooterMotor.getDeviceTemp();
 
   private final TalonFX shooterMotorFollower = new TalonFX(ShooterConstants.shooterFollower);
-  private final Follower followReq = new Follower(ShooterConstants.shooterMain, MotorAlignmentValue.Aligned);
+  private final Follower followReq =
+      new Follower(ShooterConstants.shooterMain, MotorAlignmentValue.Aligned);
 
   private final StatusSignal<Voltage> shooterMotorFollowerVoltage =
       shooterMotorFollower.getMotorVoltage();
@@ -68,17 +69,17 @@ public class ShooterIOTalonFX implements ShooterIO {
         shooterMotorFollowerSupplyCurrent,
         shooterMotorFollowerTemperature);
     PhoenixUtil.registerSignals(
-            false,
-            shooterMotorVoltage,
-            shooterMotorVelocity,
-            shooterMotorStatorCurrent,
-            shooterMotorSupplyCurrent,
-            shooterMotorTemperature,
-            shooterMotorFollowerVoltage,
-            shooterMotorFollowerVelocity,
-            shooterMotorFollowerStatorCurrent,
-            shooterMotorFollowerSupplyCurrent,
-            shooterMotorFollowerTemperature);
+        false,
+        shooterMotorVoltage,
+        shooterMotorVelocity,
+        shooterMotorStatorCurrent,
+        shooterMotorSupplyCurrent,
+        shooterMotorTemperature,
+        shooterMotorFollowerVoltage,
+        shooterMotorFollowerVelocity,
+        shooterMotorFollowerStatorCurrent,
+        shooterMotorFollowerSupplyCurrent,
+        shooterMotorFollowerTemperature);
     shooterMotor.optimizeBusUtilization();
     shooterMotorFollower.optimizeBusUtilization();
   }
@@ -133,5 +134,4 @@ public class ShooterIOTalonFX implements ShooterIO {
   public TalonFX getFollowerMotor() {
     return shooterMotorFollower;
   }
-
 }

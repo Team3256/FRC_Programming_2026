@@ -7,12 +7,10 @@
 
 package frc.robot.subsystems.shooter;
 
-
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
-import frc.robot.utils.LoggedTunableNumber;
+import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends DisableSubsystem {
@@ -20,9 +18,8 @@ public class Shooter extends DisableSubsystem {
   private final ShooterIO shooterIO;
   private final ShooterIOInputsAutoLogged shooterIOAutoLogged = new ShooterIOInputsAutoLogged();
 
-
-  public Shooter(boolean disabled, ShooterIO shooterIO) {
-    super(disabled);
+  public Shooter(boolean enabled, ShooterIO shooterIO) {
+    super(enabled);
     this.shooterIO = shooterIO;
   }
 
@@ -32,21 +29,29 @@ public class Shooter extends DisableSubsystem {
     shooterIO.updateInputs(shooterIOAutoLogged);
     Logger.processInputs("Shooter", shooterIOAutoLogged);
 
-      LoggedTracer.record("Shooter");
+    LoggedTracer.record("Shooter");
   }
 
   public Command setVoltage(double voltage) {
-    return this.run(()->shooterIO.setShooterVoltage(voltage))
-        .finallyDo(shooterIO::off);
+    return this.run(() -> shooterIO.setShooterVoltage(voltage)).finallyDo(shooterIO::off);
   }
 
   public Command setVelocity(double velocity) {
-    return this.run(
-            () ->
-              shooterIO.setShooterVelocity(velocity))
+    return this.run(() -> shooterIO.setShooterVelocity(velocity)).finallyDo(shooterIO::off);
+  }
+
+  public Command setVelocity(DoubleSupplier velocity) {
+    return this.run(() -> shooterIO.setShooterVelocity(velocity.getAsDouble()))
         .finallyDo(shooterIO::off);
   }
 
+  public Command shootHub(DoubleSupplier distance) {
+    return setVelocity(() -> ShooterConstants.hubLUT.get(distance.getAsDouble()));
+  }
+
+  public Command feedCorner(DoubleSupplier distance) {
+    return setVelocity(() -> ShooterConstants.feedLUT.get(distance.getAsDouble()));
+  }
 
   public Command off() {
     return this.runOnce(shooterIO::off);
