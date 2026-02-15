@@ -10,7 +10,9 @@ package frc.robot.commands;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 public class AutoRoutines {
@@ -50,12 +52,17 @@ public class AutoRoutines {
   public AutoRoutine MidMid2x() {
     final AutoRoutine routine = m_factory.newRoutine("MidMid2x");
     final AutoTrajectory midMid2x = routine.trajectory("MidMid2x");
-
-    routine.active().onTrue(midMid2x.resetOdometry().andThen(midMid2x.cmd()));
+    
     routine
         .active()
         .onTrue(midMid2x.resetOdometry().andThen(Commands.waitSeconds(0)).andThen(midMid2x.cmd()));
-        midMid2x.atTimeBeforeEnd(0.5).onTrue(m_superstructure.setState(StructureState.SHOOT));
+    midMid2x.atTime("Start").onTrue(m_superstructure.setState(StructureState.REV).andThen(Commands.waitSeconds(2)).andThen(m_superstructure.setState(StructureState.SHOOT)));
+    midMid2x.atTime("Intake1").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    midMid2x.atTime("Home1").onTrue(m_superstructure.setState(StructureState.REV));
+    midMid2x.atTime("Shoot1").onTrue(m_superstructure.setState(StructureState.SHOOT));
+    midMid2x.atTime("Intake2").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    midMid2x.atTime("Home2").onTrue(m_superstructure.setState(StructureState.REV));
+    midMid2x.atTime("Shoot2").onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
   }
