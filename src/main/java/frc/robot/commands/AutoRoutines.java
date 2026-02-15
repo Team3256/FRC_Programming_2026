@@ -10,7 +10,6 @@ package frc.robot.commands;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
-import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 public class AutoRoutines {
@@ -18,21 +17,16 @@ public class AutoRoutines {
   private final AutoFactory m_factory;
 
   // subsystems
-  private final Superstructure m_superstructure;
 
   private final AutoCommands m_autoCommands;
 
   private final CommandSwerveDrivetrain m_drivetrain;
 
   public AutoRoutines(
-      AutoFactory factory,
-      AutoCommands mAutoCommands,
-      CommandSwerveDrivetrain drivetrain,
-      Superstructure superstructure) {
+      AutoFactory factory, AutoCommands mAutoCommands, CommandSwerveDrivetrain drivetrain) {
     m_factory = factory;
     m_autoCommands = mAutoCommands;
     m_drivetrain = drivetrain; // subsystems
-    m_superstructure = superstructure;
   }
 
   public AutoRoutine forward() {
@@ -41,6 +35,19 @@ public class AutoRoutines {
     routine.active().onTrue(forward.resetOdometry().andThen(forward().cmd()));
     return routine;
   }
+
+
+  public AutoRoutine topMid() {
+    final AutoRoutine routine = m_factory.newRoutine("topmid");
+    final AutoTrajectory topMid = routine.trajectory("TopMid");
+    routine.active().onTrue(topMid.resetOdometry().andThen(topMid.cmd()));
+
+    topMid.atTime("Intake").onTrue(m_superstructure)
+    topMid.atTime()
+
+    return routine;
+
+    }
 
   private static class AutoCommands {
 
