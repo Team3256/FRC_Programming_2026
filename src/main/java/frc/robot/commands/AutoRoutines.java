@@ -59,7 +59,7 @@ public class AutoRoutines {
 
     return routine;
   }
-  
+
   public AutoRoutine bottomMid() {
     final AutoRoutine routine = m_factory.newRoutine("bottomMid");
     final AutoTrajectory traj = routine.trajectory("bottomMid");
@@ -73,8 +73,6 @@ public class AutoRoutines {
             m_superstructure
                 .setState(StructureState.IDLE)
                 .andThen(m_superstructure.setState(StructureState.REV)));
-
-    topMidNoClimb.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
     traj.atTime("Bump").onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
