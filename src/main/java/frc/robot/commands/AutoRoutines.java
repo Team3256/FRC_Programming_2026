@@ -50,6 +50,16 @@ public class AutoRoutines {
     topMidNoClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
     topMidNoClimb
         .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    topMidNoClimb.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+
+    return routine;
+  }
+  
   public AutoRoutine bottomMid() {
     final AutoRoutine routine = m_factory.newRoutine("bottomMid");
     final AutoTrajectory traj = routine.trajectory("bottomMid");
