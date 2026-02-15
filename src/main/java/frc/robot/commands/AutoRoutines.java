@@ -22,11 +22,8 @@ public class AutoRoutines {
 
   // subsystems
   private final Superstructure m_superstructure;
-
   private final AutoCommands m_autoCommands;
-
   private final CommandSwerveDrivetrain m_drivetrain;
-    private final Superstructure m_superstructure;
 
   public AutoRoutines(
       AutoFactory factory,
