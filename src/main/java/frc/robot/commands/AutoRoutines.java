@@ -44,7 +44,7 @@ public class AutoRoutines {
   }
 
   public AutoRoutine topMidNoClimb() {
-    final AutoRoutine routine = m_factory.newRoutine("topmidnoclimb");
+    final AutoRoutine routine = m_factory.newRoutine("topMidNoClimb");
     final AutoTrajectory topMidNoClimb = routine.trajectory("TopMidNoClimb");
     routine.active().onTrue(topMidNoClimb.resetOdometry().andThen(topMidNoClimb.cmd()));
 
