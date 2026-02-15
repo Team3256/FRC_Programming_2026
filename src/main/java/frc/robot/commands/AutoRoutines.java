@@ -45,13 +45,13 @@ public class AutoRoutines {
 
   public AutoRoutine topMidNoClimb() {
     final AutoRoutine routine = m_factory.newRoutine("topmidnoclimb");
-    final AutoTrajectory topMid = routine.trajectory("TopMidNoClimb");
-    routine.active().onTrue(topMid.resetOdometry().andThen(topMid.cmd()));
+    final AutoTrajectory topMidNoClimb = routine.trajectory("TopMidNoClimb");
+    routine.active().onTrue(topMidNoClimb.resetOdometry().andThen(topMidNoClimb.cmd()));
 
-    topMid.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
-    topMid.atTime("StopIntake").onTrue(m_superstructure.setState(StructureState.IDLE));
-    topMid.atTime("Rev").onTrue(m_superstructure.setState(StructureState.REV));
-    topMid.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+    topMidNoClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    topMidNoClimb.atTime("StopIntake").onTrue(m_superstructure.setState(StructureState.IDLE));
+    topMidNoClimb.atTime("Rev").onTrue(m_superstructure.setState(StructureState.REV));
+    topMidNoClimb.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
   }
