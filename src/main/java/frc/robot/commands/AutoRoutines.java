@@ -21,6 +21,7 @@ public class AutoRoutines {
   private final AutoFactory m_factory;
 
   // subsystems
+  private final Superstructure m_superstructure;
 
   private final AutoCommands m_autoCommands;
 
@@ -28,7 +29,10 @@ public class AutoRoutines {
     private final Superstructure m_superstructure;
 
   public AutoRoutines(
-      AutoFactory factory, AutoCommands mAutoCommands, CommandSwerveDrivetrain drivetrain, Superstructure superstructure) {
+      AutoFactory factory,
+      AutoCommands mAutoCommands,
+      CommandSwerveDrivetrain drivetrain,
+      Superstructure superstructure) {
     m_factory = factory;
     m_autoCommands = mAutoCommands;
     m_drivetrain = drivetrain; // subsystems
