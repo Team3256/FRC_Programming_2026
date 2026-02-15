@@ -49,12 +49,13 @@ public class AutoRoutines {
     routine.active().onTrue(topMidNoClimb.resetOdometry().andThen(topMidNoClimb.cmd()));
 
     topMidNoClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
-    topMidNoClimb.atTime("StopIntake")
+    topMidNoClimb
+        .atTime("StopIntake")
         .onTrue(
             m_superstructure
                 .setState(StructureState.IDLE)
                 .andThen(m_superstructure.setState(StructureState.REV)));
-      
+
     topMidNoClimb.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
