@@ -58,9 +58,11 @@ public class AutoRoutines {
         .onTrue(midMid2x.resetOdometry().andThen(Commands.waitSeconds(0)).andThen(midMid2x.cmd()));
     midMid2x.atTime("Start").onTrue(m_superstructure.setState(StructureState.REV).andThen(Commands.waitSeconds(2)).andThen(m_superstructure.setState(StructureState.SHOOT)));
     midMid2x.atTime("Intake1").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    midMid2x.atTime("StopIntake1").onTrue(m_superstructure.setState(StructureState.IDLE));
     midMid2x.atTime("Home1").onTrue(m_superstructure.setState(StructureState.REV));
     midMid2x.atTime("Shoot1").onTrue(m_superstructure.setState(StructureState.SHOOT));
     midMid2x.atTime("Intake2").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    midMid2x.atTime("StopIntake2").onTrue(m_superstructure.setState(StructureState.IDLE));
     midMid2x.atTime("Home2").onTrue(m_superstructure.setState(StructureState.REV));
     midMid2x.atTime("Shoot2").onTrue(m_superstructure.setState(StructureState.SHOOT));
 
