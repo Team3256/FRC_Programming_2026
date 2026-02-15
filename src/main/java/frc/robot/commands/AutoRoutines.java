@@ -41,4 +41,10 @@ public class AutoRoutines {
     public void AutoCommands() { // void for now, fill subsystems
     }
   }
+  public AutoRoutine MidMid2x() {
+    final AutoRoutine routine = m_factory.newRoutine("MidMid2x");
+    final AutoTrajectory MidMid2x = routine.trajectory("MidMid2x");
+
+    routine.active().onTrue(midMid2x.resetOdometry().andThen(midMid2x.cmd()));
+  }
 }
