@@ -25,7 +25,10 @@ public class AutoRoutines {
   private final CommandSwerveDrivetrain m_drivetrain;
 
   public AutoRoutines(
-      AutoFactory factory, AutoCommands mAutoCommands, CommandSwerveDrivetrain drivetrain, Superstructure superstructure) {
+      AutoFactory factory,
+      AutoCommands mAutoCommands,
+      CommandSwerveDrivetrain drivetrain,
+      Superstructure superstructure) {
     m_factory = factory;
     m_autoCommands = mAutoCommands;
     m_drivetrain = drivetrain; // subsystems
