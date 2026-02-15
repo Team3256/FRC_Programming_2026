@@ -10,7 +10,7 @@ package frc.robot.commands;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
-import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 public class AutoRoutines {
@@ -18,16 +18,21 @@ public class AutoRoutines {
   private final AutoFactory m_factory;
 
   // subsystems
+  private final Superstructure m_superstructure;
 
   private final AutoCommands m_autoCommands;
 
   private final CommandSwerveDrivetrain m_drivetrain;
 
   public AutoRoutines(
-      AutoFactory factory, AutoCommands mAutoCommands, CommandSwerveDrivetrain drivetrain) {
+      AutoFactory factory,
+      AutoCommands mAutoCommands,
+      CommandSwerveDrivetrain drivetrain,
+      Superstructure superstructure) {
     m_factory = factory;
     m_autoCommands = mAutoCommands;
     m_drivetrain = drivetrain; // subsystems
+    m_superstructure = superstructure;
   }
 
   public AutoRoutine forward() {
