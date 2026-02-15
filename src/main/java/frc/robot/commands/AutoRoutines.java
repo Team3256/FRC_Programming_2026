@@ -10,6 +10,10 @@ package frc.robot.commands;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import edu.wpi.first.util.MsvcRuntimeException;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 public class AutoRoutines {
@@ -21,18 +25,34 @@ public class AutoRoutines {
   private final AutoCommands m_autoCommands;
 
   private final CommandSwerveDrivetrain m_drivetrain;
+    private final Superstructure m_superstructure;
 
   public AutoRoutines(
-      AutoFactory factory, AutoCommands mAutoCommands, CommandSwerveDrivetrain drivetrain) {
+      AutoFactory factory, AutoCommands mAutoCommands, CommandSwerveDrivetrain drivetrain, Superstructure superstructure) {
     m_factory = factory;
     m_autoCommands = mAutoCommands;
     m_drivetrain = drivetrain; // subsystems
+    m_superstructure = superstructure;
   }
 
   public AutoRoutine forward() {
     final AutoRoutine routine = m_factory.newRoutine("forward");
     final AutoTrajectory forward = routine.trajectory("forward");
     routine.active().onTrue(forward.resetOdometry().andThen(forward().cmd()));
+    return routine;
+  }
+
+  public AutoRoutine bottomMid() {
+    final AutoRoutine routine = m_factory.newRoutine("bottomMid");
+    final AutoTrajectory traj = routine.trajectory("bottomMid");
+    routine
+    .active()
+    .onTrue(traj.resetOdometry().andThen(Commands.waitSeconds(2)).andThen(traj.cmd()));
+
+    traj.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    traj.atTime("StopIntake").onTrue(m_superstructure.setState(StructureState.IDLE).andThen(m_superstructure.setState(StructureState.REV)));
+    traj.atTime("Bump").onTrue(m_superstructure.setState(StructureState.SHOOT));
+    
     return routine;
   }
 
