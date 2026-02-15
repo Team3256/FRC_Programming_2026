@@ -43,7 +43,6 @@ public class AutoRoutines {
     return routine;
   }
 
-
   public AutoRoutine topMidNoClimb() {
     final AutoRoutine routine = m_factory.newRoutine("topmidnoclimb");
     final AutoTrajectory topMid = routine.trajectory("TopMidNoClimb");
@@ -55,8 +54,7 @@ public class AutoRoutines {
     topMid.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
-
-    }
+  }
 
   private static class AutoCommands {
 
