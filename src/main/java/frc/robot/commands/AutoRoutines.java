@@ -11,6 +11,7 @@ import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 public class AutoRoutines {
@@ -43,13 +44,15 @@ public class AutoRoutines {
   }
 
 
-  public AutoRoutine topMid() {
-    final AutoRoutine routine = m_factory.newRoutine("topmid");
-    final AutoTrajectory topMid = routine.trajectory("TopMid");
+  public AutoRoutine topMidNoClimb() {
+    final AutoRoutine routine = m_factory.newRoutine("topmidnoclimb");
+    final AutoTrajectory topMid = routine.trajectory("TopMidNoClimb");
     routine.active().onTrue(topMid.resetOdometry().andThen(topMid.cmd()));
 
-    topMid.atTime("Intake").onTrue(m_superstructure)
-    topMid.atTime()
+    topMid.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    topMid.atTime("StopIntake").onTrue(m_superstructure.setState(StructureState.IDLE));
+    topMid.atTime("Rev").onTrue(m_superstructure.setState(StructureState.REV));
+    topMid.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
 
