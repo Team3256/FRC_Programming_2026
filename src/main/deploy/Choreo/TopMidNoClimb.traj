@@ -208,6 +208,5 @@
  "events":[
    {"name":"Shoot", "from":{"target":5, "targetTimestamp":3.28344, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"Intake", "from":{"target":2, "targetTimestamp":1.7126, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"Rev", "from":{"target":4, "targetTimestamp":2.65527, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"StopIntake", "from":{"target":3, "targetTimestamp":2.14012, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }
