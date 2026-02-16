@@ -171,7 +171,7 @@ public class Superstructure {
         .onTrue(shooterPivot.setPosition(0));
 
     //
-    // stateTriggers.get(StructureState.REV).whileTrue(shooter.shootHub(shotCalculator::getDistance));
+     stateTriggers.get(StructureState.REV).whileTrue(shooter.shootHub(shotCalculator::getDistance));
   }
 
   // call manually
