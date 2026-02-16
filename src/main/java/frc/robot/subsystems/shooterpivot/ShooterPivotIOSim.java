@@ -30,7 +30,7 @@ public class ShooterPivotIOSim extends ShooterPivotIOTalonFX {
           ShooterPivotConstants.PivotSim.shooterPivotLength.in(Meters),
           ShooterPivotConstants.PivotSim.minAngle.getRadians(),
           ShooterPivotConstants.PivotSim.maxAngle.getRadians(),
-          true,
+          false,
           ShooterPivotConstants.PivotSim.startingAngle.getRadians());
 
   private TalonFXSimState pivotSimState;

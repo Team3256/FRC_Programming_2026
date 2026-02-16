@@ -8,13 +8,10 @@
 package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
@@ -23,52 +20,36 @@ public final class ShooterConstants {
   // field oriented control
   public static final boolean kUseFOC = true;
   // regen breaking
-  public static final boolean kUseShooterRegenBraking = true;
 
   // can IDs
   public static int shooterFollower = 60;
   public static int shooterMain = 59;
 
-  // motor output behavior
-  public static MotorOutputConfigs motorOutputConfigs =
-      new MotorOutputConfigs()
-          .withNeutralMode(NeutralModeValue.Brake)
-          .withInverted(InvertedValue.CounterClockwise_Positive);
-
   // pid
   public static TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
           .withSlot0(
-              new Slot0Configs().withKS(0).withKV(1.2).withKA(0).withKP(8).withKI(0).withKD(0))
+              new Slot0Configs().withKS(0).withKV(.12).withKA(0.01).withKP(.2).withKI(0).withKD(0))
           // For regenerative braking
-          // we need to make sure that the backcurrent is below the breaker limit
-          // P = 2 gives us like 102 amps so that's good enough
-
-          .withSlot1(new Slot1Configs().withKS(0).withKV(0).withKP(2).withKI(0).withKD(0))
-          .withMotorOutput(motorOutputConfigs)
-          .withMotionMagic(
-              new MotionMagicConfigs()
-                  .withMotionMagicAcceleration(1600)
-                  .withMotionMagicCruiseVelocity(0))
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Coast)
+                  .withInverted(InvertedValue.CounterClockwise_Positive))
+          .withMotionMagic(new MotionMagicConfigs().withMotionMagicAcceleration(800))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(60))
-          .withTorqueCurrent(
-              new TorqueCurrentConfigs()
-                  .withPeakForwardTorqueCurrent(80)
-                  .withPeakReverseTorqueCurrent(80))
-          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1));
+                  .withStatorCurrentLimit(60));
   public static TalonFXConfiguration followerMotorConfigs = motorConfigs;
 
   public static final InterpolatingDoubleTreeMap hubLUT =
       new InterpolatingDoubleTreeMap() {
         {
-          put(2.0, 5.0);
-          put(3.0, 7.0);
-          put(4.0, 9.0);
-          put(5.0, 11.0);
-          put(6.0, 13.0);
+          put(2.0, 30.0);
+          put(3.0, 40.0);
+          put(4.0, 50.0);
+          put(5.0, 60.0);
+          put(6.0, 50.0);
         }
       };
 

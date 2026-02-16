@@ -37,8 +37,8 @@ public class ShooterPivotConstants {
           .withSlot0(
               new Slot0Configs()
                   .withKS(0)
-                  .withKV(0)
-                  .withKP(0)
+                  .withKV(.12 * 40)
+                  .withKP(10)
                   .withKI(0)
                   .withKD(0)
                   .withKA(0)
@@ -62,16 +62,16 @@ public class ShooterPivotConstants {
       new InterpolatingDoubleTreeMap() {
         {
           put(0.0, 0.0);
-          put(1.0, 0.5);
-          put(2.0, 1.0);
+          put(3.0, 0.05);
+          put(6.0, 0.11);
         }
       };
   public static final InterpolatingDoubleTreeMap feedLUT =
       new InterpolatingDoubleTreeMap() {
         {
           put(0.0, 0.0);
-          put(1.0, 0.5);
-          put(2.0, 1.0);
+          put(3.0, 0.05);
+          put(6.0, 0.11);
         }
       };
 

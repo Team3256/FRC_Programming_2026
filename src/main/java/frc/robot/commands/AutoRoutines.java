@@ -11,7 +11,9 @@ import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
@@ -21,18 +23,11 @@ public class AutoRoutines {
 
   // subsystems
   private final Superstructure m_superstructure;
-
-  private final AutoCommands m_autoCommands;
-
   private final CommandSwerveDrivetrain m_drivetrain;
 
   public AutoRoutines(
-      AutoFactory factory,
-      AutoCommands mAutoCommands,
-      CommandSwerveDrivetrain drivetrain,
-      Superstructure superstructure) {
+      AutoFactory factory, CommandSwerveDrivetrain drivetrain, Superstructure superstructure) {
     m_factory = factory;
-    m_autoCommands = mAutoCommands;
     m_drivetrain = drivetrain; // subsystems
     m_superstructure = superstructure;
   }
@@ -81,9 +76,39 @@ public class AutoRoutines {
     return routine;
   }
 
-  private static class AutoCommands {
+  public AutoRoutine topMidNoClimb() {
+    final AutoRoutine routine = m_factory.newRoutine("topMidNoClimb");
+    final AutoTrajectory topMidNoClimb = routine.trajectory("TopMidNoClimb");
+    routine.active().onTrue(topMidNoClimb.resetOdometry().andThen(topMidNoClimb.cmd()));
 
-    public void AutoCommands() { // void for now, fill subsystems
-    }
+    topMidNoClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    topMidNoClimb
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    topMidNoClimb.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+
+    return routine;
+  }
+
+  public AutoRoutine bottomMid() {
+    final AutoRoutine routine = m_factory.newRoutine("bottomMid");
+    final AutoTrajectory traj = routine.trajectory("bottomMid");
+    routine
+        .active()
+        .onTrue(traj.resetOdometry().andThen(Commands.waitSeconds(2)).andThen(traj.cmd()));
+
+    traj.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    traj.atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+    traj.atTime("Bump").onTrue(m_superstructure.setState(StructureState.SHOOT));
+
+    return routine;
   }
 }
