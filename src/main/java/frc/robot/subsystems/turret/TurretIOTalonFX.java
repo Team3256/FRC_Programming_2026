@@ -10,7 +10,6 @@ package frc.robot.subsystems.turret;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -25,7 +24,7 @@ import frc.robot.utils.PhoenixUtil;
 public class TurretIOTalonFX implements TurretIO {
 
   private final TalonFX turretMotor =
-      new TalonFX(TurretConstants.turretMotorId, new CANBus("mani"));
+      new TalonFX(TurretConstants.turretMotorId);
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0).withSlot(0).withEnableFOC(TurretConstants.kUseFOC);
 
@@ -35,8 +34,8 @@ public class TurretIOTalonFX implements TurretIO {
   private final StatusSignal<Current> turretMotorStatorCurrent = turretMotor.getStatorCurrent();
   private final StatusSignal<Current> turretMotorSupplyCurrent = turretMotor.getSupplyCurrent();
 
-  private final CANcoder cancoder1 = new CANcoder(TurretConstants.turretEncoder1);
-  private final CANcoder cancoder2 = new CANcoder(TurretConstants.turretEncoder2);
+  private final CANcoder cancoder1 = new CANcoder(TurretConstants.turretEncoder1ID);
+  private final CANcoder cancoder2 = new CANcoder(TurretConstants.turretEncoder2ID);
 
   private final StatusSignal<Angle> cancoder1AbsolutePosition = cancoder1.getAbsolutePosition();
   private final StatusSignal<Angle> cancoder1Position = cancoder1.getPosition();
@@ -66,12 +65,18 @@ public class TurretIOTalonFX implements TurretIO {
         turretMotorStatorCurrent);
 
     PhoenixUtil.registerSignals(
-        true,
+        false,
         turretMotorVoltage,
         turretMotorVelocity,
         turretMotorPosition,
         turretMotorStatorCurrent,
-        turretMotorSupplyCurrent);
+        turretMotorSupplyCurrent,
+            cancoder1AbsolutePosition,
+            cancoder1Position,
+            cancoder1Velocity,
+            cancoder2AbsolutePosition,
+            cancoder2Position,
+            cancoder2Velocity);
   }
 
   @Override
@@ -81,13 +86,13 @@ public class TurretIOTalonFX implements TurretIO {
     inputs.turretMotorPosition = turretMotorPosition.getValue().in(Rotations);
     inputs.turretMotorStatorCurrent = turretMotorStatorCurrent.getValue().in(Amps);
     inputs.turretMotorSupplyCurrent = turretMotorSupplyCurrent.getValue().in(Amps);
-    inputs.turretEncoder1Position = cancoder1Position.getValue().in(Rotations);
+    inputs.turretEncoder1AbsolutePosition = cancoder1AbsolutePosition.getValue().in(Rotations);
     inputs.turretEncoder1Velocity = cancoder1Velocity.getValue().in(RotationsPerSecond);
-    inputs.turretEncoder1Position = cancoder1AbsolutePosition.getValue().in(Rotations);
+    inputs.turretEncoder1Position = cancoder1Position.getValue().in(Rotations);
 
-    inputs.turretEncoder2Position = cancoder2Position.getValue().in(Rotations);
+    inputs.turretEncoder2AbsolutePosition = cancoder2AbsolutePosition.getValue().in(Rotations);
     inputs.turretEncoder2Velocity = cancoder2Velocity.getValue().in(RotationsPerSecond);
-    inputs.turretEncoder2Position = cancoder2AbsolutePosition.getValue().in(Rotations);
+    inputs.turretEncoder2Position = cancoder2Position.getValue().in(Rotations);
   }
 
   @Override
@@ -111,7 +116,7 @@ public class TurretIOTalonFX implements TurretIO {
   }
 
   @Override
-  public void resetPosition(Angle angle) {
+  public void resetPosition(double angle) {
     turretMotor.setPosition(angle);
   }
 }

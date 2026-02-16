@@ -25,37 +25,36 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 
 public class TurretConstants {
-  public static final int turretMotorId = 20;
+  public static final int turretMotorId = 21;
 
   public static final boolean kUseFOC = true;
   public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
 
   public static double updateFrequency = 50;
-  public static final int turretEncoder1 = 0;
-  public static final int turretEncoder2 = 1;
+  public static final int turretEncoder1ID = 9;
+  public static final int turretEncoder2ID = 0;
 
-  public static final double loopPeriodSecs = 0.02;
 
   public static final Rotation2d turretOffset = Rotation2d.kPi;
 
   public static final Transform2d driveBaseToTurret =
-      new Transform2d(Units.inchesToMeters(-6.750), Units.inchesToMeters(6.750), Rotation2d.kZero);
+      new Transform2d(Units.inchesToMeters(6.750), Units.inchesToMeters(-6.750), Rotation2d.kZero);
 
   public static final CANcoderConfiguration cancoderConfiguration1 =
       new CANcoderConfiguration()
           .withMagnetSensor(
               new MagnetSensorConfigs()
                   .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                  .withMagnetOffset(0)
+                  .withMagnetOffset(-0.89794921875)
                   .withAbsoluteSensorDiscontinuityPoint(Rotations.of(1)));
 
   public static final CANcoderConfiguration cancoderConfiguration2 =
       new CANcoderConfiguration()
           .withMagnetSensor(
               new MagnetSensorConfigs()
-                  .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                  .withMagnetOffset(0)
+                  .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+                  .withMagnetOffset(-0.911376953125)
                   .withAbsoluteSensorDiscontinuityPoint(Rotations.of(1)));
 
   public static final TalonFXConfiguration motorConfigs =
@@ -81,7 +80,7 @@ public class TurretConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(80))
-          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(26));
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(90.0/10 * 48.0/12));
 
   public static final class SimulationConstants {
 
@@ -91,12 +90,11 @@ public class TurretConstants {
   }
 
   // CRT constants
-  public static final int drivingGear1 = 90;
-  public static final int drivenGear1 = 10;
-  public static final int drivingGear2 = 90 / 10 * 32;
-  public static final int drivenGear2 = 56;
 
-  public static final double ratio1 = (double) drivingGear1 / drivenGear1;
-  public static final double ratio2 = (double) drivingGear2 / drivenGear2;
-  public static final double differenceDegrees = (ratio2 - ratio1) * 360;
+  public static final int mainTurretGear = 900;
+  public static final int cancoderGear1 = 100;
+  public static final int cancoderGear2 = 175;
+
+
+  public static final double crtOffsetRot = 0.5;
 }

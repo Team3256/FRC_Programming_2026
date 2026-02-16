@@ -25,12 +25,18 @@ public class Turret extends DisableSubsystem {
 
   private double reqPosition = 0.0;
 
+
+  private boolean hasBeenZeroed = false;
+
   public final Trigger reachedPosition = new Trigger(this::reachedPosition);
 
   public Turret(boolean enabled, TurretIO turretIO) {
     super(enabled);
 
     this.turretIO = turretIO;
+
+
+
   }
 
   @Override
@@ -40,7 +46,12 @@ public class Turret extends DisableSubsystem {
     Logger.processInputs("Turret", turretIOInputsAutoLogged);
 
     Logger.recordOutput(this.getClass().getSimpleName() + "/reqPosition", reqPosition);
+    Logger.recordOutput(this.getClass().getSimpleName() + "/absTurretPos", solveTheta(TurretConstants.mainTurretGear, TurretConstants.cancoderGear1, TurretConstants.cancoderGear2, turretIOInputsAutoLogged.turretEncoder1AbsolutePosition, turretIOInputsAutoLogged.turretEncoder2AbsolutePosition));
 
+    if (!hasBeenZeroed &&turretIOInputsAutoLogged.turretEncoder1AbsolutePosition!=0) {
+      turretIO.resetPosition(solveTheta(TurretConstants.mainTurretGear, TurretConstants.cancoderGear1, TurretConstants.cancoderGear2, turretIOInputsAutoLogged.turretEncoder1AbsolutePosition, turretIOInputsAutoLogged.turretEncoder2AbsolutePosition) - TurretConstants.crtOffsetRot);
+      hasBeenZeroed = true;
+    }
     LoggedTracer.record("Turret");
   }
 
@@ -81,20 +92,30 @@ public class Turret extends DisableSubsystem {
     return this.run(() -> setPositionFieldRelative(position.get(), robotRot.get()));
   }
 
-  public static Rotation2d getTurretPosition(Rotation2d cancoder1, Rotation2d cancoder2) {
-    Rotation2d diff = cancoder2.minus(cancoder1);
-    double drivingRotRaw = diff.getDegrees() / TurretConstants.differenceDegrees;
-    double expectedG1 = (drivingRotRaw * TurretConstants.ratio1) % 1;
-    double g1Diff = expectedG1 - (cancoder1.getRotations() % 1);
-    if (g1Diff > 0.5) {
-      g1Diff -= 1;
-    } else if (g1Diff < -0.5) {
-      g1Diff += 1;
-    }
-    double drivingRem = g1Diff / TurretConstants.ratio1;
-    return Rotation2d.fromRotations(drivingRotRaw - drivingRem);
-  }
+  public static double solveTheta(int p, int q1, int q2, double a, double b) {
+                double range = (double) Util.lcm(q1, q2) / p;
+                double r1 = (double) q1 / p;
+                double r2 = (double) q2 / p;
 
+    double i = 0;
+    double j = 0;
+    while(i * r1 < range && j * r2 < range) {
+                    double alpha = r1 * (i + a);
+                    double beta = r2 * (j + b);
+
+      if (Math.abs(alpha - beta) < 1e-3) {
+        return alpha;
+      }
+
+      if(alpha < beta) {
+        i += 1;
+      } else {
+        j += 1;
+      }
+    }
+
+    return 0;
+  }
   public Command zero() {
     return this.runOnce(turretIO::zero);
   }

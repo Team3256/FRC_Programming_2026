@@ -16,6 +16,19 @@ public class Util {
   /** Prevent this class from being instantiated. */
   private Util() {}
 
+  public static int gcd(int a, int b) {
+    while (b != 0) {
+      int temp = b;
+      b = a % b;
+      a = temp;
+    }
+    return Math.abs(a);
+  }
+
+  public static int lcm(int a, int b) {
+    return Math.abs(a * b) / gcd(a, b);
+  }
+
   /** Limits the given input to the given magnitude. */
   public static double limit(double v, double maxMagnitude) {
     return limit(v, -maxMagnitude, maxMagnitude);
