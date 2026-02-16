@@ -276,5 +276,6 @@
  "events":[
    {"name":"Shoot", "from":{"target":4, "targetTimestamp":1.60492, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"Intake", "from":{"target":5, "targetTimestamp":1.82127, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"StopIntake", "from":{"target":8, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
+   {"name":"StopIntake", "from":{"target":8, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Climb", "from":{"target":10, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }
