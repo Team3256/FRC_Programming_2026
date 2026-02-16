@@ -24,9 +24,7 @@ public class AutoRoutines {
   private final CommandSwerveDrivetrain m_drivetrain;
 
   public AutoRoutines(
-      AutoFactory factory,
-      CommandSwerveDrivetrain drivetrain,
-      Superstructure superstructure) {
+      AutoFactory factory, CommandSwerveDrivetrain drivetrain, Superstructure superstructure) {
     m_factory = factory;
     m_drivetrain = drivetrain; // subsystems
     m_superstructure = superstructure;
@@ -74,5 +72,4 @@ public class AutoRoutines {
 
     return routine;
   }
-
 }

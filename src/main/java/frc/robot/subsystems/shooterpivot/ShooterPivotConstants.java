@@ -37,7 +37,7 @@ public class ShooterPivotConstants {
           .withSlot0(
               new Slot0Configs()
                   .withKS(0)
-                  .withKV(.12*40)
+                  .withKV(.12 * 40)
                   .withKP(10)
                   .withKI(0)
                   .withKD(0)

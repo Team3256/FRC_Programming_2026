@@ -13,8 +13,6 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -78,19 +76,22 @@ public class RobotContainer {
       new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
 
   private final ShooterPivot shooterPivot =
-          new ShooterPivot(true, Utils.isSimulation() ? new ShooterPivotIOSim() : new ShooterPivotIOTalonFX());
-  private final Shooter shooter
-          = new Shooter(true, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
+      new ShooterPivot(
+          true, Utils.isSimulation() ? new ShooterPivotIOSim() : new ShooterPivotIOTalonFX());
+  private final Shooter shooter =
+      new Shooter(true, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
 
   private final IntakeRollers intakeRollers =
-          new IntakeRollers(true, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
+      new IntakeRollers(
+          true, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
 
-  private final IntakePivot intakePivot
-          = new IntakePivot(true, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
-  private final Indexer indexer = new Indexer(true, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
-  private final Feeder feeder = new Feeder(true, Utils.isSimulation() ? new FeederIOSim() : new FeederIOTalonFX());
-
-
+  private final IntakePivot intakePivot =
+      new IntakePivot(
+          true, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
+  private final Indexer indexer =
+      new Indexer(true, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
+  private final Feeder feeder =
+      new Feeder(true, Utils.isSimulation() ? new FeederIOSim() : new FeederIOTalonFX());
 
   private final Vision vision =
       new Vision(
@@ -103,8 +104,17 @@ public class RobotContainer {
           () -> drivetrain.getState().Pose,
           drivetrain::getFieldRelativeSpeeds,
           TurretConstants.driveBaseToTurret);
-  private final Superstructure superstructure = new Superstructure(indexer, shooterPivot, shooter, intakeRollers, intakePivot, feeder, turret, shotCalculator, ()->drivetrain.getState().Pose);
-
+  private final Superstructure superstructure =
+      new Superstructure(
+          indexer,
+          shooterPivot,
+          shooter,
+          intakeRollers,
+          intakePivot,
+          feeder,
+          turret,
+          shotCalculator,
+          () -> drivetrain.getState().Pose);
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -116,7 +126,9 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Configure the trigger bindings
-    m_autoRoutines = new AutoRoutines(drivetrain.createAutoFactory(drivetrain::trajLogger),drivetrain, superstructure );
+    m_autoRoutines =
+        new AutoRoutines(
+            drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure);
     configureOperatorBinds();
     configureChoreoAutoChooser();
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
@@ -126,9 +138,7 @@ public class RobotContainer {
     }
   }
 
-  private void configureOperatorBinds() {
-    
-  }
+  private void configureOperatorBinds() {}
 
   private void configureChoreoAutoChooser() {
 

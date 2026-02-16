@@ -74,7 +74,8 @@ public class Superstructure {
   private final Translation2d topCorner = new Translation2d(1.5, 6.8);
   private final Translation2d bottomCorner = new Translation2d(1.5, 1.5);
 
-  private Pose2d target = new Pose2d(FieldConstants.Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero);
+  private Pose2d target =
+      new Pose2d(FieldConstants.Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero);
 
   public Superstructure(
       Indexer indexer,
@@ -110,7 +111,8 @@ public class Superstructure {
 
   public void configStateTransitions() {
 
-    new Trigger(DriverStation::isEnabled).debounce(.05)
+    new Trigger(DriverStation::isEnabled)
+        .debounce(.05)
         .whileTrue(turret.pointToPose(shotCalculator::getLookaheadPose, () -> target));
 
     targetBlueHub.onTrue(changeTarget(FieldConstants.Hub.topCenterPoint.toTranslation2d()));
@@ -124,15 +126,19 @@ public class Superstructure {
         changeTarget(
             () -> getAllianceBlue() ? bottomCorner : ChoreoAllianceFlipUtil.flip(topCorner)));
 
-    targetRedHub.or(targetBlueHub).and(DriverStation::isEnabled).whileTrue(shooterPivot.shootHub(shotCalculator::getDistance));
+    targetRedHub
+        .or(targetBlueHub)
+        .and(DriverStation::isEnabled)
+        .whileTrue(shooterPivot.shootHub(shotCalculator::getDistance));
     feedTopCorner
-        .or(feedBottomCorner).and(DriverStation::isEnabled)
+        .or(feedBottomCorner)
+        .and(DriverStation::isEnabled)
         .whileTrue(shooterPivot.feedCorner(shotCalculator::getDistance));
 
     stateTriggers
         .get(StructureState.SHOOT)
         .and(targetRedHub.or(targetBlueHub))
-            .onTrue(shooter.shootHub(shotCalculator::getDistance));
+        .onTrue(shooter.shootHub(shotCalculator::getDistance));
     stateTriggers
         .get(StructureState.SHOOT)
         .and(feedTopCorner.or(feedBottomCorner))
@@ -164,7 +170,8 @@ public class Superstructure {
         .onTrue(intakePivot.setPosition(0))
         .onTrue(shooterPivot.setPosition(0));
 
-//    stateTriggers.get(StructureState.REV).whileTrue(shooter.shootHub(shotCalculator::getDistance));
+    //
+    // stateTriggers.get(StructureState.REV).whileTrue(shooter.shootHub(shotCalculator::getDistance));
   }
 
   // call manually
@@ -174,9 +181,9 @@ public class Superstructure {
     Logger.recordOutput("Superstructure/PrevState", this.prevState.toString());
     Logger.recordOutput("Superstructure/StateTime", this.stateTimer.get());
 
-    Logger.recordOutput("Superstructure/Hub", stateTriggers
-            .get(StructureState.SHOOT)
-            .and(targetRedHub.or(targetBlueHub)));
+    Logger.recordOutput(
+        "Superstructure/Hub",
+        stateTriggers.get(StructureState.SHOOT).and(targetRedHub.or(targetBlueHub)));
     Logger.recordOutput("Superstructure/TargetRedHub", targetRedHub);
     Logger.recordOutput("Superstructure/TargetBlueHub", targetBlueHub);
     Logger.recordOutput("Superstructure/FeedTopCorner", feedTopCorner);
@@ -192,10 +199,11 @@ public class Superstructure {
 
   private Command changeTarget(Supplier<Translation2d> target) {
     return Commands.runOnce(
-        () -> {
-          this.target = new Pose2d(target.get(), Rotation2d.kZero);
-          shotCalculator.setTarget(target.get());
-        }).ignoringDisable(true);
+            () -> {
+              this.target = new Pose2d(target.get(), Rotation2d.kZero);
+              shotCalculator.setTarget(target.get());
+            })
+        .ignoringDisable(true);
   }
 
   private boolean getAllianceBlue() {
