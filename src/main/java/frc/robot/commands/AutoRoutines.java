@@ -49,14 +49,21 @@ public class AutoRoutines {
     public void AutoCommands() { // void for now, fill subsystems
     }
   }
+
   public AutoRoutine MidMid2x() {
     final AutoRoutine routine = m_factory.newRoutine("MidMid2x");
     final AutoTrajectory midMid2x = routine.trajectory("MidMid2x");
-    
+
     routine
         .active()
         .onTrue(midMid2x.resetOdometry().andThen(Commands.waitSeconds(0)).andThen(midMid2x.cmd()));
-    midMid2x.atTime("Start").onTrue(m_superstructure.setState(StructureState.REV).andThen(Commands.waitSeconds(2)).andThen(m_superstructure.setState(StructureState.SHOOT)));
+    midMid2x
+        .atTime("Start")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.REV)
+                .andThen(Commands.waitSeconds(2))
+                .andThen(m_superstructure.setState(StructureState.SHOOT)));
     midMid2x.atTime("Intake1").onTrue(m_superstructure.setState(StructureState.INTAKE));
     midMid2x.atTime("StopIntake1").onTrue(m_superstructure.setState(StructureState.IDLE));
     midMid2x.atTime("Home1").onTrue(m_superstructure.setState(StructureState.REV));
