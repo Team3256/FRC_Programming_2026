@@ -49,7 +49,7 @@ public class ShooterIOSim extends ShooterIOTalonFX {
     shooterMotorSim.setSupplyVoltage(RobotController.getBatteryVoltage());
     shooterMotorFollowerSim.setSupplyVoltage(RobotController.getBatteryVoltage());
     // Update physics models
-    flywheelSim.setInput(shooterMotorSim.getMotorVoltage());
+    flywheelSim.setInputVoltage(shooterMotorSim.getMotorVoltage());
     flywheelSim.update(LoggedRobot.defaultPeriodSecs);
 
     double motor1Rps = flywheelSim.getAngularVelocityRPM() / 60;

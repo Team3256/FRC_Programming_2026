@@ -21,16 +21,13 @@ public class AutoRoutines {
 
   // subsystems
   private final Superstructure m_superstructure;
-  private final AutoCommands m_autoCommands;
   private final CommandSwerveDrivetrain m_drivetrain;
 
   public AutoRoutines(
       AutoFactory factory,
-      AutoCommands mAutoCommands,
       CommandSwerveDrivetrain drivetrain,
       Superstructure superstructure) {
     m_factory = factory;
-    m_autoCommands = mAutoCommands;
     m_drivetrain = drivetrain; // subsystems
     m_superstructure = superstructure;
   }
@@ -78,9 +75,4 @@ public class AutoRoutines {
     return routine;
   }
 
-  private static class AutoCommands {
-
-    public void AutoCommands() { // void for now, fill subsystems
-    }
-  }
 }

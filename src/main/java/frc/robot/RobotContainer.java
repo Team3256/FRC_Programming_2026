@@ -20,7 +20,27 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.AutoRoutines;
 import frc.robot.sim.SimMechs;
+import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.feeder.Feeder;
+import frc.robot.subsystems.feeder.FeederIOSim;
+import frc.robot.subsystems.feeder.FeederIOTalonFX;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.indexer.IndexerIOSim;
+import frc.robot.subsystems.indexer.IndexerIOTalonFX;
+import frc.robot.subsystems.intakepivot.IntakePivot;
+import frc.robot.subsystems.intakepivot.IntakePivotIOSim;
+import frc.robot.subsystems.intakepivot.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intakerollers.IntakeRollers;
+import frc.robot.subsystems.intakerollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intakerollers.IntakeRollersIOTalonFX;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.shooterpivot.ShooterPivot;
+import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
+import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
 import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
@@ -52,8 +72,25 @@ public class RobotContainer {
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+  private final AutoRoutines m_autoRoutines;
+
   private final Turret turret =
       new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
+
+  private final ShooterPivot shooterPivot =
+          new ShooterPivot(true, Utils.isSimulation() ? new ShooterPivotIOSim() : new ShooterPivotIOTalonFX());
+  private final Shooter shooter
+          = new Shooter(true, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
+
+  private final IntakeRollers intakeRollers =
+          new IntakeRollers(true, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
+
+  private final IntakePivot intakePivot
+          = new IntakePivot(true, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
+  private final Indexer indexer = new Indexer(true, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
+  private final Feeder feeder = new Feeder(true, Utils.isSimulation() ? new FeederIOSim() : new FeederIOTalonFX());
+
+
 
   private final Vision vision =
       new Vision(
@@ -66,6 +103,8 @@ public class RobotContainer {
           () -> drivetrain.getState().Pose,
           drivetrain::getFieldRelativeSpeeds,
           TurretConstants.driveBaseToTurret);
+  private final Superstructure superstructure = new Superstructure(indexer, shooterPivot, shooter, intakeRollers, intakePivot, feeder, turret, shotCalculator, ()->drivetrain.getState().Pose);
+
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -77,6 +116,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Configure the trigger bindings
+    m_autoRoutines = new AutoRoutines(drivetrain.createAutoFactory(drivetrain::trajLogger),drivetrain, superstructure );
     configureOperatorBinds();
     configureChoreoAutoChooser();
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
@@ -87,21 +127,14 @@ public class RobotContainer {
   }
 
   private void configureOperatorBinds() {
-
-    m_driverController
-        .a()
-        .onTrue(
-            turret.pointToPose(
-                () -> drivetrain.getState().Pose,
-                () ->
-                    new Pose2d(
-                        FieldConstants.Hub.innerCenterPoint.toTranslation2d(), Rotation2d.kZero)));
+    
   }
 
   private void configureChoreoAutoChooser() {
 
     // Add options to the chooser
     autoChooser.addCmd("Wheel Radius Change", () -> drivetrain.wheelRadiusCharacterization(1));
+    autoChooser.addRoutine("Top 1 Cycle Mid", m_autoRoutines::topMidNoClimb);
 
     SmartDashboard.putData("auto chooser", autoChooser);
 
@@ -153,5 +186,6 @@ public class RobotContainer {
 
   public void periodic() {
     shotCalculator.periodic();
+    superstructure.periodic();
   }
 }

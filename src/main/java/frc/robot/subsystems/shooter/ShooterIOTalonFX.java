@@ -23,8 +23,6 @@ public class ShooterIOTalonFX implements ShooterIO {
   final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);
-  final VelocityTorqueCurrentFOC regenRequest = new VelocityTorqueCurrentFOC(0).withSlot(1);
-  private final VoltageOut voltageReq = new VoltageOut(0);
 
   private final StatusSignal<Voltage> shooterMotorVoltage = shooterMotor.getMotorVoltage();
   private final StatusSignal<AngularVelocity> shooterMotorVelocity = shooterMotor.getVelocity();
@@ -113,16 +111,12 @@ public class ShooterIOTalonFX implements ShooterIO {
     } else {
       shooterMotor.setControl(velocityRequest.withVelocity(velocity));
     }
-    shooterMotor.setControl(followReq);
+    shooterMotorFollower.setControl(followReq);
   }
 
   @Override
   public void off() {
-    if (ShooterConstants.kUseShooterRegenBraking) {
-      shooterMotor.setControl(regenRequest);
-    } else {
       shooterMotor.setControl(new NeutralOut());
-    }
   }
 
   @Override
