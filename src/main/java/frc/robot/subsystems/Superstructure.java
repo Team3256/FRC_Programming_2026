@@ -40,6 +40,8 @@ public class Superstructure {
     CLIMB,
     CANCEL_ALL,
     REV,
+    STOP_SHOOTER,
+    STOP_INTAKE,
   }
 
   private StructureState state = StructureState.IDLE;
@@ -158,6 +160,13 @@ public class Superstructure {
         .onTrue(shooterPivot.off())
         .onTrue(indexer.off())
         .onTrue(feeder.off());
+
+    stateTriggers.get(StructureState.STOP_SHOOTER).onTrue(shooter.off()).onTrue(shooterPivot.off());
+
+    stateTriggers
+        .get(StructureState.STOP_INTAKE)
+        .onTrue(intakeRollers.off())
+        .onTrue(intakePivot.off());
 
     stateTriggers
         .get(StructureState.HOME)
