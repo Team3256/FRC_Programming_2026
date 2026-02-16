@@ -145,6 +145,8 @@ public class RobotContainer {
     // Add options to the chooser
     autoChooser.addCmd("Wheel Radius Change", () -> drivetrain.wheelRadiusCharacterization(1));
     autoChooser.addRoutine("Top 1 Cycle Mid", m_autoRoutines::topMidNoClimb);
+    autoChooser.addRoutine("Bottom 1 Cycle Mid", m_autoRoutines::bottomMid);
+
 
     SmartDashboard.putData("auto chooser", autoChooser);
 
