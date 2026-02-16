@@ -33,12 +33,12 @@ public class AutoRoutines {
   public AutoRoutine forward() {
     final AutoRoutine routine = m_factory.newRoutine("forward");
     final AutoTrajectory forward = routine.trajectory("forward");
-    routine.active().onTrue(forward.resetOdometry().andThen(forward().cmd()));
+    routine.active().onTrue(forward.resetOdometry().andThen(forward.cmd()));
     return routine;
   }
 
   public AutoRoutine topMidNoClimb() {
-    final AutoRoutine routine = m_factory.newRoutine("topMidNoClimb");
+    final AutoRoutine routine = m_factory.newRoutine("TopMidNoClimb");
     final AutoTrajectory topMidNoClimb = routine.trajectory("TopMidNoClimb");
     routine.active().onTrue(topMidNoClimb.resetOdometry().andThen(topMidNoClimb.cmd()));
 
