@@ -42,7 +42,7 @@ public class AutoRoutines {
   public AutoRoutine midFeedClimb() {
     final AutoRoutine routine = m_factory.newRoutine("midFeedClimb");
     final AutoTrajectory midFeedClimb = routine.trajectory("MidFeedClimb");
-    routine.active().onTrue(midFeedClimb.resetOdometry().andThen(midFeedClimb().cmd()));
+    routine.active().onTrue(midFeedClimb.resetOdometry().andThen(midFeedClimb.cmd()));
     midFeedClimb
         .atTime("Shoot")
         .onTrue(
@@ -64,7 +64,7 @@ public class AutoRoutines {
     final AutoRoutine routine = m_factory.newRoutine("midFeedClimb");
     
     final AutoTrajectory midFeedNoClimb = routine.trajectory("MidFeedNoClimb");
-    routine.active().onTrue(midFeedNoClimb.resetOdometry().andThen(midFeedNoClimb().cmd()));
+    routine.active().onTrue(midFeedNoClimb.resetOdometry().andThen(midFeedNoClimb.cmd()));
     midFeedNoClimb
         .atTime("Shoot")
         .onTrue(
