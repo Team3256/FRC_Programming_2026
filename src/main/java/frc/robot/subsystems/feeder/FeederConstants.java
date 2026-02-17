@@ -27,19 +27,19 @@ public class FeederConstants {
 
   public static final boolean kUseFOC = false;
 
-  public static final int kFeederMotorID = 32; // TODO: FILL
+  public static final int kFeederMotorID = 22; // TODO: FILL
 
-  public static final double feederVoltage = 5.0;
+  public static final double feederVelocity = 80;
 
   public static double updateFrequency = 50;
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
-          .withSlot0(new Slot0Configs().withKS(0.0).withKV(0.0).withKP(0.0).withKI(0).withKD(0))
+          .withSlot0(new Slot0Configs().withKS(0.0).withKV(0.13).withKP(0.3).withKI(0).withKD(0))
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)
-                  .withInverted(InvertedValue.Clockwise_Positive))
+                  .withInverted(InvertedValue.CounterClockwise_Positive))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)

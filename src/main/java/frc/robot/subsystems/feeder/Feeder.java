@@ -42,7 +42,7 @@ public class Feeder extends DisableSubsystem {
   }
 
   public Command startFeeding() {
-    return setVoltage(FeederConstants.feederVoltage);
+    return setVelocity(FeederConstants.feederVelocity);
   }
 
   public Command off() {

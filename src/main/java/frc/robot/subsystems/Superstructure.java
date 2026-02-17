@@ -147,7 +147,6 @@ public class Superstructure {
     stateTriggers
         .get(StructureState.SHOOT)
         .debounce(.05)
-        .and(turret.reachedPosition)
         .whileTrue(indexer.startShooting())
         .whileTrue(feeder.startFeeding());
 

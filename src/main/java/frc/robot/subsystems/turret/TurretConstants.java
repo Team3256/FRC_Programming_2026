@@ -62,11 +62,11 @@ public class TurretConstants {
           .withSlot0(
               new Slot0Configs()
                   .withKS(0)
-                  .withKV(2.34)
-                  .withKP(100)
+                  .withKV(3.4812)
+                  .withKP(300)
                   .withKI(0)
                   .withKD(0)
-                  .withKA(0)
+                  .withKA(0.22)
                   .withKG(0))
           .withMotorOutput(
               new MotorOutputConfigs()
@@ -74,8 +74,8 @@ public class TurretConstants {
                   .withInverted(InvertedValue.Clockwise_Positive))
           .withMotionMagic(
               new MotionMagicConfigs()
-                  .withMotionMagicAcceleration(10)
-                  .withMotionMagicCruiseVelocity(4.8))
+                  .withMotionMagicAcceleration(20)
+                  .withMotionMagicCruiseVelocity(15))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)

@@ -37,33 +37,33 @@ public class ShooterPivotConstants {
           .withSlot0(
               new Slot0Configs()
                   .withKS(0)
-                  .withKV(.12 * 40)
-                  .withKP(10)
+                  .withKV(14.22)
+                  .withKP(450)
                   .withKI(0)
-                  .withKD(0)
+                  .withKD(1)
                   .withKA(0)
                   .withKG(0)
                   .withGravityType(GravityTypeValue.Arm_Cosine))
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)
-                  .withInverted(InvertedValue.Clockwise_Positive))
+                  .withInverted(InvertedValue.CounterClockwise_Positive))
           .withMotionMagic(
               new MotionMagicConfigs()
-                  .withMotionMagicAcceleration(10)
-                  .withMotionMagicCruiseVelocity(2))
+                  .withMotionMagicAcceleration(8)
+                  .withMotionMagicCruiseVelocity(2.5))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(80))
-          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(40));
+                  .withStatorCurrentLimit(20))
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(158.142945));
 
   public static final InterpolatingDoubleTreeMap hubLUT =
       new InterpolatingDoubleTreeMap() {
         {
           put(0.0, 0.0);
           put(3.0, 0.05);
-          put(6.0, 0.11);
+          put(6.0, 0.08);
         }
       };
   public static final InterpolatingDoubleTreeMap feedLUT =
@@ -71,7 +71,7 @@ public class ShooterPivotConstants {
         {
           put(0.0, 0.0);
           put(3.0, 0.05);
-          put(6.0, 0.11);
+          put(6.0, 0.08);
         }
       };
 

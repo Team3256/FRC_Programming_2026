@@ -82,9 +82,13 @@ public class Turret extends DisableSubsystem {
         });
   }
 
+  public Command resetPosition() {
+    return this.runOnce(()->turretIO.resetPosition(solveTheta(TurretConstants.mainTurretGear, TurretConstants.cancoderGear1, TurretConstants.cancoderGear2, turretIOInputsAutoLogged.turretEncoder1AbsolutePosition, turretIOInputsAutoLogged.turretEncoder2AbsolutePosition) - TurretConstants.crtOffsetRot));
+  }
+
   private void setPositionFieldRelative(Rotation2d targetRot, Rotation2d robotRot) {
     reqPosition = targetRot.minus(robotRot).getRotations();
-    turretIO.setPosition(reqPosition);
+    turretIO.setPosition(-reqPosition);
   }
 
   public Command setPositionFieldRelative(

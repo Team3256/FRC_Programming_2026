@@ -32,7 +32,7 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   private final TalonFX shooterMotorFollower = new TalonFX(ShooterConstants.shooterFollower);
   private final Follower followReq =
-      new Follower(ShooterConstants.shooterMain, MotorAlignmentValue.Aligned);
+      new Follower(ShooterConstants.shooterMain, MotorAlignmentValue.Opposed);
 
   private final StatusSignal<Voltage> shooterMotorFollowerVoltage =
       shooterMotorFollower.getMotorVoltage();

@@ -54,8 +54,8 @@ public class Robot extends LoggedRobot {
     }
     try (MitoCANdria mito = new MitoCANdria(0)) {
 
-      mito.setChannelVoltage(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_ADJ, 19);
-      mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_ADJ, true);
+      mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_USB2, true);
+      mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_USB1, true);
       // Device operations here
 
     } catch (Exception e) {

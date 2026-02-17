@@ -13,6 +13,7 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -77,17 +78,17 @@ public class RobotContainer {
 
   private final ShooterPivot shooterPivot =
       new ShooterPivot(
-          true, Utils.isSimulation() ? new ShooterPivotIOSim() : new ShooterPivotIOTalonFX());
+          false, Utils.isSimulation() ? new ShooterPivotIOSim() : new ShooterPivotIOTalonFX());
   private final Shooter shooter =
       new Shooter(true, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
 
   private final IntakeRollers intakeRollers =
       new IntakeRollers(
-          true, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
+          false, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
 
   private final IntakePivot intakePivot =
       new IntakePivot(
-          true, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
+          false, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
   private final Indexer indexer =
       new Indexer(true, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
   private final Feeder feeder =
@@ -138,7 +139,13 @@ public class RobotContainer {
     }
   }
 
-  private void configureOperatorBinds() {}
+  private void configureOperatorBinds() {
+
+    m_operatorController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
+    m_operatorController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
+
+    m_operatorController.x().onTrue(turret.setPositionFieldRelative(()-> Rotation2d.fromDegrees(90), ()-> drivetrain.getState().Pose.getRotation()));
+  }
 
   private void configureChoreoAutoChooser() {
 

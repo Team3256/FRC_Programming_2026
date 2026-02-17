@@ -29,12 +29,12 @@ public final class ShooterConstants {
   public static TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
           .withSlot0(
-              new Slot0Configs().withKS(0).withKV(.12).withKA(0.01).withKP(.2).withKI(0).withKD(0))
+              new Slot0Configs().withKS(0).withKV(.132).withKA(0).withKP(.4).withKI(0).withKD(0))
           // For regenerative braking
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Coast)
-                  .withInverted(InvertedValue.CounterClockwise_Positive))
+                  .withInverted(InvertedValue.Clockwise_Positive))
           .withMotionMagic(new MotionMagicConfigs().withMotionMagicAcceleration(800))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
@@ -45,22 +45,22 @@ public final class ShooterConstants {
   public static final InterpolatingDoubleTreeMap hubLUT =
       new InterpolatingDoubleTreeMap() {
         {
-          put(2.0, 30.0);
-          put(3.0, 40.0);
-          put(4.0, 50.0);
+          put(2.0, 60.0);
+          put(3.0, 60.0);
+          put(4.0, 60.0);
           put(5.0, 60.0);
-          put(6.0, 50.0);
+          put(6.0, 60.0);
         }
       };
 
   public static final InterpolatingDoubleTreeMap feedLUT =
       new InterpolatingDoubleTreeMap() {
         {
-          put(2.0, 5.0);
-          put(3.0, 7.0);
-          put(4.0, 9.0);
-          put(5.0, 11.0);
-          put(6.0, 13.0);
+          put(2.0, 60.0);
+          put(3.0, 60.0);
+          put(4.0, 60.0);
+          put(5.0, 60.0);
+          put(6.0, 60.0);
         }
       };
 
