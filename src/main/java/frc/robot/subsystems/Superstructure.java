@@ -202,13 +202,13 @@ public class Superstructure {
     Logger.recordOutput("Superstructure/PrevState", this.prevState.toString());
     Logger.recordOutput("Superstructure/StateTime", this.stateTimer.get());
 
-    Logger.recordOutput(
-        "Superstructure/Hub",
-        stateTriggers.get(StructureState.SHOOT).and(targetRedHub.or(targetBlueHub)));
-    Logger.recordOutput("Superstructure/TargetRedHub", targetRedHub);
-    Logger.recordOutput("Superstructure/TargetBlueHub", targetBlueHub);
-    Logger.recordOutput("Superstructure/FeedTopCorner", feedTopCorner);
-    Logger.recordOutput("Superstructure/FeedBottomCorner", feedBottomCorner);
+    //    Logger.recordOutput(
+    //        "Superstructure/Hub",
+    //        stateTriggers.get(StructureState.SHOOT).and(targetRedHub.or(targetBlueHub)));
+    //    Logger.recordOutput("Superstructure/TargetRedHub", targetRedHub);
+    //    Logger.recordOutput("Superstructure/TargetBlueHub", targetBlueHub);
+    //    Logger.recordOutput("Superstructure/FeedTopCorner", feedTopCorner);
+    //    Logger.recordOutput("Superstructure/FeedBottomCorner", feedBottomCorner);
     Logger.recordOutput("Superstructure/Target", target);
 
     LoggedTracer.record(this.getClass().getSimpleName());

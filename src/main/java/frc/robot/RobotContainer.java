@@ -97,7 +97,12 @@ public class RobotContainer {
       new Vision(
           drivetrain::addVisionMeasurement,
           new VisionIOPhotonVision(
-              VisionConstants.frontRightCam, VisionConstants.robotToFrontRightCam));
+              VisionConstants.frontRightCam, VisionConstants.robotToFrontRightCam),
+          new VisionIOPhotonVision(VisionConstants.backLeftCam, VisionConstants.robotToBackLeftCam),
+          new VisionIOPhotonVision(
+              VisionConstants.backRightCam, VisionConstants.robotToBackRightCam),
+          new VisionIOPhotonVision(
+              VisionConstants.frontLeftCam, VisionConstants.robotToFrontLeftCam));
 
   private final ShotCalculator shotCalculator =
       new ShotCalculator(
@@ -120,7 +125,6 @@ public class RobotContainer {
 
   private AutoChooser autoChooser = new AutoChooser();
 
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -139,10 +143,10 @@ public class RobotContainer {
 
   private void configureOperatorBinds() {
 
-//    m_operatorController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
-//    m_operatorController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
-//
-//    m_operatorController.x().onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
+    m_operatorController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
+    m_operatorController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
+    //
+    m_operatorController.x().onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
   }
 
   private void configureChoreoAutoChooser() {

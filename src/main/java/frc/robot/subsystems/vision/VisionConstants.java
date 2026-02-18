@@ -20,24 +20,37 @@ public class VisionConstants {
 
   // Camera names, must match names configured on coprocessor
   public static String frontRightCam = "frontRight";
-  public static String rightCam = "right";
-  public static String frontCam = "front";
-  public static String backCam = "back";
+  public static String backRightCam = "backRight";
+  public static String frontLeftCam = "frontLeft";
+  public static String backLeftCam = "backLeft";
 
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)
   public static Transform3d robotToFrontRightCam =
       new Transform3d(
-          Units.inchesToMeters(12.887),
-          Units.inchesToMeters(-12.887),
+          Units.inchesToMeters(12.714),
+          Units.inchesToMeters(-9.769),
           Units.inchesToMeters(22.072),
           new Rotation3d(0.0, Units.degreesToRadians(-20), Units.degreesToRadians(-45)));
-  public static Transform3d robotToRightCam =
+  public static Transform3d robotToBackRightCam =
       new Transform3d(
-          Units.inchesToMeters(0),
-          Units.inchesToMeters(-13.667),
-          Units.inchesToMeters(7.678),
-          new Rotation3d(0.0, Units.degreesToRadians(-25), Units.degreesToRadians(-90)));
+          Units.inchesToMeters(8.054),
+          Units.inchesToMeters(8.052),
+          Units.inchesToMeters(27.731),
+          new Rotation3d(0.0, Units.degreesToRadians(-20), Units.degreesToRadians(-134.786)));
+  public static Transform3d robotToFrontLeftCam =
+      new Transform3d(
+          Units.inchesToMeters(13.696),
+          Units.inchesToMeters(3.696),
+          Units.inchesToMeters(24.731),
+          new Rotation3d(0.0, Units.degreesToRadians(-20), Units.degreesToRadians(45.214)));
+
+  public static Transform3d robotToBackLeftCam =
+      new Transform3d(
+          Units.inchesToMeters(8.052),
+          Units.inchesToMeters(13.698),
+          Units.inchesToMeters(21.727),
+          new Rotation3d(0.0, Units.degreesToRadians(-20), Units.degreesToRadians(90 + 45.132)));
 
   // Basic filtering thresholds
   public static double maxAmbiguity = 0.3;
