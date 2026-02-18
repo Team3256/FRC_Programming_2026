@@ -44,5 +44,7 @@ public interface TurretIO {
 
   default void resetPosition(double angle) {}
 
+  default void resetPosition() {}
+
   default void off() {}
 }

@@ -21,34 +21,34 @@ public final class IntakePivotConstants {
   public static final boolean kUseFOC = false;
   public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
-  public static final double stowPosition = .4267;
-  public static final double groundIntakePosition = -.09;
+  public static final double stowPosition = .342;
+  public static final double groundIntakePosition = 0;
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
           .withSlot0(
               new Slot0Configs()
-                  .withKS(.05)
-                  .withKV(4)
-                  .withKP(150)
+                  .withKS(.169)
+                  .withKV(.09*43.5)
+                  .withKP(300)
                   .withKI(0)
-                  .withKD(8)
+                  .withKD(15)
                   .withKA(0)
-                  .withKG(.45)
+                  .withKG(.469)
                   .withGravityType(GravityTypeValue.Arm_Cosine))
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)
-                  .withInverted(InvertedValue.CounterClockwise_Positive))
+                  .withInverted(InvertedValue.Clockwise_Positive))
           .withMotionMagic(
               new MotionMagicConfigs()
-                  .withMotionMagicAcceleration(10)
-                  .withMotionMagicCruiseVelocity(2))
+                  .withMotionMagicAcceleration(20)
+                  .withMotionMagicCruiseVelocity(5))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(80))
-          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(27.32));
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(43.5));
 
   public static final class PivotSim {
     // not sure about what gearing means and not sure if its equal to gear ratio

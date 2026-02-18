@@ -48,7 +48,7 @@ public class Turret extends DisableSubsystem {
     Logger.recordOutput(this.getClass().getSimpleName() + "/reqPosition", reqPosition);
     Logger.recordOutput(this.getClass().getSimpleName() + "/absTurretPos", solveTheta(TurretConstants.mainTurretGear, TurretConstants.cancoderGear1, TurretConstants.cancoderGear2, turretIOInputsAutoLogged.turretEncoder1AbsolutePosition, turretIOInputsAutoLogged.turretEncoder2AbsolutePosition));
 
-    if (!hasBeenZeroed &&turretIOInputsAutoLogged.turretEncoder1AbsolutePosition!=0) {
+    if (!hasBeenZeroed &&turretIOInputsAutoLogged.turretEncoder1AbsolutePosition!=0 &&turretIOInputsAutoLogged.turretEncoder2AbsolutePosition!=0) {
       turretIO.resetPosition(solveTheta(TurretConstants.mainTurretGear, TurretConstants.cancoderGear1, TurretConstants.cancoderGear2, turretIOInputsAutoLogged.turretEncoder1AbsolutePosition, turretIOInputsAutoLogged.turretEncoder2AbsolutePosition) - TurretConstants.crtOffsetRot);
       hasBeenZeroed = true;
     }
@@ -74,7 +74,6 @@ public class Turret extends DisableSubsystem {
           Transform2d diff =
               robotPose
                   .get()
-                  .transformBy(TurretConstants.driveBaseToTurret)
                   .minus(targetPose.get());
           Rotation2d rotation =
               new Rotation2d(diff.getX(), diff.getY()).plus(TurretConstants.turretOffset);
@@ -101,9 +100,10 @@ public class Turret extends DisableSubsystem {
                 double r1 = (double) q1 / p;
                 double r2 = (double) q2 / p;
 
+
     double i = 0;
     double j = 0;
-    while(i * r1 < range && j * r2 < range) {
+    while(i * r1 < range * 10 && j * r2 < range * 10) {
                     double alpha = r1 * (i + a);
                     double beta = r2 * (j + b);
 

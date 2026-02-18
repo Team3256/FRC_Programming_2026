@@ -27,6 +27,7 @@ public class IntakePivot extends DisableSubsystem {
   public IntakePivot(boolean enabled, IntakePivotIO intakePivotIO) {
     super(enabled);
     this.intakePivotIO = intakePivotIO;
+    intakePivotIO.resetPosition(IntakePivotConstants.stowPosition);
   }
 
   @Override

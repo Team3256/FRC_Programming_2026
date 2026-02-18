@@ -56,6 +56,9 @@ public class Robot extends LoggedRobot {
 
       mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_USB2, true);
       mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_USB1, true);
+      mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_ADJ, false);
+      mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_5VA, false);
+      mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_5VB, false);
       // Device operations here
 
     } catch (Exception e) {
@@ -88,8 +91,6 @@ public class Robot extends LoggedRobot {
       }
       Logger.addDataReceiver(new NT4PublisherNoFMS()); // Publish data to NetworkTables
       // Enables power distribution logging
-      new PowerDistribution(
-          1, ModuleType.kRev); // Ignore this "resource leak"; it was the example code from docs
     } else {
       if (Constants.Logging.kAdvkitUseReplayLogs) {
         setUseTiming(false); // Run as fast as possible

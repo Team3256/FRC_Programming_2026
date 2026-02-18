@@ -146,11 +146,11 @@ public class Superstructure {
 
     stateTriggers
         .get(StructureState.SHOOT)
-        .debounce(.05)
+        .debounce(10)
         .whileTrue(indexer.startShooting())
         .whileTrue(feeder.startFeeding());
 
-    stateTriggers.get(StructureState.INTAKE).onTrue(intakeRollers.setVoltage(12));
+    stateTriggers.get(StructureState.INTAKE).onTrue(intakeRollers.setVoltage(8)).onTrue(intakePivot.goToGroundIntake());
 
     stateTriggers.get(StructureState.IDLE).onTrue(intakeRollers.off()).onTrue(shooter.off());
 

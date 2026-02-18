@@ -93,6 +93,7 @@ public class TurretIOTalonFX implements TurretIO {
     inputs.turretEncoder2AbsolutePosition = cancoder2AbsolutePosition.getValue().in(Rotations);
     inputs.turretEncoder2Velocity = cancoder2Velocity.getValue().in(RotationsPerSecond);
     inputs.turretEncoder2Position = cancoder2Position.getValue().in(Rotations);
+
   }
 
   @Override
@@ -114,6 +115,7 @@ public class TurretIOTalonFX implements TurretIO {
   public TalonFX getMotor() {
     return turretMotor;
   }
+  
 
   @Override
   public void resetPosition(double angle) {

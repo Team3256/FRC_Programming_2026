@@ -74,7 +74,7 @@ public class RobotContainer {
   private final AutoRoutines m_autoRoutines;
 
   private final Turret turret =
-      new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
+      new Turret(false, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
 
   private final ShooterPivot shooterPivot =
       new ShooterPivot(
@@ -84,11 +84,11 @@ public class RobotContainer {
 
   private final IntakeRollers intakeRollers =
       new IntakeRollers(
-          false, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
+          true, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
 
   private final IntakePivot intakePivot =
       new IntakePivot(
-          false, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
+          true, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
   private final Indexer indexer =
       new Indexer(true, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
   private final Feeder feeder =
@@ -97,8 +97,7 @@ public class RobotContainer {
   private final Vision vision =
       new Vision(
           drivetrain::addVisionMeasurement,
-          new VisionIOPhotonVision("left", VisionConstants.robotToLeftCam),
-          new VisionIOPhotonVision("right", VisionConstants.robotToRightCam));
+          new VisionIOPhotonVision(VisionConstants.frontRightCam, VisionConstants.robotToFrontRightCam));
 
   private final ShotCalculator shotCalculator =
       new ShotCalculator(
@@ -144,7 +143,7 @@ public class RobotContainer {
     m_operatorController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
     m_operatorController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
 
-    m_operatorController.x().onTrue(turret.setPositionFieldRelative(()-> Rotation2d.fromDegrees(90), ()-> drivetrain.getState().Pose.getRotation()));
+    m_operatorController.x().onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
   }
 
   private void configureChoreoAutoChooser() {

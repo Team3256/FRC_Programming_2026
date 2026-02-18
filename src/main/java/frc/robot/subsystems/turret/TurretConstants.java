@@ -65,8 +65,8 @@ public class TurretConstants {
                   .withKV(3.4812)
                   .withKP(300)
                   .withKI(0)
-                  .withKD(0)
-                  .withKA(0.22)
+                  .withKD(8)
+                  .withKA(0)
                   .withKG(0))
           .withMotorOutput(
               new MotorOutputConfigs()
@@ -75,7 +75,7 @@ public class TurretConstants {
           .withMotionMagic(
               new MotionMagicConfigs()
                   .withMotionMagicAcceleration(20)
-                  .withMotionMagicCruiseVelocity(15))
+                  .withMotionMagicCruiseVelocity(12))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
