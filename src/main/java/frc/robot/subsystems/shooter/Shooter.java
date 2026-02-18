@@ -8,8 +8,10 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
+import frc.robot.utils.Util;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,6 +19,10 @@ public class Shooter extends DisableSubsystem {
 
   private final ShooterIO shooterIO;
   private final ShooterIOInputsAutoLogged shooterIOAutoLogged = new ShooterIOInputsAutoLogged();
+
+  private double reqVelocity = 0.0;
+
+  public final Trigger reachedVelocity = new Trigger(this::reachedVelocity);
 
   public Shooter(boolean enabled, ShooterIO shooterIO) {
     super(enabled);
@@ -29,6 +35,8 @@ public class Shooter extends DisableSubsystem {
     shooterIO.updateInputs(shooterIOAutoLogged);
     Logger.processInputs("Shooter", shooterIOAutoLogged);
 
+    Logger.recordOutput(this.getClass().getSimpleName() + "/reqVelocity", reqVelocity);
+
     LoggedTracer.record("Shooter");
   }
 
@@ -37,11 +45,15 @@ public class Shooter extends DisableSubsystem {
   }
 
   public Command setVelocity(double velocity) {
-    return this.run(() -> shooterIO.setShooterVelocity(velocity)).finallyDo(shooterIO::off);
+    return setVelocity(() -> velocity);
   }
 
   public Command setVelocity(DoubleSupplier velocity) {
-    return this.run(() -> shooterIO.setShooterVelocity(velocity.getAsDouble()))
+    return this.run(
+            () -> {
+              reqVelocity = velocity.getAsDouble();
+              shooterIO.setShooterVelocity(reqVelocity);
+            })
         .finallyDo(shooterIO::off);
   }
 
@@ -51,6 +63,10 @@ public class Shooter extends DisableSubsystem {
 
   public Command feedCorner(DoubleSupplier distance) {
     return setVelocity(() -> ShooterConstants.feedLUT.get(distance.getAsDouble()));
+  }
+
+  public boolean reachedVelocity() {
+    return Util.epsilonEquals(shooterIOAutoLogged.shooterMotorVelocity, reqVelocity, 5);
   }
 
   public Command off() {

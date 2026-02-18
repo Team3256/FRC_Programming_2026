@@ -35,6 +35,7 @@ public class Superstructure {
   public enum StructureState {
     INTAKE,
     SHOOT,
+    SHOOT_AND_INTAKE,
     HOME,
     IDLE,
     CLIMB,
@@ -137,25 +138,43 @@ public class Superstructure {
 
     stateTriggers
         .get(StructureState.SHOOT)
+        .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
         .and(targetRedHub.or(targetBlueHub))
         .onTrue(shooter.shootHub(shotCalculator::getDistance));
     stateTriggers
         .get(StructureState.SHOOT)
+        .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
         .and(feedTopCorner.or(feedBottomCorner))
-        .whileTrue(shooter.feedCorner(shotCalculator::getDistance));
+        .onTrue(shooter.feedCorner(shotCalculator::getDistance));
 
     stateTriggers
         .get(StructureState.SHOOT)
-        .debounce(10)
-        .whileTrue(indexer.startShooting())
-        .whileTrue(feeder.startFeeding());
+        .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
+        .and(shooter.reachedVelocity)
+        .onTrue(indexer.startShooting())
+        .onTrue(feeder.startFeeding());
+
+    stateTriggers
+        .get(StructureState.SHOOT)
+        .and(prevStateTriggers.get(StructureState.INTAKE))
+        .or(
+            stateTriggers
+                .get(StructureState.INTAKE)
+                .and(prevStateTriggers.get(StructureState.SHOOT)))
+        .onTrue(this.setState(StructureState.SHOOT_AND_INTAKE));
 
     stateTriggers
         .get(StructureState.INTAKE)
+        .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
         .onTrue(intakeRollers.setVoltage(8))
         .onTrue(intakePivot.goToGroundIntake());
 
-    stateTriggers.get(StructureState.IDLE).onTrue(intakeRollers.off()).onTrue(shooter.off());
+    stateTriggers
+        .get(StructureState.IDLE)
+        .onTrue(intakeRollers.off())
+        .onTrue(shooter.off())
+        .onTrue(indexer.off())
+        .onTrue(feeder.off());
 
     // Kills all subsystems
     stateTriggers
