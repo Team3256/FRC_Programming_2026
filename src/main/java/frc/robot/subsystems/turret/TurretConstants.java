@@ -32,13 +32,13 @@ public class TurretConstants {
   public static final int flashConfigRetries = 5;
 
   public static double updateFrequency = 50;
-  public static final int turretEncoder1ID = 9;
+  public static final int turretEncoder1ID = 17;
   public static final int turretEncoder2ID = 0;
 
   public static final Rotation2d turretOffset = Rotation2d.kPi;
 
   public static final Transform2d driveBaseToTurret =
-      new Transform2d(Units.inchesToMeters(6.750), Units.inchesToMeters(-6.750), Rotation2d.kZero);
+      new Transform2d(Units.inchesToMeters(-6.750), Units.inchesToMeters(6.750), Rotation2d.kZero);
 
   public static final CANcoderConfiguration cancoderConfiguration1 =
       new CANcoderConfiguration()

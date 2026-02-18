@@ -79,19 +79,19 @@ public class RobotContainer {
       new ShooterPivot(
           false, Utils.isSimulation() ? new ShooterPivotIOSim() : new ShooterPivotIOTalonFX());
   private final Shooter shooter =
-      new Shooter(true, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
+      new Shooter(false, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
 
   private final IntakeRollers intakeRollers =
       new IntakeRollers(
-          true, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
+          false, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
 
   private final IntakePivot intakePivot =
       new IntakePivot(
-          true, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
+          false, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
   private final Indexer indexer =
-      new Indexer(true, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
+      new Indexer(false, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
   private final Feeder feeder =
-      new Feeder(true, Utils.isSimulation() ? new FeederIOSim() : new FeederIOTalonFX());
+      new Feeder(false, Utils.isSimulation() ? new FeederIOSim() : new FeederIOTalonFX());
 
   private final Vision vision =
       new Vision(
@@ -120,7 +120,6 @@ public class RobotContainer {
 
   private AutoChooser autoChooser = new AutoChooser();
 
-  //  private final Limelight limelight = new Limelight("limelight");
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -140,10 +139,10 @@ public class RobotContainer {
 
   private void configureOperatorBinds() {
 
-    m_operatorController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
-    m_operatorController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
-
-    m_operatorController.x().onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
+//    m_operatorController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
+//    m_operatorController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
+//
+//    m_operatorController.x().onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
   }
 
   private void configureChoreoAutoChooser() {
