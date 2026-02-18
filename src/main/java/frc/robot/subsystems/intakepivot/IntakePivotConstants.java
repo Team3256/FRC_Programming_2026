@@ -29,7 +29,7 @@ public final class IntakePivotConstants {
           .withSlot0(
               new Slot0Configs()
                   .withKS(.169)
-                  .withKV(.09*43.5)
+                  .withKV(.09 * 43.5)
                   .withKP(300)
                   .withKI(0)
                   .withKD(15)

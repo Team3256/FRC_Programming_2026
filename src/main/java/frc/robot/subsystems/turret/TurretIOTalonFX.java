@@ -23,8 +23,7 @@ import frc.robot.utils.PhoenixUtil;
 
 public class TurretIOTalonFX implements TurretIO {
 
-  private final TalonFX turretMotor =
-      new TalonFX(TurretConstants.turretMotorId);
+  private final TalonFX turretMotor = new TalonFX(TurretConstants.turretMotorId);
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0).withSlot(0).withEnableFOC(TurretConstants.kUseFOC);
 
@@ -71,12 +70,12 @@ public class TurretIOTalonFX implements TurretIO {
         turretMotorPosition,
         turretMotorStatorCurrent,
         turretMotorSupplyCurrent,
-            cancoder1AbsolutePosition,
-            cancoder1Position,
-            cancoder1Velocity,
-            cancoder2AbsolutePosition,
-            cancoder2Position,
-            cancoder2Velocity);
+        cancoder1AbsolutePosition,
+        cancoder1Position,
+        cancoder1Velocity,
+        cancoder2AbsolutePosition,
+        cancoder2Position,
+        cancoder2Velocity);
   }
 
   @Override
@@ -93,7 +92,6 @@ public class TurretIOTalonFX implements TurretIO {
     inputs.turretEncoder2AbsolutePosition = cancoder2AbsolutePosition.getValue().in(Rotations);
     inputs.turretEncoder2Velocity = cancoder2Velocity.getValue().in(RotationsPerSecond);
     inputs.turretEncoder2Position = cancoder2Position.getValue().in(Rotations);
-
   }
 
   @Override
@@ -115,7 +113,6 @@ public class TurretIOTalonFX implements TurretIO {
   public TalonFX getMotor() {
     return turretMotor;
   }
-  
 
   @Override
   public void resetPosition(double angle) {

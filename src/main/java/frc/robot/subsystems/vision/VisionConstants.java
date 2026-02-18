@@ -57,5 +57,4 @@ public class VisionConstants {
         1.0,
         1.0 // Camera 3
       };
-
 }

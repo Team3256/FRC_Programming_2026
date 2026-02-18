@@ -35,7 +35,6 @@ public class TurretConstants {
   public static final int turretEncoder1ID = 9;
   public static final int turretEncoder2ID = 0;
 
-
   public static final Rotation2d turretOffset = Rotation2d.kPi;
 
   public static final Transform2d driveBaseToTurret =
@@ -80,7 +79,7 @@ public class TurretConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(80))
-          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(90.0/10 * 48.0/12));
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(90.0 / 10 * 48.0 / 12));
 
   public static final class SimulationConstants {
 
@@ -94,7 +93,6 @@ public class TurretConstants {
   public static final int mainTurretGear = 900;
   public static final int cancoderGear1 = 100;
   public static final int cancoderGear2 = 175;
-
 
   public static final double crtOffsetRot = 0.5;
 }

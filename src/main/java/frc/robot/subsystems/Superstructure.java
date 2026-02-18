@@ -150,7 +150,10 @@ public class Superstructure {
         .whileTrue(indexer.startShooting())
         .whileTrue(feeder.startFeeding());
 
-    stateTriggers.get(StructureState.INTAKE).onTrue(intakeRollers.setVoltage(8)).onTrue(intakePivot.goToGroundIntake());
+    stateTriggers
+        .get(StructureState.INTAKE)
+        .onTrue(intakeRollers.setVoltage(8))
+        .onTrue(intakePivot.goToGroundIntake());
 
     stateTriggers.get(StructureState.IDLE).onTrue(intakeRollers.off()).onTrue(shooter.off());
 
@@ -170,7 +173,7 @@ public class Superstructure {
         .onTrue(shooterPivot.setPosition(0));
 
     //
-     stateTriggers.get(StructureState.REV).whileTrue(shooter.shootHub(shotCalculator::getDistance));
+    stateTriggers.get(StructureState.REV).whileTrue(shooter.shootHub(shotCalculator::getDistance));
   }
 
   // call manually

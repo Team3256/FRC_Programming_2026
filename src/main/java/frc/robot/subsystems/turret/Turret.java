@@ -25,7 +25,6 @@ public class Turret extends DisableSubsystem {
 
   private double reqPosition = 0.0;
 
-
   private boolean hasBeenZeroed = false;
 
   public final Trigger reachedPosition = new Trigger(this::reachedPosition);
@@ -34,9 +33,6 @@ public class Turret extends DisableSubsystem {
     super(enabled);
 
     this.turretIO = turretIO;
-
-
-
   }
 
   @Override
@@ -46,10 +42,26 @@ public class Turret extends DisableSubsystem {
     Logger.processInputs("Turret", turretIOInputsAutoLogged);
 
     Logger.recordOutput(this.getClass().getSimpleName() + "/reqPosition", reqPosition);
-    Logger.recordOutput(this.getClass().getSimpleName() + "/absTurretPos", solveTheta(TurretConstants.mainTurretGear, TurretConstants.cancoderGear1, TurretConstants.cancoderGear2, turretIOInputsAutoLogged.turretEncoder1AbsolutePosition, turretIOInputsAutoLogged.turretEncoder2AbsolutePosition));
+    Logger.recordOutput(
+        this.getClass().getSimpleName() + "/absTurretPos",
+        solveTheta(
+            TurretConstants.mainTurretGear,
+            TurretConstants.cancoderGear1,
+            TurretConstants.cancoderGear2,
+            turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
+            turretIOInputsAutoLogged.turretEncoder2AbsolutePosition));
 
-    if (!hasBeenZeroed &&turretIOInputsAutoLogged.turretEncoder1AbsolutePosition!=0 &&turretIOInputsAutoLogged.turretEncoder2AbsolutePosition!=0) {
-      turretIO.resetPosition(solveTheta(TurretConstants.mainTurretGear, TurretConstants.cancoderGear1, TurretConstants.cancoderGear2, turretIOInputsAutoLogged.turretEncoder1AbsolutePosition, turretIOInputsAutoLogged.turretEncoder2AbsolutePosition) - TurretConstants.crtOffsetRot);
+    if (!hasBeenZeroed
+        && turretIOInputsAutoLogged.turretEncoder1AbsolutePosition != 0
+        && turretIOInputsAutoLogged.turretEncoder2AbsolutePosition != 0) {
+      turretIO.resetPosition(
+          solveTheta(
+                  TurretConstants.mainTurretGear,
+                  TurretConstants.cancoderGear1,
+                  TurretConstants.cancoderGear2,
+                  turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
+                  turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)
+              - TurretConstants.crtOffsetRot);
       hasBeenZeroed = true;
     }
     LoggedTracer.record("Turret");
@@ -71,10 +83,7 @@ public class Turret extends DisableSubsystem {
   public Command pointToPose(Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
     return this.run(
         () -> {
-          Transform2d diff =
-              robotPose
-                  .get()
-                  .minus(targetPose.get());
+          Transform2d diff = robotPose.get().minus(targetPose.get());
           Rotation2d rotation =
               new Rotation2d(diff.getX(), diff.getY()).plus(TurretConstants.turretOffset);
           setPositionFieldRelative(rotation, robotPose.get().getRotation());
@@ -82,7 +91,16 @@ public class Turret extends DisableSubsystem {
   }
 
   public Command resetPosition() {
-    return this.runOnce(()->turretIO.resetPosition(solveTheta(TurretConstants.mainTurretGear, TurretConstants.cancoderGear1, TurretConstants.cancoderGear2, turretIOInputsAutoLogged.turretEncoder1AbsolutePosition, turretIOInputsAutoLogged.turretEncoder2AbsolutePosition) - TurretConstants.crtOffsetRot));
+    return this.runOnce(
+        () ->
+            turretIO.resetPosition(
+                solveTheta(
+                        TurretConstants.mainTurretGear,
+                        TurretConstants.cancoderGear1,
+                        TurretConstants.cancoderGear2,
+                        turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
+                        turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)
+                    - TurretConstants.crtOffsetRot));
   }
 
   private void setPositionFieldRelative(Rotation2d targetRot, Rotation2d robotRot) {
@@ -96,22 +114,21 @@ public class Turret extends DisableSubsystem {
   }
 
   public static double solveTheta(int p, int q1, int q2, double a, double b) {
-                double range = (double) Util.lcm(q1, q2) / p;
-                double r1 = (double) q1 / p;
-                double r2 = (double) q2 / p;
-
+    double range = (double) Util.lcm(q1, q2) / p;
+    double r1 = (double) q1 / p;
+    double r2 = (double) q2 / p;
 
     double i = 0;
     double j = 0;
-    while(i * r1 < range * 10 && j * r2 < range * 10) {
-                    double alpha = r1 * (i + a);
-                    double beta = r2 * (j + b);
+    while (i * r1 < range * 10 && j * r2 < range * 10) {
+      double alpha = r1 * (i + a);
+      double beta = r2 * (j + b);
 
       if (Math.abs(alpha - beta) < 1e-3) {
         return alpha;
       }
 
-      if(alpha < beta) {
+      if (alpha < beta) {
         i += 1;
       } else {
         j += 1;
@@ -120,6 +137,7 @@ public class Turret extends DisableSubsystem {
 
     return 0;
   }
+
   public Command zero() {
     return this.runOnce(turretIO::zero);
   }

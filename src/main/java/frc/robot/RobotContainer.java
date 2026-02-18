@@ -13,7 +13,6 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -97,7 +96,8 @@ public class RobotContainer {
   private final Vision vision =
       new Vision(
           drivetrain::addVisionMeasurement,
-          new VisionIOPhotonVision(VisionConstants.frontRightCam, VisionConstants.robotToFrontRightCam));
+          new VisionIOPhotonVision(
+              VisionConstants.frontRightCam, VisionConstants.robotToFrontRightCam));
 
   private final ShotCalculator shotCalculator =
       new ShotCalculator(

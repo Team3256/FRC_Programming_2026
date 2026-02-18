@@ -8,7 +8,6 @@
 package frc.robot.subsystems.turret;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.units.measure.Angle;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface TurretIO {
