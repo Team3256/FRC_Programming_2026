@@ -73,25 +73,25 @@ public class RobotContainer {
   private final AutoRoutines m_autoRoutines;
 
   private final Turret turret =
-      new Turret(false, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
+      new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
 
   private final ShooterPivot shooterPivot =
       new ShooterPivot(
-          false, Utils.isSimulation() ? new ShooterPivotIOSim() : new ShooterPivotIOTalonFX());
+          true, Utils.isSimulation() ? new ShooterPivotIOSim() : new ShooterPivotIOTalonFX());
   private final Shooter shooter =
-      new Shooter(false, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
+      new Shooter(true, Utils.isSimulation() ? new ShooterIOSim() : new ShooterIOTalonFX());
 
   private final IntakeRollers intakeRollers =
       new IntakeRollers(
-          false, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
+          true, Utils.isSimulation() ? new IntakeRollersIOSim() : new IntakeRollersIOTalonFX());
 
   private final IntakePivot intakePivot =
       new IntakePivot(
-          false, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
+          true, Utils.isSimulation() ? new IntakePivotIOSim() : new IntakePivotIOTalonFX());
   private final Indexer indexer =
-      new Indexer(false, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
+      new Indexer(true, Utils.isSimulation() ? new IndexerIOSim() : new IndexerIOTalonFX());
   private final Feeder feeder =
-      new Feeder(false, Utils.isSimulation() ? new FeederIOSim() : new FeederIOTalonFX());
+      new Feeder(true, Utils.isSimulation() ? new FeederIOSim() : new FeederIOTalonFX());
 
   private final Vision vision =
       new Vision(

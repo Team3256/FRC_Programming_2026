@@ -38,7 +38,7 @@ public class TurretConstants {
   public static final Rotation2d turretOffset = Rotation2d.kPi;
 
   public static final Transform2d driveBaseToTurret =
-      new Transform2d(Units.inchesToMeters(-6.750), Units.inchesToMeters(6.750), Rotation2d.kZero);
+      new Transform2d(Units.inchesToMeters(6.750), Units.inchesToMeters(-6.750), Rotation2d.kZero);
 
   public static final CANcoderConfiguration cancoderConfiguration1 =
       new CANcoderConfiguration()
@@ -62,9 +62,9 @@ public class TurretConstants {
               new Slot0Configs()
                   .withKS(0)
                   .withKV(3.4812)
-                  .withKP(300)
+                  .withKP(150)
                   .withKI(0)
-                  .withKD(8)
+                  .withKD(2)
                   .withKA(0)
                   .withKG(0))
           .withMotorOutput(

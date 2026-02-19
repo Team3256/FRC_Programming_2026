@@ -30,7 +30,7 @@ public class VisionConstants {
       new Transform3d(
           Units.inchesToMeters(12.714),
           Units.inchesToMeters(-9.769),
-          Units.inchesToMeters(22.072),
+          Units.inchesToMeters(17.052),
           new Rotation3d(0.0, Units.degreesToRadians(-20), Units.degreesToRadians(-45)));
   public static Transform3d robotToBackRightCam =
       new Transform3d(
@@ -65,7 +65,7 @@ public class VisionConstants {
   // (Adjust to trust some cameras more than others)
   public static double[] cameraStdDevFactors =
       new double[] {
-        1.3, // Camera 0
+        1.0, // Camera 0
         1.0, // Camera 1
         1.0,
         1.0 // Camera 3

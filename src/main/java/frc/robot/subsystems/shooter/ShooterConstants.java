@@ -45,11 +45,13 @@ public final class ShooterConstants {
   public static final InterpolatingDoubleTreeMap hubLUT =
       new InterpolatingDoubleTreeMap() {
         {
-          put(2.0, 50.0);
-          put(3.0, 50.0);
-          put(4.0, 50.0);
-          put(5.0, 50.0);
-          put(6.0, 50.0);
+          put(1.342, 32.6);
+          put(2.118, 32.6);
+          put(2.912, 35.6);
+          put(3.465, 37.4);
+          put(3.9, 39.6);
+          put(4.37, 39.6);
+          put(5.66, 44.8);
         }
       };
 
