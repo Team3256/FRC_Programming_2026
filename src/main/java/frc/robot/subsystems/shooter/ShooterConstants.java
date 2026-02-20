@@ -46,12 +46,19 @@ public final class ShooterConstants {
       new InterpolatingDoubleTreeMap() {
         {
           put(1.342, 32.6);
-          put(2.118, 32.6);
-          put(2.912, 35.6);
+          put(2.118, 34.6);
+          put(2.912, 36.6);
           put(3.465, 37.4);
           put(3.9, 39.6);
-          put(4.37, 39.6);
+          put(4.37, 42.6);
           put(5.66, 44.8);
+
+          //fake data
+          put(6.0, 46.8);
+          put(7.0, 49.0);
+          put(8.0, 52.0);
+
+
         }
       };
 

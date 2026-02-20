@@ -33,6 +33,7 @@ public class Turret extends DisableSubsystem {
     super(enabled);
 
     this.turretIO = turretIO;
+    turretIO.resetPosition(0);
   }
 
   @Override
@@ -51,19 +52,25 @@ public class Turret extends DisableSubsystem {
             turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
             turretIOInputsAutoLogged.turretEncoder2AbsolutePosition));
 
-    if (!hasBeenZeroed
-        && turretIOInputsAutoLogged.turretEncoder1AbsolutePosition != 0
-        && turretIOInputsAutoLogged.turretEncoder2AbsolutePosition != 0) {
-      turretIO.resetPosition(
-          solveTheta(
-                  TurretConstants.mainTurretGear,
-                  TurretConstants.cancoderGear1,
-                  TurretConstants.cancoderGear2,
-                  turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
-                  turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)
-              - TurretConstants.crtOffsetRot);
-      hasBeenZeroed = true;
-    }
+
+
+//    if (!hasBeenZeroed
+//        && solveTheta(
+//            TurretConstants.mainTurretGear,
+//            TurretConstants.cancoderGear1,
+//            TurretConstants.cancoderGear2,
+//            turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
+//            turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)!=0) {
+//      turretIO.resetPosition(
+//          solveTheta(
+//                  TurretConstants.mainTurretGear,
+//                  TurretConstants.cancoderGear1,
+//                  TurretConstants.cancoderGear2,
+//                  turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
+//                  turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)
+//              - TurretConstants.crtOffsetRot);
+//      hasBeenZeroed = true;
+//    }
     LoggedTracer.record("Turret");
   }
 
@@ -88,19 +95,6 @@ public class Turret extends DisableSubsystem {
               new Rotation2d(diff.getX(), diff.getY()).plus(TurretConstants.turretOffset);
           setPositionFieldRelative(rotation, robotPose.get().getRotation());
         });
-  }
-
-  public Command resetPosition() {
-    return this.runOnce(
-        () ->
-            turretIO.resetPosition(
-                solveTheta(
-                        TurretConstants.mainTurretGear,
-                        TurretConstants.cancoderGear1,
-                        TurretConstants.cancoderGear2,
-                        turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
-                        turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)
-                    - TurretConstants.crtOffsetRot));
   }
 
   private void setPositionFieldRelative(Rotation2d targetRot, Rotation2d robotRot) {
