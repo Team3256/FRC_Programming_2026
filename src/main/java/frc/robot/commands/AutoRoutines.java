@@ -75,4 +75,29 @@ public class AutoRoutines {
 
     return routine;
   }
+
+  public AutoRoutine jeslynOWO() {
+    final AutoRoutine routine = m_factory.newRoutine("jeslynOWO");
+    final AutoTrajectory jeslynOWO = routine.trajectory("jeslynOWO");
+
+    routine
+        .active()
+        .onTrue(
+            jeslynOWO.resetOdometry().andThen(Commands.waitSeconds(0)).andThen(jeslynOWO.cmd()));
+    jeslynOWO
+        .atTime("Start")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.REV)
+                .andThen(Commands.waitSeconds(2))
+                .andThen(m_superstructure.setState(StructureState.SHOOT)));
+
+    jeslynOWO.atTime("intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    jeslynOWO.atTime("stopintake").onTrue(m_superstructure.setState(StructureState.IDLE));
+    jeslynOWO.atTime("shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+    jeslynOWO.atTime("shoot2").onTrue(m_superstructure.setState(StructureState.SHOOT));
+    jeslynOWO.atTime("shoot3").onTrue(m_superstructure.setState(StructureState.SHOOT));
+
+    return routine;
+  }
 }

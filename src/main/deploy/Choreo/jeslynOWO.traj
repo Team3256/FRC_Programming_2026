@@ -26,7 +26,7 @@
     {"x":{"exp":"0.41136908531188965 m", "val":0.4113690853118897}, "y":{"exp":"5.262204170227051 m", "val":5.262204170227051}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":27, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"0.8193734884262085 m", "val":0.8193734884262085}, "y":{"exp":"3.1317684650421143 m", "val":3.1317684650421143}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":38, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"2.1779181957244873 m", "val":2.1779181957244873}, "y":{"exp":"1.996268391609192 m", "val":1.996268391609192}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":21, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
-    {"x":{"exp":"0.434114545583725 m", "val":0.434114545583725}, "y":{"exp":"0.7188308835029602 m", "val":0.7188308835029602}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+    {"x":{"exp":"0.5274574756622314 m", "val":0.5274574756622314}, "y":{"exp":"0.731063187122345 m", "val":0.731063187122345}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
@@ -191,7 +191,7 @@
  },
  "events":[
    {"name":"intake", "from":{"target":1, "targetTimestamp":0.62267, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"intake2", "from":{"target":2, "targetTimestamp":1.55763, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"stopintake", "from":{"target":2, "targetTimestamp":1.55763, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"shoot", "from":{"target":3, "targetTimestamp":2.70536, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"shoot2", "from":{"target":4, "targetTimestamp":4.50932, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"shoot3", "from":{"target":5, "targetTimestamp":5.44753, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
