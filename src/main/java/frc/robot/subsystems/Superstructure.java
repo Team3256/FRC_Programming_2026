@@ -36,6 +36,8 @@ public class Superstructure {
     INTAKE,
     SHOOT,
     SHOOT_AND_INTAKE,
+    JITTER_INTAKE,
+    JITTER_AND_SHOOT,
     HOME,
     IDLE,
     CLIMB,
@@ -139,11 +141,13 @@ public class Superstructure {
     stateTriggers
         .get(StructureState.SHOOT)
         .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
+        .or(stateTriggers.get(StructureState.JITTER_AND_SHOOT))
         .and(targetRedHub.or(targetBlueHub))
         .onTrue(shooter.shootHub(shotCalculator::getDistance));
     stateTriggers
         .get(StructureState.SHOOT)
         .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
+        .or(stateTriggers.get(StructureState.JITTER_AND_SHOOT))
         .and(feedTopCorner.or(feedBottomCorner))
         .onTrue(shooter.feedCorner(shotCalculator::getDistance));
 
@@ -151,6 +155,7 @@ public class Superstructure {
         .get(StructureState.SHOOT)
         .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
         .and(shooter.reachedVelocity)
+        .or(stateTriggers.get(StructureState.JITTER_AND_SHOOT))
         .onTrue(indexer.startShooting())
         .onTrue(feeder.startFeeding());
 
@@ -160,7 +165,7 @@ public class Superstructure {
         .or(
             stateTriggers
                 .get(StructureState.INTAKE)
-                .and(prevStateTriggers.get(StructureState.SHOOT)))
+                .and(prevStateTriggers.get(StructureState.SHOOT).or(prevStateTriggers.get(StructureState.JITTER_AND_SHOOT))))
         .onTrue(this.setState(StructureState.SHOOT_AND_INTAKE));
 
     stateTriggers
@@ -169,12 +174,25 @@ public class Superstructure {
         .onTrue(intakeRollers.setVoltage(8))
         .onTrue(intakePivot.goToGroundIntake());
 
+    stateTriggers.get(StructureState.JITTER_INTAKE).onTrue(intakePivot.jitterIntake());
+
+    stateTriggers
+        .get(StructureState.JITTER_INTAKE)
+        .and(
+            prevStateTriggers
+                .get(StructureState.SHOOT)
+                .or(prevStateTriggers.get(StructureState.SHOOT_AND_INTAKE)))
+        .onTrue(this.setState(StructureState.JITTER_AND_SHOOT));
+
+    stateTriggers.get(StructureState.JITTER_AND_SHOOT).onTrue(intakePivot.jitterIntake());
+
     stateTriggers
         .get(StructureState.IDLE)
         .onTrue(intakeRollers.off())
         .onTrue(shooter.off())
         .onTrue(indexer.off())
-        .onTrue(feeder.off());
+        .onTrue(feeder.off())
+            .onTrue(intakePivot.off());
 
     // Kills all subsystems
     stateTriggers

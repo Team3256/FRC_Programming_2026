@@ -129,13 +129,13 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Configure the trigger bindings
+    CommandScheduler.getInstance().registerSubsystem(drivetrain);
     m_autoRoutines =
         new AutoRoutines(
             drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure);
-    configureOperatorBinds();
-    configureChoreoAutoChooser();
-    CommandScheduler.getInstance().registerSubsystem(drivetrain);
     configureSwerve();
+    configureChoreoAutoChooser();
+    configureOperatorBinds();
     if (Utils.isSimulation()) {
       SimMechs.getInstance().publishToNT();
     }
@@ -147,18 +147,24 @@ public class RobotContainer {
     m_operatorController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
     //
     m_operatorController.x().onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
+    m_operatorController
+        .y()
+        .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
   }
 
   private void configureChoreoAutoChooser() {
 
     // Add options to the chooser
+
     autoChooser.addCmd("Wheel Radius Change", () -> drivetrain.wheelRadiusCharacterization(1));
-    autoChooser.addRoutine("Top 1 Cycle Mid", m_autoRoutines::topMidNoClimb);
+
+    autoChooser.addRoutine("Top 1 Cycle Mid", m_autoRoutines::topMidNoClimbAuto);
+    autoChooser.addRoutine("Top Depot Outpost", m_autoRoutines::topDepotOutpostAuto);
 
     SmartDashboard.putData("auto chooser", autoChooser);
 
     // Schedule the selected auto during the autonomous period
-    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+    RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
   }
 
   private void configureSwerve() {

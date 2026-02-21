@@ -62,9 +62,9 @@ public class TurretConstants {
               new Slot0Configs()
                   .withKS(0)
                   .withKV(3.4812)
-                  .withKP(300)
+                  .withKP(500)
                   .withKI(0)
-                  .withKD(10)
+                  .withKD(11)
                   .withKA(0)
                   .withKG(0))
           .withMotorOutput(

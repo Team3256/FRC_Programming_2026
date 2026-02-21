@@ -97,6 +97,20 @@
      "val":-1.559946983113957
     }
    },
+   "outpostEnd":{
+    "x":{
+     "exp":"0.6605635285377502 m",
+     "val":0.6605635285377502
+    },
+    "y":{
+     "exp":"0.7018707990646362 m",
+     "val":0.7018707990646362
+    },
+    "heading":{
+     "exp":"0 deg",
+     "val":0.0
+    }
+   },
    "topBumpEntry":{
     "x":{
      "exp":"3.9546008110046387 m",
@@ -165,16 +179,16 @@
    "val":0.0508
   },
   "vmax":{
-   "exp":"6000 RPM",
-   "val":628.3185307179587
+   "exp":"5000 RPM",
+   "val":523.5987755982989
   },
   "tmax":{
-   "exp":"1.2 N * m",
-   "val":1.2
+   "exp":"0.8 N * m",
+   "val":0.8
   },
   "cof":{
-   "exp":"1",
-   "val":1.0
+   "exp":"0.9",
+   "val":0.9
   },
   "bumper":{
    "front":{
@@ -198,7 +212,7 @@
  "generationFeatures":[],
  "codegen":{
   "root":"Users/ryanabraham/Downloads/FRC_Programming_2026/src/main/deploy/Choreo",
-  "genVars":true,
+  "genVars":false,
   "genTrajData":true,
   "useChoreoLib":true
  }

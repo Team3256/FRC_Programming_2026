@@ -22,6 +22,9 @@ public final class IntakePivotConstants {
   public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
   public static final double stowPosition = .342;
+
+  public static final double jitterPosition = .15;
+  public static final double jitterIntermediate = 0.05;
   public static final double groundIntakePosition = 0;
 
   public static final TalonFXConfiguration motorConfigs =

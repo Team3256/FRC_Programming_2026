@@ -71,6 +71,19 @@ public class IntakePivot extends DisableSubsystem {
     return this.setPosition(IntakePivotConstants.groundIntakePosition);
   }
 
+  public Command goToJitter() {
+    return this.setPosition(IntakePivotConstants.jitterPosition);
+  }
+
+  public Command goToJitterIntermediate() {
+    return this.setPosition(IntakePivotConstants.jitterIntermediate);
+  }
+
+  public Command jitterIntake() {
+    return (goToJitter().withTimeout(.2).andThen(goToJitterIntermediate().withTimeout(.2)))
+        .repeatedly();
+  }
+
   public boolean reachedPosition() {
     return Util.epsilonEquals(intakePivotIOInputsAutoLogged.pivotMotorPosition, reqPosition, 0.01);
   }

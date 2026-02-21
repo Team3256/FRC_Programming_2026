@@ -40,11 +40,12 @@ public class ShotCalculator {
   private static final InterpolatingDoubleTreeMap timeOfFlightMapFeed =
       new InterpolatingDoubleTreeMap() {
         {
-          put(5.68, 1.16);
-          put(4.55, 1.12);
-          put(3.15, 1.11);
-          put(1.88, 1.09);
-          put(1.38, 0.90);
+          put(4.38, 1.12);
+          put(6.11, 1.2);
+          put(8.0, 1.3);
+          put(9.42, 1.3);
+          put(10.8, 1.55);
+          put(12.834, 1.7);
         }
       };
   private final Supplier<Pose2d> robotPoseSupplier;
@@ -62,7 +63,7 @@ public class ShotCalculator {
     this.robotPoseSupplier = robotPoseSupplier;
     this.robotVelocitySupplier = robotVelocitySupplier;
     this.robotToTurret = robotToTurret;
-    phaseDelay = 0.03;
+    phaseDelay = 0.05;
   }
 
   // Suppliers for pose and velocit

@@ -10,6 +10,7 @@ package frc.robot.commands;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.StructureState;
@@ -30,16 +31,22 @@ public class AutoRoutines {
     m_superstructure = superstructure;
   }
 
-  public AutoRoutine forward() {
-    final AutoRoutine routine = m_factory.newRoutine("forward");
+  public AutoRoutine forwardTraj() {
+    final AutoRoutine routine = m_factory.newRoutine("forwardTest");
     final AutoTrajectory forward = routine.trajectory("forward");
-    routine.active().onTrue(forward.resetOdometry().andThen(forward().cmd()));
+    routine.active().whileTrue(Commands.print("yest").repeatedly());
+    routine.active().onTrue(forward.resetOdometry().andThen(forward.cmd()));
     return routine;
   }
 
-  public AutoRoutine topMidNoClimb() {
+  public Command forwardCmd() {
+    return Commands.sequence(
+        m_factory.resetOdometry("forward"), m_factory.trajectoryCmd("forward"));
+  }
+
+  public AutoRoutine topMidNoClimbAuto() {
     final AutoRoutine routine = m_factory.newRoutine("topMidNoClimb");
-    final AutoTrajectory topMidNoClimb = routine.trajectory("TopMidNoClimb");
+    final AutoTrajectory topMidNoClimb = routine.trajectory("TopMidNoClimb2");
     routine.active().onTrue(topMidNoClimb.resetOdometry().andThen(topMidNoClimb.cmd()));
 
     topMidNoClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
@@ -50,25 +57,38 @@ public class AutoRoutines {
                 .setState(StructureState.IDLE)
                 .andThen(m_superstructure.setState(StructureState.REV)));
 
-    topMidNoClimb.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+    topMidNoClimb
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
 
     return routine;
   }
 
-  public AutoRoutine bottomMid() {
-    final AutoRoutine routine = m_factory.newRoutine("bottomMid");
-    final AutoTrajectory traj = routine.trajectory("bottomMid");
-    routine
-        .active()
-        .onTrue(traj.resetOdometry().andThen(Commands.waitSeconds(2)).andThen(traj.cmd()));
+  public AutoRoutine topDepotOutpostAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("topDepotOutpost");
+    final AutoTrajectory topDepotOutpost = routine.trajectory("depotNoClimb");
+    final AutoTrajectory outpostPt2 = routine.trajectory("depotNoClimbPt2");
 
-    traj.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
-    traj.atTime("StopIntake")
+    routine.active().onTrue(topDepotOutpost.resetOdometry().andThen(topDepotOutpost.cmd()));
+
+    topDepotOutpost.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    topDepotOutpost.atTime("Rev").onTrue(m_superstructure.setState(StructureState.REV));
+
+    topDepotOutpost
+        .atTime("Shoot")
         .onTrue(
-            m_superstructure
-                .setState(StructureState.IDLE)
-                .andThen(m_superstructure.setState(StructureState.REV)));
-    traj.atTime("Bump").onTrue(m_superstructure.setState(StructureState.SHOOT));
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+
+    topDepotOutpost.doneDelayed(3).onTrue(outpostPt2.cmd());
 
     return routine;
   }
