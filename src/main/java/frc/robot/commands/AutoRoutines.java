@@ -11,9 +11,7 @@ import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
@@ -62,7 +60,7 @@ public class AutoRoutines {
 
   public AutoRoutine midFeedNoClimb() {
     final AutoRoutine routine = m_factory.newRoutine("midFeedClimb");
-    
+
     final AutoTrajectory midFeedNoClimb = routine.trajectory("MidFeedNoClimb");
     routine.active().onTrue(midFeedNoClimb.resetOdometry().andThen(midFeedNoClimb.cmd()));
     midFeedNoClimb
