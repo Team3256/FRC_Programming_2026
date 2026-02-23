@@ -37,7 +37,7 @@ public final class SwerveConstants {
   public static final Translation2d backRight =
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY);
 
-  // adjust each for overshoot
+  // TODO: adjust each for overshoot
   public static final class AzimuthTargets {
     public static final double aziKP = 6.0;
     public static final double aziKi = 0.0;
