@@ -87,7 +87,6 @@ public class AutoRoutines {
                 .andThen(Commands.waitSeconds(1))
                 .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
 
-
     topDepotOutpost.doneDelayed(3).onTrue(outpostPt2.cmd());
 
     return routine;

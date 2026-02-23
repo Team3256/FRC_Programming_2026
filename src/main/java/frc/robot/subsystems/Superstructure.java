@@ -165,7 +165,10 @@ public class Superstructure {
         .or(
             stateTriggers
                 .get(StructureState.INTAKE)
-                .and(prevStateTriggers.get(StructureState.SHOOT).or(prevStateTriggers.get(StructureState.JITTER_AND_SHOOT))))
+                .and(
+                    prevStateTriggers
+                        .get(StructureState.SHOOT)
+                        .or(prevStateTriggers.get(StructureState.JITTER_AND_SHOOT))))
         .onTrue(this.setState(StructureState.SHOOT_AND_INTAKE));
 
     stateTriggers
@@ -192,7 +195,7 @@ public class Superstructure {
         .onTrue(shooter.off())
         .onTrue(indexer.off())
         .onTrue(feeder.off())
-            .onTrue(intakePivot.off());
+        .onTrue(intakePivot.off());
 
     // Kills all subsystems
     stateTriggers
