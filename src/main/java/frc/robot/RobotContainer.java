@@ -49,6 +49,7 @@ import frc.robot.subsystems.turret.TurretIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.utils.MappedXboxController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -60,10 +61,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  public final CommandXboxController m_driverController =
-      new CommandXboxController(ControllerConstants.kDriverControllerPort);
-  public final CommandXboxController m_operatorController =
-      new CommandXboxController(ControllerConstants.kOperatorControllerPort);
+  public final MappedXboxController m_driverController =
+      new MappedXboxController(ControllerConstants.kDriverControllerPort, "Driver");
+  public final MappedXboxController m_operatorController =
+      new MappedXboxController(ControllerConstants.kOperatorControllerPort, "Operator");
 
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
@@ -202,7 +203,7 @@ public class RobotContainer {
                     drive
                         .withVelocityX(-m_driverController.getLeftY() * SlowMaxSpeed)
                         .withVelocityY(-m_driverController.getLeftX() * SlowMaxSpeed)
-                        .withRotationalRate(-m_driverController.getRightX() * SlowMaxAngular)));
+                        .withRotationalRate(-m_driverController.getTriggerAxes() * SlowMaxAngular)));
 
     m_driverController
         .rightBumper()
