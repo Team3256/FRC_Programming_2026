@@ -145,7 +145,6 @@ public class RobotContainer {
 
     m_operatorController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
     m_operatorController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
-    //
     m_operatorController.x().onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
     m_operatorController
         .y()
