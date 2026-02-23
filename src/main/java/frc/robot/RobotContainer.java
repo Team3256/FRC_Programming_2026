@@ -15,7 +15,6 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AutoRoutines;
@@ -203,7 +202,8 @@ public class RobotContainer {
                     drive
                         .withVelocityX(-m_driverController.getLeftY() * SlowMaxSpeed)
                         .withVelocityY(-m_driverController.getLeftX() * SlowMaxSpeed)
-                        .withRotationalRate(-m_driverController.getTriggerAxes() * SlowMaxAngular)));
+                        .withRotationalRate(
+                            -m_driverController.getTriggerAxes() * SlowMaxAngular)));
 
     m_driverController
         .rightBumper()
