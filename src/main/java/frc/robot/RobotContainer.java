@@ -193,6 +193,7 @@ public class RobotContainer {
                     .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
                     .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate)));
 
+    // TODO: change rotational rate to trigger axis
     m_driverController
         .leftBumper()
         .whileTrue(
@@ -202,6 +203,15 @@ public class RobotContainer {
                         .withVelocityX(-m_driverController.getLeftY() * SlowMaxSpeed)
                         .withVelocityY(-m_driverController.getLeftX() * SlowMaxSpeed)
                         .withRotationalRate(-m_driverController.getRightX() * SlowMaxAngular)));
+
+    m_driverController
+        .rightBumper()
+        .onTrue(
+            drivetrain.applyRequest(
+                azimuth
+                    .withVelocityX(-m_driverController.getLeftY())
+                    .withVelocityY(-m_driverController.getLeftX())
+                    .withTargetDirection(AzimuthTargets.bump)));
 
     // sets the heading to wherever the robot is facing
     m_driverController.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));

@@ -42,9 +42,6 @@ public final class SwerveConstants {
     public static final double aziKi = 0.0;
     public static final double aziKD = 0.0;
     public static final double timeout = 0.3;
-    public static final Rotation2d forward = new Rotation2d(Math.toRadians(0));
-    public static final Rotation2d left = new Rotation2d(Math.toRadians(90));
-    public static final Rotation2d back = new Rotation2d(Math.toRadians(180));
-    public static final Rotation2d right = new Rotation2d(Math.toRadians(270));
+    public static final Rotation2d bump = new Rotation2d(Math.toRadians(45));
   }
 }
