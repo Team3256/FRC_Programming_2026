@@ -13,9 +13,11 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AutoRoutines;
 import frc.robot.sim.SimMechs;
@@ -62,8 +64,6 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public final MappedXboxController m_driverController =
       new MappedXboxController(ControllerConstants.kDriverControllerPort, "Driver");
-  public final MappedXboxController m_operatorController =
-      new MappedXboxController(ControllerConstants.kOperatorControllerPort, "Operator");
 
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
@@ -133,22 +133,11 @@ public class RobotContainer {
     m_autoRoutines =
         new AutoRoutines(
             drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure);
-    configureSwerve();
+    configureController();
     configureChoreoAutoChooser();
-    configureOperatorBinds();
     if (Utils.isSimulation()) {
       SimMechs.getInstance().publishToNT();
     }
-  }
-
-  private void configureOperatorBinds() {
-
-    m_operatorController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
-    m_operatorController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
-    m_operatorController.x().onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
-    m_operatorController
-        .y()
-        .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
   }
 
   private void configureChoreoAutoChooser() {
@@ -166,8 +155,7 @@ public class RobotContainer {
     RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
   }
 
-  private void configureSwerve() {
-
+  private void configureController() {
     // Request to drive normally using input for both translation and rotation
     SwerveRequest.FieldCentric drive =
         new SwerveRequest.FieldCentric()
@@ -183,7 +171,8 @@ public class RobotContainer {
     azimuth.HeadingController.setPID(
         AzimuthTargets.aziKP, AzimuthTargets.aziKi, AzimuthTargets.aziKD);
 
-    // Default Swerve Command, run periodically every 20ms
+    // Default Drive
+
     drivetrain.setDefaultCommand(
         drivetrain.applyRequest(
             () ->
@@ -192,7 +181,8 @@ public class RobotContainer {
                     .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
                     .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate)));
 
-    // TODO: change rotational rate to trigger axis
+    // Slow
+
     m_driverController
         .leftBumper()
         .whileTrue(
@@ -204,8 +194,10 @@ public class RobotContainer {
                         .withRotationalRate(
                             -m_driverController.getTriggerAxes() * SlowMaxAngular)));
 
+    // Bump
+
     m_driverController
-        .rightBumper()
+        .a()
         .onTrue(
             drivetrain.applyRequest(
                 azimuth
@@ -213,8 +205,92 @@ public class RobotContainer {
                     .withVelocityY(-m_driverController.getLeftX())
                     .withTargetDirection(AzimuthTargets.bump)));
 
-    // sets the heading to wherever the robot is facing
+    // Zero Swerve
+
     m_driverController.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+    // Home?
+
+    m_driverController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
+
+    // Jitter
+
+    m_driverController
+        .povUp()
+        .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
+
+    // FEED placeholder - povUp
+
+    // Shoot
+
+    m_driverController
+        .povRight()
+        .onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
+
+    // Intake
+
+    m_driverController
+        .povDown()
+        .onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
+
+    // Climb placeholder - x
+
+    // Bump Azi
+
+    m_driverController
+        .a()
+        .onTrue(
+            drivetrain.applyRequest(
+                azimuth
+                    .withVelocityX(-m_driverController.getRightY())
+                    .withVelocityY(-m_driverController.getRightX())
+                    .withTargetDirection(AzimuthTargets.bump)));
+
+    // Cardinal Azimuth
+
+    new Trigger(() -> (m_driverController.getRightY() > 0.5)) // Up
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withTargetDirection(Rotation2d.kZero))
+                .withTimeout(AzimuthTargets.timeout));
+
+    new Trigger(() -> (m_driverController.getRightY() < -0.5)) // Down
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withTargetDirection(new Rotation2d(Math.toRadians(180))))
+                .withTimeout(AzimuthTargets.timeout));
+
+    new Trigger(() -> (m_driverController.getRightX() > 0.5)) // Right
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withTargetDirection(new Rotation2d(Math.toRadians(90))))
+                .withTimeout(AzimuthTargets.timeout));
+
+    new Trigger(() -> (m_driverController.getRightX() < -0.5)) // Left
+        .onTrue(
+            drivetrain
+                .applyRequest(
+                    () ->
+                        azimuth
+                            .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                            .withTargetDirection(new Rotation2d(Math.toRadians(270))))
+                .withTimeout(AzimuthTargets.timeout));
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }

@@ -16,6 +16,7 @@ import edu.wpi.first.units.measure.MomentOfInertia;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 public final class SwerveConstants {
+
   // LinearVelocity is a vector, so we need to get the magnitude
   public static final double deadbandMultiplier = 0.15;
   public static final double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
