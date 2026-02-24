@@ -100,7 +100,17 @@ public class AutoRoutines {
 
     topMidNoClimbDepot.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-    topMidNoClimbDepot.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    topMidNoClimbDepot
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    topMidNoClimbDepot.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+
+    topMidNoClimbDepot.atTime("Intake2").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
     
 
 
