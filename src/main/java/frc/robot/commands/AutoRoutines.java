@@ -115,14 +115,7 @@ public class AutoRoutines {
                 .andThen(Commands.waitSeconds(1))
                 .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
 
-                
     topMidNoClimbDepot.atTime("Intake2").onTrue(m_superstructure.setState(StructureState.INTAKE));
-
-    
-
-
-
-
 
     return routine;
   }
