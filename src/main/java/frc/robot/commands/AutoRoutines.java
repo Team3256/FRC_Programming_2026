@@ -76,9 +76,7 @@ public class AutoRoutines {
     routine.active().onTrue(topDepotOutpost.resetOdometry().andThen(topDepotOutpost.cmd()));
 
     topDepotOutpost.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
-
     topDepotOutpost.atTime("Rev").onTrue(m_superstructure.setState(StructureState.REV));
-
     topDepotOutpost
         .atTime("Shoot")
         .onTrue(
@@ -88,6 +86,19 @@ public class AutoRoutines {
                 .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
 
     topDepotOutpost.doneDelayed(3).onTrue(outpostPt2.cmd());
+
+    return routine;
+  }
+
+  public AutoRoutine rainbow() {
+    final AutoRoutine routine = m_factory.newRoutine("rainbow");
+    final AutoTrajectory rainbow = routine.trajectory("rainbow");
+
+    routine.active().onTrue(rainbow.resetOdometry().andThen(rainbow.cmd()));
+
+    rainbow.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    rainbow.atTime("StopIntake").onTrue(m_superstructure.setState(StructureState.REV));
+    rainbow.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
   }
