@@ -192,7 +192,6 @@ public class RobotContainer {
                     .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
                     .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate)));
 
-    // TODO: change rotational rate to trigger axis
     m_driverController
         .leftBumper()
         .whileTrue(
