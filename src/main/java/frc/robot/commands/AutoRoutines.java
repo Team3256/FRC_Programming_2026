@@ -92,7 +92,7 @@ public class AutoRoutines {
     return routine;
   }
 
-   public AutoRoutine topDepotAuto() {
+  public AutoRoutine topDepotAuto() {
     final AutoRoutine routine = m_factory.newRoutine("topDepot");
     final AutoTrajectory topDepot = routine.trajectory("topTrenchDepot");
     routine.active().onTrue(topDepot.resetOdometry().andThen(topDepot.cmd()));
