@@ -93,7 +93,7 @@ public class AutoRoutines {
   }
 
   public AutoRoutine topMidNoClimbDepotAuto() {
-    final AutoRoutine routine = m_factory.newRoutine("TopMidDepotNoCimb");
+    final AutoRoutine routine = m_factory.newRoutine("toTopMidDepotNoCimb");
     final AutoTrajectory topMidNoClimbDepot = routine.trajectory("TopMidDepotNoCimb");
 
     routine.active().onTrue(topMidNoClimbDepot.resetOdometry().andThen(topMidNoClimbDepot.cmd()));
