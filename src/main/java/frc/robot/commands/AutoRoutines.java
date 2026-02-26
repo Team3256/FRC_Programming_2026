@@ -44,9 +44,9 @@ public class AutoRoutines {
         m_factory.resetOdometry("forward"), m_factory.trajectoryCmd("forward"));
   }
 
-  public AutoRoutine topMidNoClimbAuto() {
-    final AutoRoutine routine = m_factory.newRoutine("topMidNoClimb");
-    final AutoTrajectory topMidNoClimb = routine.trajectory("TopMidNoClimb2");
+  public AutoRoutine topBumpMidHub() {
+    final AutoRoutine routine = m_factory.newRoutine("TopBumpMidHub");
+    final AutoTrajectory topMidNoClimb = routine.trajectory("TopBumpMidHub");
     routine.active().onTrue(topMidNoClimb.resetOdometry().andThen(topMidNoClimb.cmd()));
 
     topMidNoClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
@@ -68,10 +68,10 @@ public class AutoRoutines {
     return routine;
   }
 
-  public AutoRoutine topDepotOutpostAuto() {
-    final AutoRoutine routine = m_factory.newRoutine("topDepotOutpost");
-    final AutoTrajectory topDepotOutpost = routine.trajectory("depotNoClimb");
-    final AutoTrajectory outpostPt2 = routine.trajectory("depotNoClimbPt2");
+  public AutoRoutine topTrenchDepotOutpostHub() {
+    final AutoRoutine routine = m_factory.newRoutine("TopTrenchDepotOutpostHub");
+    final AutoTrajectory topDepotOutpost = routine.trajectory("TopTrenchDepotOutpostHub");
+    final AutoTrajectory outpostPt2 = routine.trajectory("OutPostMove");
 
     routine.active().onTrue(topDepotOutpost.resetOdometry().andThen(topDepotOutpost.cmd()));
 
