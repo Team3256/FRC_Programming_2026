@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # This grabs the WPILib docker container
-    container: wpilib/roborio-cross-ubuntu:2023-22.04
+    container: wpilib/roborio-cross-ubuntu:2025-24.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -27,7 +27,7 @@ jobs:
         run: ./gradlew spotlessCheck
   build:
     runs-on: ubuntu-latest
-    container: wpilib/roborio-cross-ubuntu:2023-22.04
+    container: wpilib/roborio-cross-ubuntu:2025-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Add repository to git safe directories
@@ -40,7 +40,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    container: wpilib/roborio-cross-ubuntu:2023-22.04
+    container: wpilib/roborio-cross-ubuntu:2025-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Add repository to git safe directories

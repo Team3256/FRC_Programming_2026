@@ -10,7 +10,7 @@ jobs:
     permissions:
       contents: write
 
-    container: wpilib/roborio-cross-ubuntu:2023-22.04
+    container: wpilib/roborio-cross-ubuntu:application/vnd.github.v3+json
 
     steps:
       - uses: actions/checkout@v3
