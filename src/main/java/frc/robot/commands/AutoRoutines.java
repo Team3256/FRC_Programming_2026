@@ -94,7 +94,7 @@ public class AutoRoutines {
 
   public AutoRoutine topDepotAuto() {
     final AutoRoutine routine = m_factory.newRoutine("topDepot");
-    final AutoTrajectory topDepot = routine.trajectory("depotOnly");
+    final AutoTrajectory topDepot = routine.trajectory("topTrenchDepot");
     routine.active().onTrue(topDepot.resetOdometry().andThen(topDepot.cmd()));
     topDepot.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
     topDepot.atTime("Rev").onTrue(m_superstructure.setState(StructureState.REV));
