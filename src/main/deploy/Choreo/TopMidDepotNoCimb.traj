@@ -1,5 +1,5 @@
 {
- "name":"TopMidNoCimb3",
+ "name":"TopMidDepotNoCimb",
  "version":3,
  "snapshot":{
   "waypoints":[
@@ -346,6 +346,6 @@
  "events":[
    {"name":"Shoot", "from":{"target":7, "targetTimestamp":6.24717, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"Intake", "from":{"target":3, "targetTimestamp":1.97551, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"Intake2", "from":{"target":8, "targetTimestamp":7.38332, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Intake", "from":{"target":8, "targetTimestamp":7.38332, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"StopIntake", "from":{"target":5, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }
