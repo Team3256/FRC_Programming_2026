@@ -165,9 +165,10 @@ public class AutoRoutines {
     return routine;
   }
 
-  public AutoRoutine TopBumpMidHub() {
-    final AutoRoutine routine = m_factory.newRoutine("TopBumpMidHub");
-    final AutoTrajectory topBumpMidHub = routine.trajectory("TopBumpMidHub");
+ 
+  public AutoRoutine TopBumpMidHubBump() {
+    final AutoRoutine routine = m_factory.newRoutine("TopBumpMidHubBump");
+    final AutoTrajectory topBumpMidHub = routine.trajectory("TopBumpMidHubBump");
 
     routine.active().onTrue(topBumpMidHub.resetOdometry().andThen(topBumpMidHub.cmd()));
 
