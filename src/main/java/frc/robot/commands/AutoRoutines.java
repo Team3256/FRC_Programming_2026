@@ -91,4 +91,19 @@ public class AutoRoutines {
 
     return routine;
   }
+
+  public AutoRoutine topDepotAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("topDepot");
+    final AutoTrajectory topDepot = routine.trajectory("TopTrenchDepotHub");
+    routine.active().onTrue(topDepot.resetOdometry().andThen(topDepot.cmd()));
+    topDepot.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    topDepot
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+    return routine;
+  }
 }
