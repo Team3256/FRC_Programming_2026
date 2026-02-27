@@ -138,4 +138,30 @@ public class AutoRoutines {
 
     return routine;
   }
+
+  public AutoRoutine topMidNoClimbDepotAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("toTopBumpMidDepotNoCimb");
+    final AutoTrajectory topMidNoClimbDepot = routine.trajectory("TopBumpMidDepotNoCimb");
+
+    routine.active().onTrue(topMidNoClimbDepot.resetOdometry().andThen(topMidNoClimbDepot.cmd()));
+
+    topMidNoClimbDepot.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    topMidNoClimbDepot
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    topMidNoClimbDepot
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
 }
