@@ -48,7 +48,7 @@
     {"from":0, "to":1, "data":{"type":"KeepInLane", "props":{"tolerance":{"exp":"0.01 m", "val":0.01}}}, "enabled":true},
     {"from":3, "to":4, "data":{"type":"KeepInLane", "props":{"tolerance":{"exp":"0.01 m", "val":0.01}}}, "enabled":true},
     {"from":8, "to":8, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"ShootSpeed", "val":2.0}}}, "enabled":true},
-    {"from":7, "to":8, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"2 m / s", "val":2.0}}}, "enabled":true}],
+    {"from":7, "to":8, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"ShootSpeed", "val":2.0}}}, "enabled":true}],
   "targetDt":{
    "exp":"0.05 s",
    "val":0.05
