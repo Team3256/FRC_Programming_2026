@@ -165,7 +165,6 @@ public class AutoRoutines {
     return routine;
   }
 
- 
   public AutoRoutine TopBumpMidHubBump() {
     final AutoRoutine routine = m_factory.newRoutine("TopBumpMidHubBump");
     final AutoTrajectory topBumpMidHub = routine.trajectory("TopBumpMidHubBump");
