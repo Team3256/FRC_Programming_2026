@@ -164,4 +164,17 @@ public class AutoRoutines {
 
     return routine;
   }
+
+  public AutoRoutine TopBumpMidHub() {
+    final AutoRoutine routine = m_factory.newRoutine("TopBumpMidHub");
+    final AutoTrajectory topBumpMidHub = routine.trajectory("TopBumpMidHub");
+
+    routine.active().onTrue(topBumpMidHub.resetOdometry().andThen(topBumpMidHub.cmd()));
+
+    topBumpMidHub.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    topBumpMidHub.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+    topBumpMidHub.atTime("StopIntake").onTrue(m_superstructure.setState(StructureState.IDLE));
+
+    return routine;
+  }
 }
