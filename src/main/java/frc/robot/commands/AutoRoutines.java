@@ -107,6 +107,38 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine topBumpDirectionalIntake() {
+    final AutoRoutine routine = m_factory.newRoutine("TopBumpDirectionalIntake");
+    final AutoTrajectory topBumpDirectionalIntakeAuto =
+        routine.trajectory("TopBumpDirectionalIntake");
+    routine
+        .active()
+        .onTrue(
+            topBumpDirectionalIntakeAuto
+                .resetOdometry()
+                .andThen(topBumpDirectionalIntakeAuto.cmd()));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Intake")
+        .onTrue(m_superstructure.setState(StructureState.INTAKE));
+    topBumpDirectionalIntakeAuto
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
   public AutoRoutine topMidNoClimbDepotAuto() {
     final AutoRoutine routine = m_factory.newRoutine("toTopBumpMidDepotNoCimb");
     final AutoTrajectory topMidNoClimbDepot = routine.trajectory("TopBumpMidDepotNoCimb");
