@@ -56,7 +56,6 @@ public class AutoRoutines {
             m_superstructure
                 .setState(StructureState.IDLE)
                 .andThen(m_superstructure.setState(StructureState.REV)));
-                
 
     topMidNoClimb
         .atTime("Shoot")
@@ -81,7 +80,6 @@ public class AutoRoutines {
             m_superstructure
                 .setState(StructureState.IDLE)
                 .andThen(m_superstructure.setState(StructureState.REV)));
-                
 
     bottomMidNoClimb
         .atTime("Shoot")
