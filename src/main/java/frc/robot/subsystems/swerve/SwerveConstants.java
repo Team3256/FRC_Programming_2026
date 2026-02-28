@@ -47,8 +47,11 @@ public final class SwerveConstants {
     public static final double aziKD = 0.0;
     public static final double timeout = 0.3;
     public static final Rotation2d bump = new Rotation2d(Math.toRadians(45));
+}
 
-    public static Pose2d BOTTOM_BUMP = new Pose2d(
+public static final class BumpTargets {
+  
+  public static Pose2d BOTTOM_BUMP = new Pose2d(
     3.4559648036956787,
     2.4935503005981445,
     Rotation2d.fromDegrees(0));
