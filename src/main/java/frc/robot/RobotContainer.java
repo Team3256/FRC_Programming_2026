@@ -10,16 +10,23 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 
+import java.util.function.BooleanSupplier;
+
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AutoRoutines;
 import frc.robot.sim.SimMechs;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.feeder.FeederIOSim;
 import frc.robot.subsystems.feeder.FeederIOTalonFX;
@@ -40,6 +47,8 @@ import frc.robot.subsystems.shooterpivot.ShooterPivotIOSim;
 import frc.robot.subsystems.shooterpivot.ShooterPivotIOTalonFX;
 import frc.robot.subsystems.sotm.ShotCalculator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveConstants.AzimuthTargets;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretConstants;
@@ -124,6 +133,7 @@ public class RobotContainer {
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
+public static Boolean isAbove = false;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -212,14 +222,28 @@ public class RobotContainer {
                     .withVelocityY(-m_driverController.getLeftX())
                     .withTargetDirection(AzimuthTargets.bump)));
 
+
+
     // sets the heading to wherever the robot is facing
     m_driverController.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+    new Trigger(() -> isAbove == true && m_driverController.a().getAsBoolean()).whileTrue(drivetrain.pidToPose(() -> SwerveConstants.AzimuthTargets.TOP_BUMP));
+    new Trigger(() -> isAbove == false && m_driverController.a().getAsBoolean()).whileTrue(drivetrain.pidToPose(() -> SwerveConstants.AzimuthTargets.BOTTOM_BUMP));
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
+
+
   public void periodic() {
     shotCalculator.periodic();
     superstructure.periodic();
+    
+    if(drivetrain.getState().Pose.getY() > 4.042979717254639) {
+        isAbove = true;
+    } else {
+        isAbove = false;
+    };
   }
 }
+
