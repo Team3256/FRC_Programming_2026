@@ -139,12 +139,6 @@ public class RobotContainer {
   public RobotContainer() {
 
     SmartDashboard.putData("Field", m_field);
-    m_field
-        .getObject("TopBumpCross")
-        .setPoses(Choreo.loadTrajectory("TopBumpCross").get().getPoses());
-    m_field
-        .getObject("BottomBumpCross")
-        .setPoses(Choreo.loadTrajectory("BottomBumpCross").get().getPoses());
     // Configure the trigger bindings
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
     m_autoRoutines =

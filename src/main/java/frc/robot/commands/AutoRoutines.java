@@ -170,13 +170,11 @@ public class AutoRoutines {
   }
 
   public Command bottomBumpCrossCmd() {
-    return Commands.sequence(
-        m_factory.resetOdometry("BottomBumpCross"), m_factory.trajectoryCmd("BottomBumpCross"));
+    return m_factory.trajectoryCmd("BottomBumpCross");
   }
 
   public Command topBumpCrossCmd() {
-    return Commands.sequence(
-        m_factory.resetOdometry("TopBumpCross"), m_factory.trajectoryCmd("TopBumpCross"));
+    return m_factory.trajectoryCmd("TopBumpCross");
   }
 
   public Pose2d getInitialPose(String trajectoryName) {
