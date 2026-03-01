@@ -51,7 +51,7 @@ public final class IntakePivotConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(80))
-          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(43.5));
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(72.5));
 
   public static final class PivotSim {
     // not sure about what gearing means and not sure if its equal to gear ratio

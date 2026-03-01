@@ -177,7 +177,7 @@ public class Superstructure {
         .onTrue(intakeRollers.setVoltage(8))
         .onTrue(intakePivot.goToGroundIntake());
 
-    stateTriggers.get(StructureState.JITTER_INTAKE).onTrue(intakePivot.jitterIntake());
+    stateTriggers.get(StructureState.JITTER_INTAKE).or(stateTriggers.get(StructureState.JITTER_AND_SHOOT)).onTrue(intakePivot.jitterIntake()).onTrue(intakeRollers.setVoltage(8));
 
     stateTriggers
         .get(StructureState.JITTER_INTAKE)
@@ -186,8 +186,6 @@ public class Superstructure {
                 .get(StructureState.SHOOT)
                 .or(prevStateTriggers.get(StructureState.SHOOT_AND_INTAKE)))
         .onTrue(this.setState(StructureState.JITTER_AND_SHOOT));
-
-    stateTriggers.get(StructureState.JITTER_AND_SHOOT).onTrue(intakePivot.jitterIntake());
 
     stateTriggers
         .get(StructureState.IDLE)
