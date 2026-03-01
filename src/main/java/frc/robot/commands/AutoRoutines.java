@@ -169,20 +169,15 @@ public class AutoRoutines {
     return routine;
   }
 
-public Command bottomBumpCrossCmd() {
+  public Command bottomBumpCrossCmd() {
     return Commands.sequence(
-        m_factory.resetOdometry("BottomBumpCross"),
-        m_factory.trajectoryCmd("BottomBumpCross")
-    );
-}
-  
+        m_factory.resetOdometry("BottomBumpCross"), m_factory.trajectoryCmd("BottomBumpCross"));
+  }
 
-public Command topBumpCrossCmd() {
+  public Command topBumpCrossCmd() {
     return Commands.sequence(
-        m_factory.resetOdometry("TopBumpCross"),
-        m_factory.trajectoryCmd("TopBumpCross")
-    );
-}
+        m_factory.resetOdometry("TopBumpCross"), m_factory.trajectoryCmd("TopBumpCross"));
+  }
 
   public Pose2d getInitialPose(String trajectoryName) {
     var trajectory = Choreo.loadTrajectory(trajectoryName);

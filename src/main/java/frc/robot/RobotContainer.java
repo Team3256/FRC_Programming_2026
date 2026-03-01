@@ -10,8 +10,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 
-import java.util.Set;
-
 import choreo.Choreo;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
@@ -58,6 +56,7 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.utils.MappedXboxController;
+import java.util.Set;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -80,7 +79,6 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   private final AutoRoutines m_autoRoutines;
-
 
   private final Turret turret =
       new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
@@ -131,8 +129,7 @@ public class RobotContainer {
           shotCalculator,
           () -> drivetrain.getState().Pose);
 
-    
-final Field2d m_field = new Field2d();
+  final Field2d m_field = new Field2d();
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -142,18 +139,19 @@ final Field2d m_field = new Field2d();
   public RobotContainer() {
 
     SmartDashboard.putData("Field", m_field);
-    m_field.getObject("TopBumpCross").setPoses(
-    Choreo.loadTrajectory("TopBumpCross").get().getPoses()
-);
-    m_field.getObject("BottomBumpCross").setPoses(
-    Choreo.loadTrajectory("BottomBumpCross").get().getPoses()
-);
+    m_field
+        .getObject("TopBumpCross")
+        .setPoses(Choreo.loadTrajectory("TopBumpCross").get().getPoses());
+    m_field
+        .getObject("BottomBumpCross")
+        .setPoses(Choreo.loadTrajectory("BottomBumpCross").get().getPoses());
     // Configure the trigger bindings
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
     m_autoRoutines =
         new AutoRoutines(
             drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure);
-    System.out.println("BottomBumpCross initial pose: " + m_autoRoutines.getInitialPose("BottomBumpCross"));
+    System.out.println(
+        "BottomBumpCross initial pose: " + m_autoRoutines.getInitialPose("BottomBumpCross"));
     System.out.println("BOTTOM_BUMP: " + SwerveConstants.BumpTargets.BOTTOM_BUMP);
     configureSwerve();
     configureChoreoAutoChooser();
@@ -255,17 +253,16 @@ final Field2d m_field = new Field2d();
             .pidToPose(() -> SwerveConstants.BumpTargets.BOTTOM_BUMP)
             .until(() -> closeEnoughToStart(m_autoRoutines.getInitialPose("BottomBumpCross")))
             .andThen(m_autoRoutines.bottomBumpCrossCmd());
-            
 
-m_driverController
-    .a()
-    .onTrue(
-        Commands.defer(
-            () -> drivetrain.getState().Pose.getY() > 4.042979717254639
-                ? topSequence
-                : bottomSequence,
-            Set.of(drivetrain)
-        ));
+    m_driverController
+        .a()
+        .onTrue(
+            Commands.defer(
+                () ->
+                    drivetrain.getState().Pose.getY() > 4.042979717254639
+                        ? topSequence
+                        : bottomSequence,
+                Set.of(drivetrain)));
 
     SmartDashboard.putData("My TopCommand", topSequence);
     SmartDashboard.putData("My BottomCommand", bottomSequence);
@@ -273,12 +270,13 @@ m_driverController
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-private boolean closeEnoughToStart(Pose2d targetStartPose) {
+  private boolean closeEnoughToStart(Pose2d targetStartPose) {
     Pose2d current = drivetrain.getState().Pose;
     double distance = current.getTranslation().getDistance(targetStartPose.getTranslation());
     System.out.println("distanceToStart: " + distance);
     return distance < 0.15;
-}
+  }
+
   public void periodic() {
     shotCalculator.periodic();
     superstructure.periodic();
