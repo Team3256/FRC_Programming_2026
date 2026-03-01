@@ -32,6 +32,7 @@ import frc.robot.subsystems.intakepivot.IntakePivotIOTalonFX;
 import frc.robot.subsystems.intakerollers.IntakeRollers;
 import frc.robot.subsystems.intakerollers.IntakeRollersIOSim;
 import frc.robot.subsystems.intakerollers.IntakeRollersIOTalonFX;
+import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
@@ -121,6 +122,9 @@ public class RobotContainer {
           shotCalculator,
           () -> drivetrain.getState().Pose);
 
+
+  private final Led led = new Led();
+
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
@@ -136,9 +140,15 @@ public class RobotContainer {
     configureSwerve();
     configureChoreoAutoChooser();
     configureOperatorBinds();
+    configureLeds();
     if (Utils.isSimulation()) {
       SimMechs.getInstance().publishToNT();
     }
+  }
+
+  private void configureLeds() {
+    RobotModeTriggers.disabled().onTrue(led.setRed());
+    RobotModeTriggers.teleop().onTrue(led.setGreen());
   }
 
   private void configureOperatorBinds() {
@@ -190,7 +200,7 @@ public class RobotContainer {
                 drive
                     .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
                     .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
-                    .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate)));
+                    .withRotationalRate(-m_driverController.getTriggerAxes() * MaxAngularRate)));
 
     m_driverController
         .leftBumper()
