@@ -81,6 +81,7 @@ public class RobotContainer {
 
   private final AutoRoutines m_autoRoutines;
 
+
   private final Turret turret =
       new Turret(true, Utils.isSimulation() ? new TurretIOSim() : new TurretIOTalonFX());
 
@@ -142,16 +143,18 @@ final Field2d m_field = new Field2d();
 
     SmartDashboard.putData("Field", m_field);
     m_field.getObject("TopBumpCross").setPoses(
-    //Choreo.loadTrajectory("TopBumpCross").get().getPoses()
+    Choreo.loadTrajectory("TopBumpCross").get().getPoses()
 );
     m_field.getObject("BottomBumpCross").setPoses(
-    //Choreo.loadTrajectory("BottomBumpCross").get().getPoses()
+    Choreo.loadTrajectory("BottomBumpCross").get().getPoses()
 );
     // Configure the trigger bindings
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
     m_autoRoutines =
         new AutoRoutines(
             drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure);
+    System.out.println("BottomBumpCross initial pose: " + m_autoRoutines.getInitialPose("BottomBumpCross"));
+    System.out.println("BOTTOM_BUMP: " + SwerveConstants.BumpTargets.BOTTOM_BUMP);
     configureSwerve();
     configureChoreoAutoChooser();
     configureOperatorBinds();
