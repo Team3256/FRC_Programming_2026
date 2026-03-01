@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
@@ -129,7 +130,7 @@ public class RobotContainer {
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
-  public static Boolean isAbove = false;
+ 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -241,8 +242,12 @@ public class RobotContainer {
             .andThen(m_autoRoutines.bottomBumpCrossCmd());
 
     m_driverController
-        .a()
-        .onTrue(new Trigger(() -> isAbove).getAsBoolean() ? topSequence : bottomSequence);
+    .a()
+    .onTrue(Commands.either(
+        topSequence,
+        bottomSequence,
+        () -> drivetrain.getState().Pose.getY() > 4.042979717254639
+    ));
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
@@ -258,12 +263,6 @@ public class RobotContainer {
   public void periodic() {
     shotCalculator.periodic();
     superstructure.periodic();
-
-    if (drivetrain.getState().Pose.getY() > 4.042979717254639) {
-      isAbove = true;
-    } else {
-      isAbove = false;
-    }
     ;
   }
 }
