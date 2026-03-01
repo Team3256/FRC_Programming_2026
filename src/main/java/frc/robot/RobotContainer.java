@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AutoRoutines;
 import frc.robot.sim.SimMechs;
@@ -130,7 +129,6 @@ public class RobotContainer {
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
- 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -242,12 +240,12 @@ public class RobotContainer {
             .andThen(m_autoRoutines.bottomBumpCrossCmd());
 
     m_driverController
-    .a()
-    .onTrue(Commands.either(
-        topSequence,
-        bottomSequence,
-        () -> drivetrain.getState().Pose.getY() > 4.042979717254639
-    ));
+        .a()
+        .onTrue(
+            Commands.either(
+                topSequence,
+                bottomSequence,
+                () -> drivetrain.getState().Pose.getY() > 4.042979717254639));
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
