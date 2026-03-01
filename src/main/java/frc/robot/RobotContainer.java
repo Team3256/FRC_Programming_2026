@@ -10,10 +10,12 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 
+import choreo.Choreo;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -126,6 +128,9 @@ public class RobotContainer {
           shotCalculator,
           () -> drivetrain.getState().Pose);
 
+    
+final Field2d m_field = new Field2d();
+
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
@@ -133,6 +138,13 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    SmartDashboard.putData("Field", m_field);
+    m_field.getObject("TopBumpCross").setPoses(
+    Choreo.loadTrajectory("TopBumpCross").get().getPoses()
+);
+    m_field.getObject("BottomBumpCross").setPoses(
+    Choreo.loadTrajectory("BottomBumpCross").get().getPoses()
+);
     // Configure the trigger bindings
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
     m_autoRoutines =
@@ -247,6 +259,9 @@ public class RobotContainer {
                 bottomSequence,
                 () -> drivetrain.getState().Pose.getY() > 4.042979717254639));
 
+    SmartDashboard.putData("My TopCommand", topSequence);
+    SmartDashboard.putData("My BottomCommand", bottomSequence);
+
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
@@ -261,6 +276,7 @@ public class RobotContainer {
   public void periodic() {
     shotCalculator.periodic();
     superstructure.periodic();
+    m_field.setRobotPose(drivetrain.getState().Pose);
     ;
   }
 }
