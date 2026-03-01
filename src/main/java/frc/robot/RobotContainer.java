@@ -10,24 +10,19 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 
-import java.util.function.BooleanSupplier;
-
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AutoRoutines;
 import frc.robot.sim.SimMechs;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.feeder.FeederIOSim;
 import frc.robot.subsystems.feeder.FeederIOTalonFX;
@@ -134,7 +129,7 @@ public class RobotContainer {
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
-public static Boolean isAbove = false;
+  public static Boolean isAbove = false;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -223,51 +218,52 @@ public static Boolean isAbove = false;
                     .withVelocityY(-m_driverController.getLeftX())
                     .withTargetDirection(AzimuthTargets.bump)));
 
-
-
     // sets the heading to wherever the robot is facing
     m_driverController.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-    new Trigger(() -> isAbove == true && m_driverController.a().getAsBoolean()).whileTrue(drivetrain.pidToPose(() -> SwerveConstants.BumpTargets.TOP_BUMP));
-    new Trigger(() -> isAbove == false && m_driverController.a().getAsBoolean()).whileTrue(drivetrain.pidToPose(() -> SwerveConstants.BumpTargets.BOTTOM_BUMP));
+    //  new Trigger(() -> isAbove == true &&
+    // m_driverController.a().getAsBoolean()).whileTrue(drivetrain.pidToPose(() ->
+    // SwerveConstants.BumpTargets.TOP_BUMP));
+    // new Trigger(() -> isAbove == false &&
+    // m_driverController.a().getAsBoolean()).whileTrue(drivetrain.pidToPose(() ->
+    // SwerveConstants.BumpTargets.BOTTOM_BUMP));
 
-    
     Command topSequence =
-    drivetrain.pidToPose(() -> SwerveConstants.BumpTargets.TOP_BUMP)
-        .until(() -> closeEnoughToStart(topTrajectory.getInitialPose()))
-        .andThen(runTopTrajectory());
-        
+        drivetrain
+            .pidToPose(() -> SwerveConstants.BumpTargets.TOP_BUMP)
+            .until(() -> closeEnoughToStart(m_autoRoutines.getInitialPose("TopBumpCross")))
+            .andThen(m_autoRoutines.topBumpCrossCmd());
 
     Command bottomSequence =
-    drivetrain.pidToPose(() -> SwerveConstants.BumpTargets.BOTTOM_BUMP)
-        .until(() -> closeEnoughToStart(bottomTrajectory.getInitialPose()))
-        .andThen(runBottomTrajectory());
+        drivetrain
+            .pidToPose(() -> SwerveConstants.BumpTargets.BOTTOM_BUMP)
+            .until(() -> closeEnoughToStart(m_autoRoutines.getInitialPose("BottomBumpCross")))
+            .andThen(m_autoRoutines.bottomBumpCrossCmd());
+
+    m_driverController
+        .a()
+        .onTrue(new Trigger(() -> isAbove).getAsBoolean() ? topSequence : bottomSequence);
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-   private boolean closeEnoughToStart(Pose2d targetStartPose) {
+  private boolean closeEnoughToStart(Pose2d targetStartPose) {
     Pose2d current = drivetrain.getState().Pose;
 
-    double distance =
-        current.getTranslation()
-               .getDistance(targetStartPose.getTranslation());
+    double distance = current.getTranslation().getDistance(targetStartPose.getTranslation());
 
     return distance < 0.15; // 15 cm tolerance
-}
-
-
-
+  }
 
   public void periodic() {
     shotCalculator.periodic();
     superstructure.periodic();
-    
-    if(drivetrain.getState().Pose.getY() > 4.042979717254639) {
-        isAbove = true;
+
+    if (drivetrain.getState().Pose.getY() > 4.042979717254639) {
+      isAbove = true;
     } else {
-        isAbove = false;
-    };
+      isAbove = false;
+    }
+    ;
   }
 }
-
