@@ -142,10 +142,10 @@ final Field2d m_field = new Field2d();
 
     SmartDashboard.putData("Field", m_field);
     m_field.getObject("TopBumpCross").setPoses(
-    Choreo.loadTrajectory("TopBumpCross").get().getPoses()
+    //Choreo.loadTrajectory("TopBumpCross").get().getPoses()
 );
     m_field.getObject("BottomBumpCross").setPoses(
-    Choreo.loadTrajectory("BottomBumpCross").get().getPoses()
+    //Choreo.loadTrajectory("BottomBumpCross").get().getPoses()
 );
     // Configure the trigger bindings
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
@@ -252,6 +252,7 @@ final Field2d m_field = new Field2d();
             .pidToPose(() -> SwerveConstants.BumpTargets.BOTTOM_BUMP)
             .until(() -> closeEnoughToStart(m_autoRoutines.getInitialPose("BottomBumpCross")))
             .andThen(m_autoRoutines.bottomBumpCrossCmd());
+            
 
 m_driverController
     .a()
@@ -269,14 +270,12 @@ m_driverController
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-  private boolean closeEnoughToStart(Pose2d targetStartPose) {
+private boolean closeEnoughToStart(Pose2d targetStartPose) {
     Pose2d current = drivetrain.getState().Pose;
-
     double distance = current.getTranslation().getDistance(targetStartPose.getTranslation());
-
-    return distance < 0.15; // 15 cm tolerance
-  }
-
+    System.out.println("distanceToStart: " + distance);
+    return distance < 0.15;
+}
   public void periodic() {
     shotCalculator.periodic();
     superstructure.periodic();

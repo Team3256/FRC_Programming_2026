@@ -169,19 +169,18 @@ public class AutoRoutines {
     return routine;
   }
 
-  public Command bottomBumpCrossCmd() {
-    return Commands.sequence(
-        m_factory.resetOdometry("BottomBumpCross"), m_factory.trajectoryCmd("BottomBumpCross"));
-  }
+public Command bottomBumpCrossCmd() {
+    return m_factory.trajectoryCmd("BottomBumpCross");
+}
+  
 
-  public Command topBumpCrossCmd() {
-    return Commands.sequence(
-        m_factory.resetOdometry("TopBumpCross"), m_factory.trajectoryCmd("TopBumpCross"));
-  }
+public Command topBumpCrossCmd() {
+    return m_factory.trajectoryCmd("TopBumpCross");
+}
 
   public Pose2d getInitialPose(String trajectoryName) {
     var trajectory = Choreo.loadTrajectory(trajectoryName);
-    Pose2d initialPose = trajectory.get().getInitialPose(isRedAlliance()).get();
+    Pose2d initialPose = trajectory.get().getInitialPose(false).get();
     return initialPose;
   }
 
