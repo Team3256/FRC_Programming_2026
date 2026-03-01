@@ -180,7 +180,7 @@ public class AutoRoutines {
   }
 
   public Pose2d getInitialPose(String trajectoryName) {
-    var trajectory = Choreo.loadTrajectory("myTrajectory");
+    var trajectory = Choreo.loadTrajectory(trajectoryName);
     Pose2d initialPose = trajectory.get().getInitialPose(isRedAlliance()).get();
     return initialPose;
   }

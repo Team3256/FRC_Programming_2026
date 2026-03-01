@@ -10,6 +10,8 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 
+import java.util.Set;
+
 import choreo.Choreo;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
@@ -251,13 +253,15 @@ final Field2d m_field = new Field2d();
             .until(() -> closeEnoughToStart(m_autoRoutines.getInitialPose("BottomBumpCross")))
             .andThen(m_autoRoutines.bottomBumpCrossCmd());
 
-    m_driverController
-        .a()
-        .onTrue(
-            Commands.either(
-                topSequence,
-                bottomSequence,
-                () -> drivetrain.getState().Pose.getY() > 4.042979717254639));
+m_driverController
+    .a()
+    .onTrue(
+        Commands.defer(
+            () -> drivetrain.getState().Pose.getY() > 4.042979717254639
+                ? topSequence
+                : bottomSequence,
+            Set.of(drivetrain)
+        ));
 
     SmartDashboard.putData("My TopCommand", topSequence);
     SmartDashboard.putData("My BottomCommand", bottomSequence);
