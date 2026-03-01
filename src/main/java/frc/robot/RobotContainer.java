@@ -10,7 +10,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 
-import choreo.Choreo;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
