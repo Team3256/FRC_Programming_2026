@@ -146,9 +146,6 @@ public class RobotContainer {
     m_autoRoutines =
         new AutoRoutines(
             drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure);
-    System.out.println(
-        "BottomBumpCross initial pose: " + m_autoRoutines.getInitialPose("BottomBumpCross"));
-    System.out.println("BOTTOM_BUMP: " + SwerveConstants.BumpTargets.BOTTOM_BUMP);
     configureSwerve();
     configureChoreoAutoChooser();
     configureOperatorBinds();
@@ -275,7 +272,6 @@ public class RobotContainer {
   private boolean closeEnoughToStart(Pose2d targetStartPose) {
     Pose2d current = drivetrain.getState().Pose;
     double distance = current.getTranslation().getDistance(targetStartPose.getTranslation());
-    System.out.println("distanceToStart: " + distance);
     return distance < 0.15;
   }
 
