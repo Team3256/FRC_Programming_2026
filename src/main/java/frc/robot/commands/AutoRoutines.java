@@ -68,6 +68,30 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine BottomBumpMidHub() {
+    final AutoRoutine routine = m_factory.newRoutine("BottomBumpMidHub");
+    final AutoTrajectory bottomMidNoClimb = routine.trajectory("BottomBumpMidHub");
+    routine.active().onTrue(bottomMidNoClimb.resetOdometry().andThen(bottomMidNoClimb.cmd()));
+
+    bottomMidNoClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    bottomMidNoClimb
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    bottomMidNoClimb
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
   public AutoRoutine topTrenchDepotOutpostHub() {
     final AutoRoutine routine = m_factory.newRoutine("TopTrenchDepotOutpostHub");
     final AutoTrajectory topDepotOutpost = routine.trajectory("TopTrenchDepotOutpostHub");
@@ -161,6 +185,31 @@ public class AutoRoutines {
                 .andThen(m_superstructure.setState(StructureState.SHOOT))
                 .andThen(Commands.waitSeconds(1))
                 .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
+  public AutoRoutine TopBumpMidHubBump() {
+    final AutoRoutine routine = m_factory.newRoutine("TopBumpMidHubBump");
+    final AutoTrajectory topBumpMidHub = routine.trajectory("TopBumpMidHubBump");
+
+    routine.active().onTrue(topBumpMidHub.resetOdometry().andThen(topBumpMidHub.cmd()));
+
+    topBumpMidHub.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    topBumpMidHub.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+    topBumpMidHub.atTime("StopIntake").onTrue(m_superstructure.setState(StructureState.IDLE));
+
+    return routine;
+  }
+
+  public AutoRoutine BottomBumpMidHubBump() {
+    final AutoRoutine routine = m_factory.newRoutine("BottomBumpMidHubBump");
+    final AutoTrajectory bottomBumpMidHub = routine.trajectory("BottomBumpMidHubBump");
+
+    routine.active().onTrue(bottomBumpMidHub.resetOdometry().andThen(bottomBumpMidHub.cmd()));
+    bottomBumpMidHub.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    bottomBumpMidHub.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+    bottomBumpMidHub.atTime("StopIntake").onTrue(m_superstructure.setState(StructureState.IDLE));
 
     return routine;
   }
