@@ -43,6 +43,7 @@ public class FeederIOTalonFX implements FeederIO {
         false,
         feederMotorVoltage,
         feederMotorVelocity,
+        feederMotorStatorCurrent,
         feederMotorSupplyCurrent,
         feederMotorTemperature);
     feederMotor.optimizeBusUtilization();
