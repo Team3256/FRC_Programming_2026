@@ -165,7 +165,7 @@ public class AutoRoutines {
     return routine;
   }
 
-    public AutoRoutine midFeedClimb() {
+  public AutoRoutine midFeedClimb() {
     final AutoRoutine routine = m_factory.newRoutine("midFeedClimb");
     final AutoTrajectory midFeedClimb = routine.trajectory("MidFeedClimb");
     routine.active().onTrue(midFeedClimb.resetOdometry().andThen(midFeedClimb.cmd()));
@@ -177,10 +177,10 @@ public class AutoRoutines {
                 .andThen(Commands.waitSeconds(2))
                 .andThen(m_superstructure.setState(StructureState.SHOOT)));
     midFeedClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
-    midFeedClimb.atTime("StopIntake").onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
     midFeedClimb
-        .atTime("StopShooter")
-        .onTrue(m_superstructure.setState(StructureState.IDLE));
+        .atTime("StopIntake")
+        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
+    midFeedClimb.atTime("StopShooter").onTrue(m_superstructure.setState(StructureState.IDLE));
     midFeedClimb.atTime("Climb").onTrue(m_superstructure.setState(StructureState.CLIMB));
 
     return routine;
