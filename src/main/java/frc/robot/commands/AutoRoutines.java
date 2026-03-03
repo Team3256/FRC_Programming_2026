@@ -164,4 +164,42 @@ public class AutoRoutines {
 
     return routine;
   }
+
+    public AutoRoutine midFeedClimb() {
+    final AutoRoutine routine = m_factory.newRoutine("midFeedClimb");
+    final AutoTrajectory midFeedClimb = routine.trajectory("MidFeedClimb");
+    routine.active().onTrue(midFeedClimb.resetOdometry().andThen(midFeedClimb.cmd()));
+    midFeedClimb
+        .atTime("Shoot")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.REV)
+                .andThen(Commands.waitSeconds(2))
+                .andThen(m_superstructure.setState(StructureState.SHOOT)));
+    midFeedClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    midFeedClimb.atTime("StopIntake").onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
+    midFeedClimb
+        .atTime("StopShooter")
+        .onTrue(m_superstructure.setState(StructureState.IDLE));
+    midFeedClimb.atTime("Climb").onTrue(m_superstructure.setState(StructureState.CLIMB));
+
+    return routine;
+  }
+
+  public AutoRoutine midFeedNoClimb() {
+    final AutoRoutine routine = m_factory.newRoutine("midFeedClimb");
+
+    final AutoTrajectory midFeedNoClimb = routine.trajectory("MidFeedNoClimb");
+    routine.active().onTrue(midFeedNoClimb.resetOdometry().andThen(midFeedNoClimb.cmd()));
+    midFeedNoClimb
+        .atTime("Shoot")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.REV)
+                .andThen(Commands.waitSeconds(2))
+                .andThen(m_superstructure.setState(StructureState.SHOOT)));
+    midFeedNoClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    return routine;
+  }
 }
