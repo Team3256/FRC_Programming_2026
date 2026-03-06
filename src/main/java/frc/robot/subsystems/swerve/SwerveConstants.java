@@ -58,6 +58,5 @@ public final class SwerveConstants {
     public static Pose2d TOP_BUMP =
         new Pose2d(
             3.4050545692443848, 5.535476207733154, Rotation2d.fromDegrees(45.744063302312063968));
-
   }
 }

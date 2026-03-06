@@ -169,36 +169,36 @@ public class AutoRoutines {
     return routine;
   }
 
-  public Command topRedBumpForwardCrossCmd() {
-    return m_factory.trajectoryCmd("TopRedBumpForwardCross");
+  public Command outpostRedBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("OutpostRedBumpForwardCross");
   }
 
-  public Command topRedBumpBackCrossCmd() {
-    return m_factory.trajectoryCmd("TopRedBumpBackCross");
+  public Command outpostRedBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("OutpostRedBumpBackCross");
   }
 
-  public Command topBlueBumpForwardCrossCmd() {
-    return m_factory.trajectoryCmd("TopBlueBumpForwardCross");
+  public Command outpostBlueBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("OutpostBlueBumpForwardCross");
   }
 
-  public Command topBlueBumpBackCrossCmd() {
-    return m_factory.trajectoryCmd("TopBlueBumpBackCross");
+  public Command outpostBlueBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("OutpostBlueBumpBackCross");
   }
 
-  public Command bottomRedBumpForwardCrossCmd() {
-    return m_factory.trajectoryCmd("BottomRedBumpForwardCross");
+  public Command depotRedBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("DepotRedBumpForwardCross");
   }
 
-  public Command bottomRedBumpBackCrossCmd() {
-    return m_factory.trajectoryCmd("BottomRedBumpBackCross");
+  public Command depotRedBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("DepotRedBumpBackCross");
   }
 
-  public Command bottomBlueBumpForwardCrossCmd() {
-    return m_factory.trajectoryCmd("BottomBlueBumpForwardCross");
+  public Command depotBlueBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("DepotBlueBumpForwardCross");
   }
 
-  public Command bottomBlueBumpBackCrossCmd() {
-    return m_factory.trajectoryCmd("BottomBlueBumpBackCross");
+  public Command depotBlueBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("DepotBlueBumpBackCross");
   }
 
   public Pose2d getInitialPose(String trajectoryName) {
