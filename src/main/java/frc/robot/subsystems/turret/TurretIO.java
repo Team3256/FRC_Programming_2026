@@ -47,7 +47,11 @@ public interface TurretIO {
 
   default void off() {}
 
-  default double blockingGetCC1() {return 0;}
+  default double blockingGetCC1() {
+    return 0;
+  }
 
-  default double blockingGetCC2() {return 0;}
+  default double blockingGetCC2() {
+    return 0;
+  }
 }

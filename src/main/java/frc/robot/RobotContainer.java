@@ -119,17 +119,17 @@ public class RobotContainer {
   private final Led led = new Led();
 
   private final Superstructure superstructure =
-          new Superstructure(
-                  led,
-                  indexer,
-                  shooterPivot,
-                  shooter,
-                  intakeRollers,
-                  intakePivot,
-                  feeder,
-                  turret,
-                  shotCalculator,
-                  () -> drivetrain.getState().Pose);
+      new Superstructure(
+          led,
+          indexer,
+          shooterPivot,
+          shooter,
+          intakeRollers,
+          intakePivot,
+          feeder,
+          turret,
+          shotCalculator,
+          () -> drivetrain.getState().Pose);
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -181,7 +181,6 @@ public class RobotContainer {
   public Led getLed() {
     return led;
   }
-
 
   private void configureOperatorBinds() {
     m_operatorController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));

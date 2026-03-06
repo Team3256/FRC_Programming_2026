@@ -52,23 +52,24 @@ public class Turret extends DisableSubsystem {
             turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
             turretIOInputsAutoLogged.turretEncoder2AbsolutePosition));
 
-        if (!hasBeenZeroed
-            && solveTheta(
+    if (!hasBeenZeroed
+        && solveTheta(
                 TurretConstants.mainTurretGear,
                 TurretConstants.cancoderGear1,
                 TurretConstants.cancoderGear2,
                 turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
-                turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)!=0) {
-          turretIO.resetPosition(
-              solveTheta(
-                      TurretConstants.mainTurretGear,
-                      TurretConstants.cancoderGear1,
-                      TurretConstants.cancoderGear2,
-                      turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
-                      turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)
-                  - TurretConstants.crtOffsetRot);
-          hasBeenZeroed = true;
-        }
+                turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)
+            != 0) {
+      turretIO.resetPosition(
+          solveTheta(
+                  TurretConstants.mainTurretGear,
+                  TurretConstants.cancoderGear1,
+                  TurretConstants.cancoderGear2,
+                  turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
+                  turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)
+              - TurretConstants.crtOffsetRot);
+      hasBeenZeroed = true;
+    }
     LoggedTracer.record("Turret");
   }
 

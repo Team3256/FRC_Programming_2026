@@ -22,21 +22,20 @@ import frc.robot.subsystems.intakepivot.IntakePivotConstants;
 import frc.robot.utils.PhoenixUtil;
 
 public class IntakeRollersIOTalonFX implements IntakeRollersIO {
-  private final TalonFX intakeMotorLeft = new TalonFX(IntakeRollersConstants.kIntakeRollerMotorIDLeft);
+  private final TalonFX intakeMotorLeft =
+      new TalonFX(IntakeRollersConstants.kIntakeRollerMotorIDLeft);
   final VelocityVoltage intakeRequest = new VelocityVoltage(0).withSlot(0);
 
   private final StatusSignal<Voltage> rollerVoltageLeft = intakeMotorLeft.getMotorVoltage();
   private final StatusSignal<AngularVelocity> rollerVelocityLeft = intakeMotorLeft.getVelocity();
-  private final StatusSignal<Current> rollerStatorCurrentLeft =
-      intakeMotorLeft.getStatorCurrent();
-  private final StatusSignal<Current> rollerSupplyCurrentLeft =
-      intakeMotorLeft.getSupplyCurrent();
-  private final StatusSignal<Temperature> rollerTemperatureLeft =
-      intakeMotorLeft.getDeviceTemp();
+  private final StatusSignal<Current> rollerStatorCurrentLeft = intakeMotorLeft.getStatorCurrent();
+  private final StatusSignal<Current> rollerSupplyCurrentLeft = intakeMotorLeft.getSupplyCurrent();
+  private final StatusSignal<Temperature> rollerTemperatureLeft = intakeMotorLeft.getDeviceTemp();
 
-
-  private final TalonFX intakeMotorRight = new TalonFX(IntakeRollersConstants.kIntakeRollerMotorIDRight);
-  final Follower followReq = new Follower(IntakeRollersConstants.kIntakeRollerMotorIDLeft, MotorAlignmentValue.Opposed);
+  private final TalonFX intakeMotorRight =
+      new TalonFX(IntakeRollersConstants.kIntakeRollerMotorIDRight);
+  final Follower followReq =
+      new Follower(IntakeRollersConstants.kIntakeRollerMotorIDLeft, MotorAlignmentValue.Opposed);
 
   private final StatusSignal<Voltage> rollerVoltageRight = intakeMotorRight.getMotorVoltage();
   private final StatusSignal<AngularVelocity> rollerVelocityRight = intakeMotorRight.getVelocity();
@@ -44,51 +43,44 @@ public class IntakeRollersIOTalonFX implements IntakeRollersIO {
       intakeMotorRight.getStatorCurrent();
   private final StatusSignal<Current> rollerSupplyCurrentRight =
       intakeMotorRight.getSupplyCurrent();
-  private final StatusSignal<Temperature> rollerTemperatureRight =
-      intakeMotorRight.getDeviceTemp();
+  private final StatusSignal<Temperature> rollerTemperatureRight = intakeMotorRight.getDeviceTemp();
 
   public IntakeRollersIOTalonFX() {
     PhoenixUtil.applyMotorConfigs(
-            intakeMotorLeft,
+        intakeMotorLeft,
         IntakeRollersConstants.motorConfigs,
         IntakeRollersConstants.flashConfigRetries);
     PhoenixUtil.applyMotorConfigs(
-            intakeMotorRight,
-            IntakePivotConstants.motorConfigs,
-            IntakePivotConstants.flashConfigRetries
-    );
-
-
-
-
+        intakeMotorRight,
+        IntakePivotConstants.motorConfigs,
+        IntakePivotConstants.flashConfigRetries);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         IntakeRollersConstants.updateFrequency,
-            rollerVoltageLeft,
-            rollerVelocityLeft,
-            rollerStatorCurrentLeft,
-            rollerSupplyCurrentLeft,
-            rollerTemperatureLeft,
-            rollerVoltageRight,
-            rollerVelocityRight,
-            rollerSupplyCurrentRight,
-            rollerStatorCurrentRight,
-            rollerTemperatureRight);
+        rollerVoltageLeft,
+        rollerVelocityLeft,
+        rollerStatorCurrentLeft,
+        rollerSupplyCurrentLeft,
+        rollerTemperatureLeft,
+        rollerVoltageRight,
+        rollerVelocityRight,
+        rollerSupplyCurrentRight,
+        rollerStatorCurrentRight,
+        rollerTemperatureRight);
     PhoenixUtil.registerSignals(
         false,
-            rollerVoltageLeft,
-            rollerVelocityLeft,
-            rollerStatorCurrentLeft,
-            rollerSupplyCurrentLeft,
-            rollerTemperatureLeft,
-            rollerVoltageRight,
-            rollerVelocityRight,
-            rollerSupplyCurrentRight,
-            rollerStatorCurrentRight,
-            rollerTemperatureRight);
+        rollerVoltageLeft,
+        rollerVelocityLeft,
+        rollerStatorCurrentLeft,
+        rollerSupplyCurrentLeft,
+        rollerTemperatureLeft,
+        rollerVoltageRight,
+        rollerVelocityRight,
+        rollerSupplyCurrentRight,
+        rollerStatorCurrentRight,
+        rollerTemperatureRight);
     intakeMotorLeft.optimizeBusUtilization();
     intakeMotorRight.optimizeBusUtilization();
-
 
     intakeMotorRight.setControl(followReq);
   }

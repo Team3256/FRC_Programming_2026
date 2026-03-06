@@ -85,7 +85,7 @@ public class Superstructure {
       new Pose2d(FieldConstants.Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero);
 
   public Superstructure(
-          Led led,
+      Led led,
       Indexer indexer,
       ShooterPivot shooterPivot,
       Shooter shooter,
@@ -226,15 +226,22 @@ public class Superstructure {
   }
 
   private void configureLed() {
-    RobotModeTriggers.teleop().and(stateTriggers.get(StructureState.INTAKE)).onTrue(led.strobeOrange());
+    RobotModeTriggers.teleop()
+        .and(stateTriggers.get(StructureState.INTAKE))
+        .onTrue(led.strobeOrange());
 
-    RobotModeTriggers.teleop().and(stateTriggers.get(StructureState.SHOOT).or(stateTriggers.get(StructureState.JITTER_AND_SHOOT))).onTrue(led.setGreen());
+    RobotModeTriggers.teleop()
+        .and(
+            stateTriggers
+                .get(StructureState.SHOOT)
+                .or(stateTriggers.get(StructureState.JITTER_AND_SHOOT)))
+        .onTrue(led.setGreen());
 
-    RobotModeTriggers.teleop().and(stateTriggers.get(StructureState.SHOOT_AND_INTAKE)).onTrue(led.halfOrangeHalfGreen());
+    RobotModeTriggers.teleop()
+        .and(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
+        .onTrue(led.halfOrangeHalfGreen());
 
     RobotModeTriggers.teleop().and(stateTriggers.get(StructureState.IDLE)).onTrue(led.setRed());
-
-
   }
 
   // call manually

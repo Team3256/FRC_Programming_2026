@@ -32,14 +32,11 @@ public class IntakeRollers extends DisableSubsystem {
     Logger.recordOutput(
         "IntakeRollers/intakeRollerMotorVelocity", intakeIOAutoLogged.rollerVelocityLeft);
     Logger.recordOutput(
-        "IntakeRollers/intakeRollerMotorStatorCurrent",
-        intakeIOAutoLogged.rollerStatorCurrentLeft);
+        "IntakeRollers/intakeRollerMotorStatorCurrent", intakeIOAutoLogged.rollerStatorCurrentLeft);
     Logger.recordOutput(
-        "IntakeRollers/intakeRollerMotorSupplyCurrent",
-        intakeIOAutoLogged.rollerSupplyCurrentLeft);
+        "IntakeRollers/intakeRollerMotorSupplyCurrent", intakeIOAutoLogged.rollerSupplyCurrentLeft);
     Logger.recordOutput(
-        "IntakeRollers/intakeRollerMotorTemperature",
-        intakeIOAutoLogged.rollerTemperatureLeft);
+        "IntakeRollers/intakeRollerMotorTemperature", intakeIOAutoLogged.rollerTemperatureLeft);
 
     LoggedTracer.record("IntakeRollers");
   }

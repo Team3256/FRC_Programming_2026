@@ -123,9 +123,9 @@ public class TurretIOTalonFX implements TurretIO {
   public double blockingGetCC1() {
     return cancoder1AbsolutePosition.waitForUpdate(5).getValueAsDouble();
   }
+
   @Override
   public double blockingGetCC2() {
     return cancoder2AbsolutePosition.waitForUpdate(5).getValueAsDouble();
   }
-
 }
