@@ -111,20 +111,22 @@ public class RobotContainer {
           () -> drivetrain.getState().Pose,
           drivetrain::getFieldRelativeSpeeds,
           TurretConstants.driveBaseToTurret);
-  private final Superstructure superstructure =
-      new Superstructure(
-          indexer,
-          shooterPivot,
-          shooter,
-          intakeRollers,
-          intakePivot,
-          feeder,
-          turret,
-          shotCalculator,
-          () -> drivetrain.getState().Pose);
 
 
   private final Led led = new Led();
+
+  private final Superstructure superstructure =
+          new Superstructure(
+                  led,
+                  indexer,
+                  shooterPivot,
+                  shooter,
+                  intakeRollers,
+                  intakePivot,
+                  feeder,
+                  turret,
+                  shotCalculator,
+                  () -> drivetrain.getState().Pose);
 
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
@@ -141,7 +143,6 @@ public class RobotContainer {
     configureSwerve();
     configureChoreoAutoChooser();
     configureOperatorBinds();
-    configureLeds();
     if (Utils.isSimulation()) {
       SimMechs.getInstance().publishToNT();
     }
@@ -151,9 +152,6 @@ public class RobotContainer {
     return led;
   }
 
-  private void configureLeds() {
-    RobotModeTriggers.teleop().onTrue(led.strobeOrange());
-  }
 
   private void configureOperatorBinds() {
 

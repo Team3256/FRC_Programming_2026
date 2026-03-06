@@ -15,12 +15,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FieldConstants;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intakepivot.IntakePivot;
 import frc.robot.subsystems.intakerollers.IntakeRollers;
+import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooterpivot.ShooterPivot;
 import frc.robot.subsystems.sotm.ShotCalculator;
@@ -62,6 +64,8 @@ public class Superstructure {
   private final Feeder feeder;
   private final Turret turret;
 
+  private final Led led;
+
   private final ShotCalculator shotCalculator;
 
   private final Supplier<Pose2d> robotPoseSupplier;
@@ -81,6 +85,7 @@ public class Superstructure {
       new Pose2d(FieldConstants.Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero);
 
   public Superstructure(
+          Led led,
       Indexer indexer,
       ShooterPivot shooterPivot,
       Shooter shooter,
@@ -90,6 +95,7 @@ public class Superstructure {
       Turret turret,
       ShotCalculator shotCalculator,
       Supplier<Pose2d> robotPoseSupplier) {
+    this.led = led;
     this.indexer = indexer;
     this.shooterPivot = shooterPivot;
     this.shooter = shooter;
@@ -110,6 +116,7 @@ public class Superstructure {
     }
 
     configStateTransitions();
+    configureLed();
   }
 
   public void configStateTransitions() {
@@ -212,6 +219,18 @@ public class Superstructure {
 
     //
     stateTriggers.get(StructureState.REV).whileTrue(shooter.shootHub(shotCalculator::getDistance));
+  }
+
+  private void configureLed() {
+    RobotModeTriggers.teleop().and(stateTriggers.get(StructureState.INTAKE)).onTrue(led.strobeOrange());
+
+    RobotModeTriggers.teleop().and(stateTriggers.get(StructureState.SHOOT).or(stateTriggers.get(StructureState.JITTER_AND_SHOOT))).onTrue(led.setGreen());
+
+    RobotModeTriggers.teleop().and(stateTriggers.get(StructureState.SHOOT_AND_INTAKE)).onTrue(led.halfOrangeHalfGreen());
+
+    RobotModeTriggers.teleop().and(stateTriggers.get(StructureState.IDLE)).onTrue(led.setRed());
+
+
   }
 
   // call manually

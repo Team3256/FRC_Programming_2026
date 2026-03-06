@@ -31,12 +31,34 @@ public class Led extends SubsystemBase {
         candle.setControl(new SolidColor(0, LedConstants.stripLength).withColor(color));
     }
 
-    public void setDisabledRed() {
-        setColor(LedConstants.disabledRed);
+    private Command halfStrobeHalfColor(RGBWColor color1, RGBWColor color2, double frameRate   ) {
+        return this.runOnce(()->{
+           candle.setControl(new EmptyAnimation(0));
+           candle.setControl(new StrobeAnimation(0, LedConstants.stripLength/2).withColor(color1).withFrameRate(frameRate));
+           candle.setControl(new SolidColor(LedConstants.stripLength/2+1, LedConstants.stripLength).withColor(color2));
+        });
+
+
+    }
+
+    public void setPurple() {
+        setColor(LedConstants.purple);
+    }
+
+    public Command setRed() {
+        return setColorCmd(LedConstants.red);
     }
 
     public Command strobeOrange() {
         return setStrobe(LedConstants.orange, 4);
+    }
+
+    public Command setGreen() {
+        return setColorCmd(LedConstants.green);
+    }
+
+    public Command halfOrangeHalfGreen() {
+        return halfStrobeHalfColor(LedConstants.orange, LedConstants.green, 4);
     }
 
 

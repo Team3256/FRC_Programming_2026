@@ -147,7 +147,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
-    led.setDisabledRed();
+    led.setPurple();
   }
 
   @Override
