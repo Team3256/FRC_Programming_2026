@@ -9,6 +9,7 @@ package frc.robot.subsystems.swerve;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Mass;
@@ -46,5 +47,16 @@ public final class SwerveConstants {
     public static final double aziKD = 0.0;
     public static final double timeout = 0.3;
     public static final Rotation2d bump = new Rotation2d(Math.toRadians(45));
+  }
+
+  public static final class BumpTargets {
+
+    public static Pose2d BOTTOM_BUMP =
+        new Pose2d(
+            3.3690896034240723, 2.46048903465271, Rotation2d.fromDegrees(45.744063302312063968));
+
+    public static Pose2d TOP_BUMP =
+        new Pose2d(
+            3.4050545692443848, 5.535476207733154, Rotation2d.fromDegrees(45.744063302312063968));
   }
 }

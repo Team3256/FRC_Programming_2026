@@ -24,6 +24,13 @@
      "exp":"2 m / s",
      "val":2.0
     }
+   },
+   "VelCap":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"0 m / s",
+     "val":0.0
+    }
    }
   },
   "poses":{

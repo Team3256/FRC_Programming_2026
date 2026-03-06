@@ -7,9 +7,13 @@
 
 package frc.robot.commands;
 
+import choreo.Choreo;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Superstructure;
@@ -163,5 +167,47 @@ public class AutoRoutines {
                 .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
 
     return routine;
+  }
+
+  public Command outpostRedBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("OutpostRedBumpForwardCross");
+  }
+
+  public Command outpostRedBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("OutpostRedBumpBackCross");
+  }
+
+  public Command outpostBlueBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("OutpostBlueBumpForwardCross");
+  }
+
+  public Command outpostBlueBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("OutpostBlueBumpBackCross");
+  }
+
+  public Command depotRedBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("DepotRedBumpForwardCross");
+  }
+
+  public Command depotRedBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("DepotRedBumpBackCross");
+  }
+
+  public Command depotBlueBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("DepotBlueBumpForwardCross");
+  }
+
+  public Command depotBlueBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("DepotBlueBumpBackCross");
+  }
+
+  public Pose2d getInitialPose(String trajectoryName) {
+    var trajectory = Choreo.loadTrajectory(trajectoryName);
+    Pose2d initialPose = trajectory.get().getInitialPose(false).get();
+    return initialPose;
+  }
+
+  private boolean isRedAlliance() {
+    return DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red);
   }
 }
