@@ -169,12 +169,36 @@ public class AutoRoutines {
     return routine;
   }
 
-  public Command bottomBumpCrossCmd() {
-    return m_factory.trajectoryCmd("BottomBumpCross");
+  public Command topRedBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("TopRedBumpForwardCross");
   }
 
-  public Command topBumpCrossCmd() {
-    return m_factory.trajectoryCmd("TopBumpCross");
+  public Command topRedBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("TopRedBumpBackCross");
+  }
+
+  public Command topBlueBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("TopBlueBumpForwardCross");
+  }
+
+  public Command topBlueBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("TopBlueBumpBackCross");
+  }
+
+  public Command bottomRedBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("BottomRedBumpForwardCross");
+  }
+
+  public Command bottomRedBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("BottomRedBumpBackCross");
+  }
+
+  public Command bottomBlueBumpForwardCrossCmd() {
+    return m_factory.trajectoryCmd("BottomBlueBumpForwardCross");
+  }
+
+  public Command bottomBlueBumpBackCrossCmd() {
+    return m_factory.trajectoryCmd("BottomBlueBumpBackCross");
   }
 
   public Pose2d getInitialPose(String trajectoryName) {
