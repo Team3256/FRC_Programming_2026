@@ -14,6 +14,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.led.Led;
 import frc.robot.utils.LoggedTracer;
 import frc.robot.utils.NT4PublisherNoFMS;
 import frc.robot.utils.PhoenixUtil;
@@ -39,6 +40,8 @@ public class Robot extends LoggedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+  private final Led led;
+
   public Robot() {
     super();
     SignalLogger.enableAutoLogging(false);
@@ -47,6 +50,7 @@ public class Robot extends LoggedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    led = m_robotContainer.getLed();
     if (Constants.FeatureFlags.kAdvKitEnabled) {
       configureAdvantageKit();
     }
@@ -142,7 +146,9 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    led.setPurple();
+  }
 
   @Override
   public void driverStationConnected() {

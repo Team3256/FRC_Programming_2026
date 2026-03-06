@@ -114,21 +114,24 @@ public class RobotContainer {
           drivetrain::getFieldRelativeSpeeds,
           TurretConstants.driveBaseToTurret);
 
-  private final Superstructure superstructure =
-      new Superstructure(
-          indexer,
-          shooterPivot,
-          shooter,
-          intakeRollers,
-          intakePivot,
-          feeder,
-          turret,
-          shotCalculator,
-          () -> drivetrain.getState().Pose);
-
   final Field2d m_field = new Field2d();
 
   private final Led led = new Led();
+
+  private final Superstructure superstructure =
+          new Superstructure(
+                  led,
+                  indexer,
+                  shooterPivot,
+                  shooter,
+                  intakeRollers,
+                  intakePivot,
+                  feeder,
+                  turret,
+                  shotCalculator,
+                  () -> drivetrain.getState().Pose);
+
+  /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
 
@@ -170,16 +173,15 @@ public class RobotContainer {
     configureSwerve();
     configureChoreoAutoChooser();
     configureOperatorBinds();
-    configureLeds();
     if (Utils.isSimulation()) {
       SimMechs.getInstance().publishToNT();
     }
   }
 
-  private void configureLeds() {
-    RobotModeTriggers.disabled().onTrue(led.setRed());
-    RobotModeTriggers.teleop().onTrue(led.setGreen());
+  public Led getLed() {
+    return led;
   }
+
 
   private void configureOperatorBinds() {
     m_operatorController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));

@@ -52,23 +52,23 @@ public class Turret extends DisableSubsystem {
             turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
             turretIOInputsAutoLogged.turretEncoder2AbsolutePosition));
 
-    //    if (!hasBeenZeroed
-    //        && solveTheta(
-    //            TurretConstants.mainTurretGear,
-    //            TurretConstants.cancoderGear1,
-    //            TurretConstants.cancoderGear2,
-    //            turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
-    //            turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)!=0) {
-    //      turretIO.resetPosition(
-    //          solveTheta(
-    //                  TurretConstants.mainTurretGear,
-    //                  TurretConstants.cancoderGear1,
-    //                  TurretConstants.cancoderGear2,
-    //                  turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
-    //                  turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)
-    //              - TurretConstants.crtOffsetRot);
-    //      hasBeenZeroed = true;
-    //    }
+        if (!hasBeenZeroed
+            && solveTheta(
+                TurretConstants.mainTurretGear,
+                TurretConstants.cancoderGear1,
+                TurretConstants.cancoderGear2,
+                turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
+                turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)!=0) {
+          turretIO.resetPosition(
+              solveTheta(
+                      TurretConstants.mainTurretGear,
+                      TurretConstants.cancoderGear1,
+                      TurretConstants.cancoderGear2,
+                      turretIOInputsAutoLogged.turretEncoder1AbsolutePosition,
+                      turretIOInputsAutoLogged.turretEncoder2AbsolutePosition)
+                  - TurretConstants.crtOffsetRot);
+          hasBeenZeroed = true;
+        }
     LoggedTracer.record("Turret");
   }
 
@@ -116,7 +116,7 @@ public class Turret extends DisableSubsystem {
       double alpha = r1 * (i + a);
       double beta = r2 * (j + b);
 
-      if (Math.abs(alpha - beta) < 1e-3) {
+      if (Math.abs(alpha - beta) < 1e-2) {
         return alpha;
       }
 
