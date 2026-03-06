@@ -174,6 +174,7 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
       SimMechs.getInstance().publishToNT();
     }
+
   }
 
   private void configureLeds() {
@@ -207,6 +208,7 @@ public class RobotContainer {
     SwerveRequest.FieldCentricFacingAngle azimuth =
         new SwerveRequest.FieldCentricFacingAngle().withDeadband(deadbandMultiplier * MaxSpeed);
 
+    
     azimuth.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
     azimuth.HeadingController.setPID(
         AzimuthTargets.aziKP, AzimuthTargets.aziKi, AzimuthTargets.aziKD);
@@ -244,9 +246,13 @@ public class RobotContainer {
     m_driverController.a().onTrue(selectBumpCrossCommand());
 
     drivetrain.registerTelemetry(logger::telemeterize);
+
+    SmartDashboard.putData("Choose command",selectBumpCrossCommand());
+    SmartDashboard.putData("Run", selectBumpCrossCommand());
+
   }
 
-  private Command selectBumpCrossCommand() {
+  public Command selectBumpCrossCommand() {
     return Commands.defer(
         () -> {
           Translation2d current = drivetrain.getState().Pose.getTranslation();
@@ -268,14 +274,16 @@ public class RobotContainer {
         Set.of(drivetrain));
   }
 
-  private Command buildBumpCrossSequence(String routineName, Supplier<Command> routineCmd) {
+    
+
+  public Command buildBumpCrossSequence(String routineName, Supplier<Command> routineCmd) {
     return drivetrain
         .pidToPose(() -> m_autoRoutines.getInitialPose(routineName))
         .until(() -> closeEnoughToStart(m_autoRoutines.getInitialPose(routineName)))
         .andThen(routineCmd.get());
   }
 
-  private boolean closeEnoughToStart(Pose2d targetStartPose) {
+  public boolean closeEnoughToStart(Pose2d targetStartPose) {
     Pose2d current = drivetrain.getState().Pose;
     double distance = current.getTranslation().getDistance(targetStartPose.getTranslation());
     return distance < 0.15;
