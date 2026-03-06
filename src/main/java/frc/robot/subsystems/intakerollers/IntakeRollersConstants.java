@@ -15,7 +15,8 @@ public class IntakeRollersConstants {
 
   public static final boolean kUseFOC = false;
 
-  public static final int kIntakeRollerMotorID = 46;
+  public static final int kIntakeRollerMotorIDLeft = 46;
+  public static final int kIntakeRollerMotorIDRight = 47;
 
   public static double updateFrequency = 50;
 

@@ -33,7 +33,7 @@ public class Turret extends DisableSubsystem {
     super(enabled);
 
     this.turretIO = turretIO;
-    turretIO.resetPosition(0);
+    turretIO.resetPosition(solveTheta(TurretConstants.mainTurretGear, TurretConstants.cancoderGear1, TurretConstants.cancoderGear2, turretIO.blockingGetCC1(), turretIO.blockingGetCC2()));
   }
 
   @Override

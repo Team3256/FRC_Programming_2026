@@ -15,6 +15,7 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AutoRoutines;
@@ -146,9 +147,12 @@ public class RobotContainer {
     }
   }
 
+  public Led getLed() {
+    return led;
+  }
+
   private void configureLeds() {
-    RobotModeTriggers.disabled().onTrue(led.setRed());
-    RobotModeTriggers.teleop().onTrue(led.setGreen());
+    RobotModeTriggers.teleop().onTrue(led.strobeOrange());
   }
 
   private void configureOperatorBinds() {
