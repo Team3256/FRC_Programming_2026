@@ -174,7 +174,6 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
       SimMechs.getInstance().publishToNT();
     }
-
   }
 
   private void configureLeds() {
@@ -208,7 +207,6 @@ public class RobotContainer {
     SwerveRequest.FieldCentricFacingAngle azimuth =
         new SwerveRequest.FieldCentricFacingAngle().withDeadband(deadbandMultiplier * MaxSpeed);
 
-    
     azimuth.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
     azimuth.HeadingController.setPID(
         AzimuthTargets.aziKP, AzimuthTargets.aziKi, AzimuthTargets.aziKD);
@@ -247,9 +245,8 @@ public class RobotContainer {
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    SmartDashboard.putData("Choose command",selectBumpCrossCommand());
+    SmartDashboard.putData("Choose command", selectBumpCrossCommand());
     SmartDashboard.putData("Run", selectBumpCrossCommand());
-
   }
 
   public Command selectBumpCrossCommand() {
@@ -273,8 +270,6 @@ public class RobotContainer {
         },
         Set.of(drivetrain));
   }
-
-    
 
   public Command buildBumpCrossSequence(String routineName, Supplier<Command> routineCmd) {
     return drivetrain
