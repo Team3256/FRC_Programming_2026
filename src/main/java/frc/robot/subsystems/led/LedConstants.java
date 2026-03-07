@@ -9,6 +9,7 @@ package frc.robot.subsystems.led;
 
 import com.ctre.phoenix6.configs.CANdleConfiguration;
 import com.ctre.phoenix6.configs.LEDConfigs;
+import com.ctre.phoenix6.signals.RGBWColor;
 import com.ctre.phoenix6.signals.StripTypeValue;
 
 public final class LedConstants {

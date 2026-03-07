@@ -80,6 +80,8 @@ public class ShooterIOTalonFX implements ShooterIO {
         shooterMotorFollowerTemperature);
     shooterMotor.optimizeBusUtilization();
     shooterMotorFollower.optimizeBusUtilization();
+
+    shooterMotorFollower.setControl(followReq);
   }
 
   @Override

@@ -21,8 +21,15 @@
    "ShootSpeed":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2 m / s",
-     "val":2.0
+     "exp":"1 m / s",
+     "val":1.0
+    }
+   },
+   "VelCap":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"4 m / s",
+     "val":4.0
     }
    }
   },
@@ -67,6 +74,20 @@
     "heading":{
      "exp":"-90 deg",
      "val":-1.5707963267948966
+    }
+   },
+   "depotBump":{
+    "x":{
+     "exp":"3.6420440673828125 m",
+     "val":3.642044067382813
+    },
+    "y":{
+     "exp":"5.616477966308594 m",
+     "val":5.616477966308594
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
     }
    },
    "feed":{

@@ -21,7 +21,7 @@ public final class IntakePivotConstants {
   public static final boolean kUseFOC = false;
   public static final boolean kUseMotionMagic = true;
   public static final int flashConfigRetries = 5;
-  public static final double stowPosition = .342;
+  public static final double stowPosition = .3354;
 
   public static final double jitterPosition = .15;
   public static final double jitterIntermediate = 0.05;
@@ -32,7 +32,7 @@ public final class IntakePivotConstants {
           .withSlot0(
               new Slot0Configs()
                   .withKS(.169)
-                  .withKV(.09 * 43.5)
+                  .withKV(.09 * 85.46)
                   .withKP(300)
                   .withKI(0)
                   .withKD(15)
@@ -50,8 +50,8 @@ public final class IntakePivotConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(80))
-          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(72.5));
+                  .withStatorCurrentLimit(40))
+          .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(85.46));
 
   public static final class PivotSim {
     // not sure about what gearing means and not sure if its equal to gear ratio

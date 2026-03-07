@@ -7,9 +7,13 @@
 
 package frc.robot.commands;
 
+import choreo.Choreo;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Superstructure;
@@ -111,6 +115,38 @@ public class AutoRoutines {
     final AutoRoutine routine = m_factory.newRoutine("TopBumpDirectionalIntake");
     final AutoTrajectory topBumpDirectionalIntakeAuto =
         routine.trajectory("TopBumpDirectionalIntake");
+    routine
+        .active()
+        .onTrue(
+            topBumpDirectionalIntakeAuto
+                .resetOdometry()
+                .andThen(topBumpDirectionalIntakeAuto.cmd()));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Intake")
+        .onTrue(m_superstructure.setState(StructureState.INTAKE));
+    topBumpDirectionalIntakeAuto
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
+  public AutoRoutine bottomBumpDirectionalIntake() {
+    final AutoRoutine routine = m_factory.newRoutine("BottomBumpDirectionalIntake");
+    final AutoTrajectory topBumpDirectionalIntakeAuto =
+        routine.trajectory("BottomBumpDirectionalIntake");
     routine
         .active()
         .onTrue(
