@@ -41,6 +41,7 @@ public class Superstructure {
     JITTER_INTAKE,
     JITTER_AND_SHOOT,
     HOME,
+    UNJAM,
     IDLE,
     CLIMB,
     CANCEL_ALL,
@@ -163,6 +164,7 @@ public class Superstructure {
         .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
         .and(shooter.reachedVelocity)
         .or(stateTriggers.get(StructureState.JITTER_AND_SHOOT))
+            .debounce(.2)
         .onTrue(indexer.startShooting())
         .onTrue(feeder.startFeeding());
 
@@ -197,6 +199,9 @@ public class Superstructure {
                 .get(StructureState.SHOOT)
                 .or(prevStateTriggers.get(StructureState.SHOOT_AND_INTAKE)))
         .onTrue(this.setState(StructureState.JITTER_AND_SHOOT));
+
+
+    stateTriggers.get(StructureState.UNJAM).onTrue(feeder.unjam());
 
     stateTriggers
         .get(StructureState.IDLE)

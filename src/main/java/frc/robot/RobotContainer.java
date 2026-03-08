@@ -193,7 +193,7 @@ public class RobotContainer {
 
   private void configureChoreoAutoChooser() {
     autoChooser.addCmd("Wheel Radius Change", () -> drivetrain.wheelRadiusCharacterization(1));
-    autoChooser.addRoutine("Top 1 Cycle Mid", m_autoRoutines::topBumpMidHub);
+    autoChooser.addRoutine("Top 1 Cycle Directional Intake", m_autoRoutines::topBumpDirectionalIntake);
     autoChooser.addRoutine("Top Depot Outpost", m_autoRoutines::topTrenchDepotOutpostHub);
     SmartDashboard.putData("auto chooser", autoChooser);
     RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
@@ -216,9 +216,9 @@ public class RobotContainer {
         drivetrain.applyRequest(
             () ->
                 drive
-                    .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
-                    .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
-                    .withRotationalRate(-m_driverController.getTriggerAxes() * MaxAngularRate)));
+                    .withVelocityX(- (Math.signum(m_driverController.getLeftY()) * Math.pow(m_driverController.getLeftY(),2)) * MaxSpeed)
+                    .withVelocityY(- (Math.signum(m_driverController.getLeftX()) * Math.pow(m_driverController.getLeftX(),2)) * MaxSpeed)
+                    .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate)));
 
     m_driverController
         .leftBumper()
@@ -226,23 +226,25 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(-m_driverController.getLeftY() * SlowMaxSpeed)
-                        .withVelocityY(-m_driverController.getLeftX() * SlowMaxSpeed)
+                        .withVelocityX(- (Math.signum(m_driverController.getLeftY()) * Math.pow(m_driverController.getLeftY(),2)) * SlowMaxSpeed)
+                        .withVelocityY(- (Math.signum(m_driverController.getLeftX()) * Math.pow(m_driverController.getLeftX(),2)) * SlowMaxSpeed)
                         .withRotationalRate(
-                            -m_driverController.getTriggerAxes() * SlowMaxAngular)));
+                            -m_driverController.getRightX() * SlowMaxAngular)));
+    
 
+    m_driverController.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+    m_driverController.povDown().whileTrue(selectBumpCrossCommand());
+
+    m_driverController.rightTrigger().onTrue(superstructure.setState(Superstructure.StructureState.UNJAM)).onFalse(superstructure.setState(Superstructure.StructureState.IDLE));
+
+
+    m_driverController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
+    m_driverController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
+    m_driverController.x().onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
     m_driverController
-        .rightBumper()
-        .onTrue(
-            drivetrain.applyRequest(
-                azimuth
-                    .withVelocityX(-m_driverController.getLeftY())
-                    .withVelocityY(-m_driverController.getLeftX())
-                    .withTargetDirection(AzimuthTargets.bump)));
-
-    m_driverController.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-
-    m_driverController.a().onTrue(selectBumpCrossCommand());
+            .y()
+            .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
 
     drivetrain.registerTelemetry(logger::telemeterize);
 

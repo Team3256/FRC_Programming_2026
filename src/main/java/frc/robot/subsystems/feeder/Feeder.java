@@ -45,6 +45,9 @@ public class Feeder extends DisableSubsystem {
     return setVelocity(FeederConstants.feederVelocity);
   }
 
+  public Command unjam(){return setVelocity(FeederConstants.unjamVelocity);}
+
+
   public Command off() {
     return this.runOnce(feederIO::off);
   }

@@ -48,30 +48,6 @@ public class AutoRoutines {
         m_factory.resetOdometry("forward"), m_factory.trajectoryCmd("forward"));
   }
 
-  public AutoRoutine topBumpMidHub() {
-    final AutoRoutine routine = m_factory.newRoutine("TopBumpMidHub");
-    final AutoTrajectory topMidNoClimb = routine.trajectory("TopBumpMidHub");
-    routine.active().onTrue(topMidNoClimb.resetOdometry().andThen(topMidNoClimb.cmd()));
-
-    topMidNoClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
-    topMidNoClimb
-        .atTime("StopIntake")
-        .onTrue(
-            m_superstructure
-                .setState(StructureState.IDLE)
-                .andThen(m_superstructure.setState(StructureState.REV)));
-
-    topMidNoClimb
-        .atTime("Shoot")
-        .onTrue(
-            Commands.waitSeconds(1.5)
-                .andThen(m_superstructure.setState(StructureState.SHOOT))
-                .andThen(Commands.waitSeconds(1))
-                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
-
-    return routine;
-  }
-
   public AutoRoutine topTrenchDepotOutpostHub() {
     final AutoRoutine routine = m_factory.newRoutine("TopTrenchDepotOutpostHub");
     final AutoTrajectory topDepotOutpost = routine.trajectory("TopTrenchDepotOutpostHub");
@@ -96,25 +72,11 @@ public class AutoRoutines {
     return routine;
   }
 
-  public AutoRoutine topDepotAuto() {
-    final AutoRoutine routine = m_factory.newRoutine("topDepot");
-    final AutoTrajectory topDepot = routine.trajectory("TopTrenchDepotHub");
-    routine.active().onTrue(topDepot.resetOdometry().andThen(topDepot.cmd()));
-    topDepot.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
-    topDepot
-        .atTime("Shoot")
-        .onTrue(
-            Commands.waitSeconds(1.5)
-                .andThen(m_superstructure.setState(StructureState.SHOOT))
-                .andThen(Commands.waitSeconds(1))
-                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
-    return routine;
-  }
 
   public AutoRoutine topBumpDirectionalIntake() {
     final AutoRoutine routine = m_factory.newRoutine("TopBumpDirectionalIntake");
     final AutoTrajectory topBumpDirectionalIntakeAuto =
-        routine.trajectory("TopBumpDirectionalIntake");
+        routine.trajectory("DepotBumpDirectionalIntake");
     routine
         .active()
         .onTrue(
@@ -125,20 +87,14 @@ public class AutoRoutines {
     topBumpDirectionalIntakeAuto
         .atTime("Intake")
         .onTrue(m_superstructure.setState(StructureState.INTAKE));
-    topBumpDirectionalIntakeAuto
-        .atTime("StopIntake")
-        .onTrue(
-            m_superstructure
-                .setState(StructureState.IDLE)
-                .andThen(m_superstructure.setState(StructureState.REV)));
+
+
+    topBumpDirectionalIntakeAuto.atTime("Jitter").onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
 
     topBumpDirectionalIntakeAuto
         .atTime("Shoot")
         .onTrue(
-            Commands.waitSeconds(1.5)
-                .andThen(m_superstructure.setState(StructureState.SHOOT))
-                .andThen(Commands.waitSeconds(1))
-                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+                m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
   }

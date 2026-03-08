@@ -31,6 +31,8 @@ public class FeederConstants {
 
   public static final double feederVelocity = 80;
 
+  public static final double unjamVelocity = -40;
+
   public static double updateFrequency = 50;
 
   public static final TalonFXConfiguration motorConfigs =

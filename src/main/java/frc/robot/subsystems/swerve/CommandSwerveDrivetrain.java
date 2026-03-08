@@ -74,8 +74,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       new SwerveRequest.ApplyFieldSpeeds()
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-  private final PIDController xController = new PIDController(5.0, 0.0, 0);
-  private final PIDController yController = new PIDController(5.0, 0.0, 0);
+  private final PIDController xController = new PIDController(8.0, 0.0, 0);
+  private final PIDController yController = new PIDController(8.0, 0.0, 0);
   private final PIDController headingController = new PIDController(5, 0, 0);
 
   /**
