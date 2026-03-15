@@ -40,12 +40,16 @@ public class FeederConstants {
           .withSlot0(new Slot0Configs().withKS(0.0).withKV(0.13).withKP(0.3).withKI(0).withKD(0))
           .withMotorOutput(
               new MotorOutputConfigs()
-                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withNeutralMode(NeutralModeValue.Coast)
                   .withInverted(InvertedValue.CounterClockwise_Positive))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(60));
+                  .withStatorCurrentLimit(70)
+                  .withStatorCurrentLimit(50)
+                  .withSupplyCurrentLimitEnable(true)
+                  .withSupplyCurrentLowerLimit(40)
+                  .withSupplyCurrentLowerTime(0.1));
 
   public static int flashConfigRetries = 5;
 

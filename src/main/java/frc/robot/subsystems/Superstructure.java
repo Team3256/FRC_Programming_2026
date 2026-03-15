@@ -82,6 +82,8 @@ public class Superstructure {
   private final Translation2d topCorner = new Translation2d(1.5, 6.8);
   private final Translation2d bottomCorner = new Translation2d(1.5, 1.5);
 
+  private double velMultiplier = 0.9;
+
   private Pose2d target =
       new Pose2d(FieldConstants.Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero);
 
@@ -151,7 +153,7 @@ public class Superstructure {
         .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
         .or(stateTriggers.get(StructureState.JITTER_AND_SHOOT))
         .and(targetRedHub.or(targetBlueHub))
-        .onTrue(shooter.shootHub(shotCalculator::getDistance));
+        .onTrue(shooter.shootHub(shotCalculator::getDistance, () -> velMultiplier));
     stateTriggers
         .get(StructureState.SHOOT)
         .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
@@ -164,7 +166,7 @@ public class Superstructure {
         .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
         .and(shooter.reachedVelocity)
         .or(stateTriggers.get(StructureState.JITTER_AND_SHOOT))
-            .debounce(.2)
+        .debounce(.2)
         .onTrue(indexer.startShooting())
         .onTrue(feeder.startFeeding());
 
@@ -200,7 +202,6 @@ public class Superstructure {
                 .or(prevStateTriggers.get(StructureState.SHOOT_AND_INTAKE)))
         .onTrue(this.setState(StructureState.JITTER_AND_SHOOT));
 
-
     stateTriggers.get(StructureState.UNJAM).onTrue(feeder.unjam());
 
     stateTriggers
@@ -227,7 +228,9 @@ public class Superstructure {
         .onTrue(shooterPivot.setPosition(0));
 
     //
-    stateTriggers.get(StructureState.REV).whileTrue(shooter.shootHub(shotCalculator::getDistance));
+    stateTriggers
+        .get(StructureState.REV)
+        .whileTrue(shooter.shootHub(shotCalculator::getDistance, () -> velMultiplier));
   }
 
   private void configureLed() {
@@ -255,6 +258,8 @@ public class Superstructure {
     Logger.recordOutput("Superstructure/State", this.state.toString());
     Logger.recordOutput("Superstructure/PrevState", this.prevState.toString());
     Logger.recordOutput("Superstructure/StateTime", this.stateTimer.get());
+
+    Logger.recordOutput("Superstructure/VelMultiplier", this.velMultiplier);
 
     //    Logger.recordOutput(
     //        "Superstructure/Hub",
@@ -306,6 +311,10 @@ public class Superstructure {
           this.state = state;
           this.stateTimer.restart();
         });
+  }
+
+  public Command addShootMultiplier(double amt) {
+    return Commands.runOnce(() -> this.velMultiplier += amt);
   }
 
   public StructureState getState() {

@@ -189,11 +189,18 @@ public class RobotContainer {
     m_operatorController
         .y()
         .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
+
+    m_operatorController.povUp().onTrue(superstructure.addShootMultiplier(.02));
+    m_operatorController.povDown().onTrue(superstructure.addShootMultiplier(-0.02));
   }
 
   private void configureChoreoAutoChooser() {
     autoChooser.addCmd("Wheel Radius Change", () -> drivetrain.wheelRadiusCharacterization(1));
-    autoChooser.addRoutine("Top 1 Cycle Directional Intake", m_autoRoutines::topBumpDirectionalIntake);
+    autoChooser.addRoutine(
+        "Top 1 Cycle Directional Intake", m_autoRoutines::topBumpDirectionalIntake);
+
+    autoChooser.addRoutine(
+        "Bottom Directional Intake", m_autoRoutines::bottomBumpDirectionalIntake);
     autoChooser.addRoutine("Top Depot Outpost", m_autoRoutines::topTrenchDepotOutpostHub);
     SmartDashboard.putData("auto chooser", autoChooser);
     RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
@@ -216,8 +223,14 @@ public class RobotContainer {
         drivetrain.applyRequest(
             () ->
                 drive
-                    .withVelocityX(- (Math.signum(m_driverController.getLeftY()) * Math.pow(m_driverController.getLeftY(),2)) * MaxSpeed)
-                    .withVelocityY(- (Math.signum(m_driverController.getLeftX()) * Math.pow(m_driverController.getLeftX(),2)) * MaxSpeed)
+                    .withVelocityX(
+                        -(Math.signum(m_driverController.getLeftY())
+                                * Math.pow(m_driverController.getLeftY(), 2))
+                            * MaxSpeed)
+                    .withVelocityY(
+                        -(Math.signum(m_driverController.getLeftX())
+                                * Math.pow(m_driverController.getLeftX(), 2))
+                            * MaxSpeed)
                     .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate)));
 
     m_driverController
@@ -226,25 +239,32 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(- (Math.signum(m_driverController.getLeftY()) * Math.pow(m_driverController.getLeftY(),2)) * SlowMaxSpeed)
-                        .withVelocityY(- (Math.signum(m_driverController.getLeftX()) * Math.pow(m_driverController.getLeftX(),2)) * SlowMaxSpeed)
-                        .withRotationalRate(
-                            -m_driverController.getRightX() * SlowMaxAngular)));
-    
+                        .withVelocityX(
+                            -(Math.signum(m_driverController.getLeftY())
+                                    * Math.pow(m_driverController.getLeftY(), 2))
+                                * SlowMaxSpeed)
+                        .withVelocityY(
+                            -(Math.signum(m_driverController.getLeftX())
+                                    * Math.pow(m_driverController.getLeftX(), 2))
+                                * SlowMaxSpeed)
+                        .withRotationalRate(-m_driverController.getRightX() * SlowMaxAngular)));
 
-    m_driverController.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+    m_driverController.povRight().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-    m_driverController.povDown().whileTrue(selectBumpCrossCommand());
+    m_driverController.povUp().onTrue(superstructure.addShootMultiplier(.02));
+    m_driverController.povDown().onTrue(superstructure.addShootMultiplier(-0.02));
 
-    m_driverController.rightTrigger().onTrue(superstructure.setState(Superstructure.StructureState.UNJAM)).onFalse(superstructure.setState(Superstructure.StructureState.IDLE));
-
+    m_driverController
+        .rightTrigger()
+        .onTrue(superstructure.setState(Superstructure.StructureState.UNJAM))
+        .onFalse(superstructure.setState(Superstructure.StructureState.IDLE));
 
     m_driverController.a().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
     m_driverController.b().onTrue(superstructure.setState(Superstructure.StructureState.IDLE));
     m_driverController.x().onTrue(superstructure.setState(Superstructure.StructureState.INTAKE));
     m_driverController
-            .y()
-            .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
+        .y()
+        .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
 
     drivetrain.registerTelemetry(logger::telemeterize);
 

@@ -21,23 +21,22 @@ public class ShotCalculator {
 
   private static double phaseDelay;
 
-
-  private static final double funnyNum = .1;
+  private static final double funnyNum = .04;
   private static final InterpolatingDoubleTreeMap timeOfFlightMapHub =
-          new InterpolatingDoubleTreeMap() {
-            {
-              put(1.342, 1.0);
-              put(2.912, 1.15);
-              put(3.465, 1.17);
-              put(3.9, 1.23);
-              put(5.66, 1.26);
+      new InterpolatingDoubleTreeMap() {
+        {
+          put(1.342, 1.0);
+          put(2.912, 1.15);
+          put(3.465, 1.17);
+          put(3.9, 1.23);
+          put(5.66, 1.26);
 
-              // fake data
-              put(6.0, 1.3);
-              put(7.0, 1.34);
-              put(8.0, 1.38);
-            }
-          };
+          // fake data
+          put(6.0, 1.3);
+          put(7.0, 1.34);
+          put(8.0, 1.38);
+        }
+      };
   private static final InterpolatingDoubleTreeMap timeOfFlightMapFeed =
       new InterpolatingDoubleTreeMap() {
         {
@@ -114,7 +113,7 @@ public class ShotCalculator {
     // Iteratively calculate lookahead pose
     Pose2d lookaheadPose = turretPosition;
     double timeOfFlight = 0.0;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 20; i++) {
       timeOfFlight = timeOfFlightMap.get(turretToTargetDistance) - funnyNum;
       double offsetX = turretVelocityX * timeOfFlight;
       double offsetY = turretVelocityY * timeOfFlight;

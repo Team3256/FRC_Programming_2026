@@ -72,7 +72,6 @@ public class AutoRoutines {
     return routine;
   }
 
-
   public AutoRoutine topBumpDirectionalIntake() {
     final AutoRoutine routine = m_factory.newRoutine("TopBumpDirectionalIntake");
     final AutoTrajectory topBumpDirectionalIntakeAuto =
@@ -88,13 +87,13 @@ public class AutoRoutines {
         .atTime("Intake")
         .onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-
-    topBumpDirectionalIntakeAuto.atTime("Jitter").onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
+    topBumpDirectionalIntakeAuto
+        .atTime("Jitter")
+        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
 
     topBumpDirectionalIntakeAuto
         .atTime("Shoot")
-        .onTrue(
-                m_superstructure.setState(StructureState.SHOOT));
+        .onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
   }
@@ -102,7 +101,7 @@ public class AutoRoutines {
   public AutoRoutine bottomBumpDirectionalIntake() {
     final AutoRoutine routine = m_factory.newRoutine("BottomBumpDirectionalIntake");
     final AutoTrajectory topBumpDirectionalIntakeAuto =
-        routine.trajectory("BottomBumpDirectionalIntake");
+        routine.trajectory("OutpostBumpDirectionalIntake");
     routine
         .active()
         .onTrue(

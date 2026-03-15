@@ -195,7 +195,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    */
   public AutoFactory createAutoFactory(TrajectoryLogger<SwerveSample> trajLogger) {
     return new AutoFactory(
-        () -> this.getState().Pose, this::resetPose, this::followPath, false, this, trajLogger);
+        () -> this.getState().Pose, this::resetPose, this::followPath, true, this, trajLogger);
   }
 
   /**
