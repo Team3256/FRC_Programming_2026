@@ -131,6 +131,8 @@ public class RobotContainer {
           shotCalculator,
           () -> drivetrain.getState().Pose);
 
+  private final Led led = new Led();
+
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();

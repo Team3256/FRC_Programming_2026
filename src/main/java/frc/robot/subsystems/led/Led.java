@@ -21,6 +21,8 @@ public class Led extends SubsystemBase {
 
   public Led() {
     super();
+
+    candle.getConfigurator().apply(LedConstants.candleConfig);
   }
 
   private Command setStrobe(RGBWColor color, double frameRate) {
@@ -33,46 +35,11 @@ public class Led extends SubsystemBase {
         .ignoringDisable(true);
   }
 
-  private Command setColorCmd(RGBWColor color) {
-    return this.runOnce(() -> this.setColor(color));
-  }
-
-  private void setColor(RGBWColor color) {
-    candle.setControl(new EmptyAnimation(0));
-    candle.setControl(new SolidColor(0, LedConstants.stripLength).withColor(color));
-  }
-
-  private Command halfStrobeHalfColor(RGBWColor color1, RGBWColor color2, double frameRate) {
-    return this.runOnce(
-        () -> {
-          candle.setControl(new EmptyAnimation(0));
-          candle.setControl(
-              new StrobeAnimation(0, LedConstants.stripLength / 2)
-                  .withColor(color1)
-                  .withFrameRate(frameRate));
-          candle.setControl(
-              new SolidColor(LedConstants.stripLength / 2 + 1, LedConstants.stripLength)
-                  .withColor(color2));
-        });
-  }
-
-  public void setPurple() {
-    setColor(LedConstants.purple);
-  }
-
   public Command setRed() {
-    return setColorCmd(LedConstants.red);
-  }
-
-  public Command strobeOrange() {
-    return setStrobe(LedConstants.orange, 4);
+    return setStrobe(RGBWColor.fromHSV(0, 0, 255), 20);
   }
 
   public Command setGreen() {
-    return setColorCmd(LedConstants.green);
-  }
-
-  public Command halfOrangeHalfGreen() {
-    return halfStrobeHalfColor(LedConstants.orange, LedConstants.green, 4);
+    return setStrobe(RGBWColor.fromHSV(120, 255, 255), 20);
   }
 }

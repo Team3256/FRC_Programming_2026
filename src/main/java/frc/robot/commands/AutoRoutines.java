@@ -156,45 +156,41 @@ public class AutoRoutines {
     return routine;
   }
 
-  public Command outpostRedBumpForwardCrossCmd() {
-    return m_factory.trajectoryCmd("OutpostRedBumpForwardCross");
+  public AutoRoutine midFeedClimb() {
+    final AutoRoutine routine = m_factory.newRoutine("midFeedClimb");
+    final AutoTrajectory midFeedClimb = routine.trajectory("MidFeedClimb");
+    routine.active().onTrue(midFeedClimb.resetOdometry().andThen(midFeedClimb.cmd()));
+    midFeedClimb
+        .atTime("Shoot")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.REV)
+                .andThen(Commands.waitSeconds(2))
+                .andThen(m_superstructure.setState(StructureState.SHOOT)));
+    midFeedClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+    midFeedClimb
+        .atTime("StopIntake")
+        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
+    midFeedClimb.atTime("StopShooter").onTrue(m_superstructure.setState(StructureState.IDLE));
+    midFeedClimb.atTime("Climb").onTrue(m_superstructure.setState(StructureState.CLIMB));
+
+    return routine;
   }
 
-  public Command outpostRedBumpBackCrossCmd() {
-    return m_factory.trajectoryCmd("OutpostRedBumpBackCross");
-  }
+  public AutoRoutine midFeedNoClimb() {
+    final AutoRoutine routine = m_factory.newRoutine("midFeedClimb");
 
-  public Command outpostBlueBumpForwardCrossCmd() {
-    return m_factory.trajectoryCmd("OutpostBlueBumpForwardCross");
-  }
+    final AutoTrajectory midFeedNoClimb = routine.trajectory("MidFeedNoClimb");
+    routine.active().onTrue(midFeedNoClimb.resetOdometry().andThen(midFeedNoClimb.cmd()));
+    midFeedNoClimb
+        .atTime("Shoot")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.REV)
+                .andThen(Commands.waitSeconds(2))
+                .andThen(m_superstructure.setState(StructureState.SHOOT)));
+    midFeedNoClimb.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-  public Command outpostBlueBumpBackCrossCmd() {
-    return m_factory.trajectoryCmd("OutpostBlueBumpBackCross");
-  }
-
-  public Command depotRedBumpForwardCrossCmd() {
-    return m_factory.trajectoryCmd("DepotRedBumpForwardCross");
-  }
-
-  public Command depotRedBumpBackCrossCmd() {
-    return m_factory.trajectoryCmd("DepotRedBumpBackCross");
-  }
-
-  public Command depotBlueBumpForwardCrossCmd() {
-    return m_factory.trajectoryCmd("DepotBlueBumpForwardCross");
-  }
-
-  public Command depotBlueBumpBackCrossCmd() {
-    return m_factory.trajectoryCmd("DepotBlueBumpBackCross");
-  }
-
-  public Pose2d getInitialPose(String trajectoryName) {
-    var trajectory = Choreo.loadTrajectory(trajectoryName);
-    Pose2d initialPose = trajectory.get().getInitialPose(false).get();
-    return initialPose;
-  }
-
-  private boolean isRedAlliance() {
-    return DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red);
+    return routine;
   }
 }
