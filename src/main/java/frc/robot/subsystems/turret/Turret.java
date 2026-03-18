@@ -89,9 +89,9 @@ public class Turret extends DisableSubsystem {
   public Command pointToPose(Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
     return this.run(
         () -> {
-          Transform2d diff = robotPose.get().minus(targetPose.get());
-          Rotation2d rotation =
-              new Rotation2d(diff.getX(), diff.getY()).plus(TurretConstants.turretOffset);
+
+
+          Rotation2d rotation = targetPose.get().getTranslation().minus(robotPose.get().getTranslation()).getAngle();
           setPositionFieldRelative(rotation, robotPose.get().getRotation());
         });
   }
