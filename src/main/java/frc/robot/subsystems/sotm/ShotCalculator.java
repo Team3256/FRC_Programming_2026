@@ -112,15 +112,22 @@ public class ShotCalculator {
 
     // Iteratively calculate lookahead pose
     Pose2d lookaheadPose = turretPosition;
-    double timeOfFlight = 0.0;
+    double currentDistance = turretToTargetDistance; // starting estimate
+
     for (int i = 0; i < 20; i++) {
-      timeOfFlight = timeOfFlightMap.get(turretToTargetDistance) - funnyNum;
+      double timeOfFlight = timeOfFlightMap.get(currentDistance) - funnyNum;
+
       double offsetX = turretVelocityX * timeOfFlight;
       double offsetY = turretVelocityY * timeOfFlight;
+
+      // update lookahead pose
       lookaheadPose =
           new Pose2d(
               turretPosition.getTranslation().plus(new Translation2d(offsetX, offsetY)),
               turretPosition.getRotation());
+
+      // let's update the distance this time guys...
+      currentDistance = target.getDistance(lookaheadPose.getTranslation());
     }
 
     this.lookaheadPose = lookaheadPose;

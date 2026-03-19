@@ -9,7 +9,6 @@ package frc.robot.subsystems.turret;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.utils.DisableSubsystem;
@@ -89,9 +88,8 @@ public class Turret extends DisableSubsystem {
   public Command pointToPose(Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
     return this.run(
         () -> {
-
-
-          Rotation2d rotation = targetPose.get().getTranslation().minus(robotPose.get().getTranslation()).getAngle();
+          Rotation2d rotation =
+              targetPose.get().getTranslation().minus(robotPose.get().getTranslation()).getAngle();
           setPositionFieldRelative(rotation, robotPose.get().getRotation());
         });
   }

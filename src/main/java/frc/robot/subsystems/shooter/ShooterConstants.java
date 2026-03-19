@@ -39,7 +39,11 @@ public final class ShooterConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(60).withStatorCurrentLimit(50).withStatorCurrentLimitEnable(true).withSupplyCurrentLowerLimit(40).withSupplyCurrentLowerTime(0.1));
+                  .withStatorCurrentLimit(60)
+                  .withStatorCurrentLimit(50)
+                  .withStatorCurrentLimitEnable(true)
+                  .withSupplyCurrentLowerLimit(40)
+                  .withSupplyCurrentLowerTime(0.1));
   public static TalonFXConfiguration followerMotorConfigs = motorConfigs;
 
   public static final InterpolatingDoubleTreeMap hubLUT =
