@@ -114,7 +114,6 @@ public class RobotContainer {
           drivetrain::getFieldRelativeSpeeds,
           TurretConstants.driveBaseToTurret);
 
-  final Field2d m_field = new Field2d();
 
   private final Led led = new Led();
 
@@ -151,7 +150,6 @@ public class RobotContainer {
   private Supplier<Command>[] BUMP_CMDS;
 
   public RobotContainer() {
-    SmartDashboard.putData("Field", m_field);
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
     m_autoRoutines =
         new AutoRoutines(
@@ -310,6 +308,5 @@ public class RobotContainer {
   public void periodic() {
     shotCalculator.periodic();
     superstructure.periodic();
-    m_field.setRobotPose(drivetrain.getState().Pose);
   }
 }

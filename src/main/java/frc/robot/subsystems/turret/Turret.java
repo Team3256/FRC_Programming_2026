@@ -32,7 +32,6 @@ public class Turret extends DisableSubsystem {
     super(enabled);
 
     this.turretIO = turretIO;
-    turretIO.resetPosition(0);
   }
 
   @Override
