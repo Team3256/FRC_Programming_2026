@@ -156,7 +156,6 @@ public class AutoRoutines {
     return routine;
   }
 
-
   public AutoRoutine stealAuto() {
     final AutoRoutine routine = m_factory.newRoutine("stealAuto");
     final AutoTrajectory stealAuto = routine.trajectory("steal");
