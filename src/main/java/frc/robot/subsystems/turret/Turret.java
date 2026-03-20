@@ -27,7 +27,7 @@ public class Turret extends DisableSubsystem {
   private boolean hasBeenZeroed = false;
 
   public final Trigger reachedPosition = new Trigger(this::reachedPosition);
- 
+
   public Turret(boolean enabled, TurretIO turretIO) {
     super(enabled);
 
