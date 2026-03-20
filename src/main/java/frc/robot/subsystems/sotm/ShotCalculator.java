@@ -21,7 +21,7 @@ public class ShotCalculator {
 
   private static double phaseDelay;
 
-  private static final double funnyNum = .04;
+  private static final double funnyNum = 0;
   private static final InterpolatingDoubleTreeMap timeOfFlightMapHub =
       new InterpolatingDoubleTreeMap() {
         {
