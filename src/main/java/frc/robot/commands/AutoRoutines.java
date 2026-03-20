@@ -159,21 +159,22 @@ public class AutoRoutines {
   public AutoRoutine stealAuto() {
     final AutoRoutine routine = m_factory.newRoutine("stealAuto");
     final AutoTrajectory stealAuto = routine.trajectory("steal");
+    final AutoTrajectory stealP2 = routine.trajectory("stealp2");
 
     routine.active().onTrue(stealAuto.resetOdometry().andThen(stealAuto.cmd()));
 
     stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-    stealAuto.atTime("Wait").onTrue(Commands.waitSeconds(2));
+    stealAuto.doneDelayed(2).onTrue(stealP2.cmd());
 
-    stealAuto
+    stealP2
         .atTime("StopIntake")
         .onTrue(
             m_superstructure
                 .setState(StructureState.IDLE)
                 .andThen(m_superstructure.setState(StructureState.REV)));
 
-    stealAuto
+    stealP2
         .atTime("Shoot")
         .onTrue(
             Commands.waitSeconds(1.5)
