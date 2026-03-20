@@ -164,6 +164,8 @@ public class AutoRoutines {
 
     stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
+    stealAuto.atTime("Wait").onTrue(Commands.waitSeconds(2));
+
     stealAuto
         .atTime("StopIntake")
         .onTrue(
