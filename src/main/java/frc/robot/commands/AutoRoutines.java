@@ -156,6 +156,34 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine stealAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("stealAuto");
+    final AutoTrajectory stealAuto = routine.trajectory("steal");
+
+    routine.active().onTrue(stealAuto.resetOdometry().andThen(stealAuto.cmd()));
+
+    stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    stealAuto.atTime("Wait").onTrue(Commands.waitSeconds(2));
+
+    stealAuto
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    stealAuto
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
   public Command outpostRedBumpForwardCrossCmd() {
     return m_factory.trajectoryCmd("OutpostRedBumpForwardCross");
   }
