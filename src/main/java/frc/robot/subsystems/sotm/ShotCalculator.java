@@ -25,16 +25,20 @@ public class ShotCalculator {
   private static final InterpolatingDoubleTreeMap timeOfFlightMapHub =
       new InterpolatingDoubleTreeMap() {
         {
-          put(1.342, 1.0);
-          put(2.912, 1.15);
-          put(3.465, 1.17);
-          put(3.9, 1.23);
-          put(5.66, 1.26);
+          put(1.322, 0.88);
+          put(1.826,1.0);
+          put(2.247,1.01);
+          put(2.765,1.1);
+          put(3.135,1.0);
+          put(3.501,1.02);
+          put(3.901,1.09);
+          put(4.017,1.12);
+          put(4.560,1.2);
+          put(4.857,1.27);
+          put(5.616,1.2);
+          put(5.837,1.27);
 
-          // fake data
-          put(6.0, 1.3);
-          put(7.0, 1.34);
-          put(8.0, 1.38);
+
         }
       };
   private static final InterpolatingDoubleTreeMap timeOfFlightMapFeed =

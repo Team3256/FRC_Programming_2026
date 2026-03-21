@@ -122,8 +122,7 @@ public class AutoRoutines {
     topBumpDirectionalIntakeAuto
         .atTime("Shoot")
         .onTrue(
-            Commands.waitSeconds(1.5)
-                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                m_superstructure.setState(StructureState.SHOOT)
                 .andThen(Commands.waitSeconds(1))
                 .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
 
