@@ -13,11 +13,18 @@ import org.littletonrobotics.junction.AutoLog;
 public interface IndexerIO {
   @AutoLog
   public static class IndexerIOInputs {
-    public double indexerMotorVoltage = 0.0;
-    public double indexerMotorVelocity = 0.0;
-    public double indexerMotorStatorCurrent = 0.0;
-    public double indexerMotorSupplyCurrent = 0.0;
-    public double indexerMotorTemperature = 0.0;
+    public double indexerMotor1Voltage = 0.0;
+    public double indexerMotor1Velocity = 0.0;
+    public double indexerMotor1StatorCurrent = 0.0;
+    public double indexerMotor1SupplyCurrent = 0.0;
+    public double indexerMotor1Temperature = 0.0;
+
+    public double indexerMotor2Voltage = 0.0;
+    public double indexerMotor2Velocity = 0.0;
+    public double indexerMotor2StatorCurrent = 0.0;
+    public double indexerMotor2SupplyCurrent = 0.0;
+    public double indexerMotor2Temperature = 0.0;
+
   }
 
   public default void updateInputs(IndexerIOInputs inputs) {}

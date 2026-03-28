@@ -20,7 +20,9 @@ public class IndexerConstants {
 
   public static final boolean kUseFOC = false;
 
-  public static final int kIndexerMotorID = 49; // TODO: FILL
+  public static final int kIndexerMotor1ID = 49;
+  public static final int kIndexerMotor2ID = 50;
+
 
   public static final double indexVolt = 9;
 
@@ -28,7 +30,7 @@ public class IndexerConstants {
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
-          .withSlot0(new Slot0Configs().withKS(0.0).withKV(0.0).withKP(0.0).withKI(0).withKD(0))
+          .withSlot0(new Slot0Configs().withKS(0.37).withKV(0.1).withKP(0.05).withKI(0).withKD(0))
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)

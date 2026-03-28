@@ -45,7 +45,7 @@ public class TurretConstants {
           .withMagnetSensor(
               new MagnetSensorConfigs()
                   .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                  .withMagnetOffset(-0.89794921875)
+                  .withMagnetOffset(-0.6005859375)
                   .withAbsoluteSensorDiscontinuityPoint(Rotations.of(1)));
 
   public static final CANcoderConfiguration cancoderConfiguration2 =
@@ -53,7 +53,7 @@ public class TurretConstants {
           .withMagnetSensor(
               new MagnetSensorConfigs()
                   .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
-                  .withMagnetOffset(-0.911376953125)
+                  .withMagnetOffset(-0.94873046875)
                   .withAbsoluteSensorDiscontinuityPoint(Rotations.of(1)));
 
   public static final TalonFXConfiguration motorConfigs =

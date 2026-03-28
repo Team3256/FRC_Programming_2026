@@ -32,7 +32,7 @@ public class FeederIOSim extends FeederIOTalonFX {
 
   public FeederIOSim() {
     super();
-    motorSim = super.getFeederMotor().getSimState();
+    motorSim = super.getFeederMotor1().getSimState();
   }
 
   @Override

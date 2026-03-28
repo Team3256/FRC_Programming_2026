@@ -27,7 +27,9 @@ public class FeederConstants {
 
   public static final boolean kUseFOC = false;
 
-  public static final int kFeederMotorID = 22; // TODO: FILL
+  public static final int kFeederMotor1ID = 22;
+
+  public static final int kFeederMotor2ID = 23;
 
   public static final double feederVelocity = 80;
 
