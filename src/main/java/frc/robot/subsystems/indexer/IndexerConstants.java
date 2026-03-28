@@ -38,7 +38,11 @@ public class IndexerConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(60));
+                  .withStatorCurrentLimit(50)
+                      .withSupplyCurrentLimit(45)
+                      .withSupplyCurrentLimitEnable(true)
+                      .withSupplyCurrentLowerLimit(30)
+                      .withSupplyCurrentLowerTime(0.1));
 
   public static int flashConfigRetries = 5;
 

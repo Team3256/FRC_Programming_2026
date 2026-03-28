@@ -47,10 +47,10 @@ public class FeederConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(70)
-                  .withSupplyCurrentLimit(50)
+                  .withStatorCurrentLimit(50)
+                  .withSupplyCurrentLimit(45)
                   .withSupplyCurrentLimitEnable(true)
-                  .withSupplyCurrentLowerLimit(40)
+                  .withSupplyCurrentLowerLimit(30)
                   .withSupplyCurrentLowerTime(0.1));
 
   public static int flashConfigRetries = 5;
