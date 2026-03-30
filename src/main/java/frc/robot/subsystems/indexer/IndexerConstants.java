@@ -23,9 +23,16 @@ public class IndexerConstants {
   public static final int kIndexerMotor1ID = 49;
   public static final int kIndexerMotor2ID = 50;
 
+
   public static final double indexVolt = 9;
 
   public static double updateFrequency = 50;
+
+  public static final double autoUnjamCurrentThreshold = 50.0; // amps
+  public static final double autoUnjamCurrentDuration = 1.0;   // seconds over threshold before unjam triggers
+  public static final double autoUnjamVoltage = 4.0;           // volts reversed during unjam
+  public static final double autoUnjamDuration = 0.5;          // seconds to run in reverse
+
 
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
@@ -38,10 +45,10 @@ public class IndexerConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(50)
-                  .withSupplyCurrentLimit(45)
-                  .withSupplyCurrentLimitEnable(true)
-                  .withSupplyCurrentLowerLimit(30)
-                  .withSupplyCurrentLowerTime(0.1));
+                      .withSupplyCurrentLimit(45)
+                      .withSupplyCurrentLimitEnable(true)
+                      .withSupplyCurrentLowerLimit(30)
+                      .withSupplyCurrentLowerTime(0.1));
 
   public static int flashConfigRetries = 5;
 
