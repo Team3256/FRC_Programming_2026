@@ -50,25 +50,24 @@ public class Indexer extends DisableSubsystem {
     return this.run(
             () -> {
               double statorCurrent = indexerIOAutoLogged.indexerMotor1StatorCurrent;
+
               if (isAutoUnjamming) {
                 if (unjamTimer.hasElapsed(IndexerConstants.autoUnjamDuration)) {
-                  // Transition back to shooting
                   isAutoUnjamming = false;
                   highCurrentTimer.stop();
                   highCurrentTimer.reset();
                 } else {
-                  // Keep unjamming
                   indexerIO.setVoltage(-IndexerConstants.autoUnjamVoltage);
-                  return; // prevent shooting override
+                  return;
                 }
               }
+
               if (statorCurrent >= IndexerConstants.autoUnjamCurrentThreshold) {
                 if (!highCurrentTimer.isRunning()) {
                   highCurrentTimer.start();
                 }
 
                 if (highCurrentTimer.hasElapsed(IndexerConstants.autoUnjamCurrentDuration)) {
-                  // Enter unjam mode
                   isAutoUnjamming = true;
                   unjamTimer.restart();
                   indexerIO.setVoltage(-IndexerConstants.autoUnjamVoltage);
@@ -78,6 +77,8 @@ public class Indexer extends DisableSubsystem {
                 highCurrentTimer.stop();
                 highCurrentTimer.reset();
               }
+
+              // Normal operation
               indexerIO.setVoltage(IndexerConstants.indexVolt);
             })
         .finallyDo(indexerIO::off);
