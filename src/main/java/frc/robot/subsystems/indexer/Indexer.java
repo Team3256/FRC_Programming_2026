@@ -35,31 +35,6 @@ public class Indexer extends DisableSubsystem {
     indexerIO.updateInputs(indexerIOAutoLogged);
     Logger.processInputs("indexer", indexerIOAutoLogged);
 
-    double statorCurrent = indexerIOAutoLogged.indexerMotor1StatorCurrent;
-
-    if (isAutoUnjamming) {
-      if (unjamTimer.hasElapsed(IndexerConstants.autoUnjamDuration)) {
-        isAutoUnjamming = false;
-        indexerIO.off();
-        highCurrentTimer.stop();
-        highCurrentTimer.reset();
-      }
-    } else {
-      if (statorCurrent >= IndexerConstants.autoUnjamCurrentThreshold) {
-        if (!highCurrentTimer.isRunning()) {
-          highCurrentTimer.start();
-        }
-        if (highCurrentTimer.hasElapsed(IndexerConstants.autoUnjamCurrentDuration)) {
-          isAutoUnjamming = true;
-          unjamTimer.restart();
-          indexerIO.setVoltage(-IndexerConstants.autoUnjamVoltage);
-        }
-      } else {
-        highCurrentTimer.stop();
-        highCurrentTimer.reset();
-      }
-    }
-
     LoggedTracer.record("Indexer");
   }
 
@@ -72,7 +47,40 @@ public class Indexer extends DisableSubsystem {
   }
 
   public Command startShooting() {
-    return setVoltage(IndexerConstants.indexVolt);
+    return this.run(
+            () -> {
+              double statorCurrent = indexerIOAutoLogged.indexerMotor1StatorCurrent;
+              if (isAutoUnjamming) {
+                if (unjamTimer.hasElapsed(IndexerConstants.autoUnjamDuration)) {
+                  // Transition back to shooting
+                  isAutoUnjamming = false;
+                  highCurrentTimer.stop();
+                  highCurrentTimer.reset();
+                } else {
+                  // Keep unjamming
+                  indexerIO.setVoltage(-IndexerConstants.autoUnjamVoltage);
+                  return; // prevent shooting override
+                }
+              }
+              if (statorCurrent >= IndexerConstants.autoUnjamCurrentThreshold) {
+                if (!highCurrentTimer.isRunning()) {
+                  highCurrentTimer.start();
+                }
+
+                if (highCurrentTimer.hasElapsed(IndexerConstants.autoUnjamCurrentDuration)) {
+                  // Enter unjam mode
+                  isAutoUnjamming = true;
+                  unjamTimer.restart();
+                  indexerIO.setVoltage(-IndexerConstants.autoUnjamVoltage);
+                  return;
+                }
+              } else {
+                highCurrentTimer.stop();
+                highCurrentTimer.reset();
+              }
+              indexerIO.setVoltage(IndexerConstants.indexVolt);
+            })
+        .finallyDo(indexerIO::off);
   }
 
   public Command off() {
