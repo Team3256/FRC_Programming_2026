@@ -24,7 +24,6 @@ public interface FeederIO {
     public double feederMotor2StatorCurrent = 0.0;
     public double feederMotor2SupplyCurrent = 0.0;
     public double feederMotor2Temperature = 0.0;
-
   }
 
   public default void updateInputs(FeederIOInputs inputs) {}

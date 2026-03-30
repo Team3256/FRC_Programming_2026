@@ -23,7 +23,6 @@ public class IndexerConstants {
   public static final int kIndexerMotor1ID = 49;
   public static final int kIndexerMotor2ID = 50;
 
-
   public static final double indexVolt = 9;
 
   public static double updateFrequency = 50;
@@ -39,10 +38,10 @@ public class IndexerConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(50)
-                      .withSupplyCurrentLimit(45)
-                      .withSupplyCurrentLimitEnable(true)
-                      .withSupplyCurrentLowerLimit(30)
-                      .withSupplyCurrentLowerTime(0.1));
+                  .withSupplyCurrentLimit(45)
+                  .withSupplyCurrentLimitEnable(true)
+                  .withSupplyCurrentLowerLimit(30)
+                  .withSupplyCurrentLowerTime(0.1));
 
   public static int flashConfigRetries = 5;
 

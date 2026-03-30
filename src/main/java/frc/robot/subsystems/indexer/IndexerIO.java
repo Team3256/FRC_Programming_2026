@@ -24,7 +24,6 @@ public interface IndexerIO {
     public double indexerMotor2StatorCurrent = 0.0;
     public double indexerMotor2SupplyCurrent = 0.0;
     public double indexerMotor2Temperature = 0.0;
-
   }
 
   public default void updateInputs(IndexerIOInputs inputs) {}

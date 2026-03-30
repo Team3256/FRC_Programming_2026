@@ -30,9 +30,9 @@ public class IndexerIOTalonFX implements IndexerIO {
   private final StatusSignal<Current> indexerMotor1SupplyCurrent = indexMotor1.getSupplyCurrent();
   private final StatusSignal<Temperature> indexerMotor1Temperature = indexMotor1.getDeviceTemp();
 
-
   private final TalonFX indexMotor2 = new TalonFX(IndexerConstants.kIndexerMotor2ID);
-  final Follower followReq = new Follower(IndexerConstants.kIndexerMotor1ID, MotorAlignmentValue.Aligned);
+  final Follower followReq =
+      new Follower(IndexerConstants.kIndexerMotor1ID, MotorAlignmentValue.Aligned);
 
   private final StatusSignal<Voltage> indexerMotor2Voltage = indexMotor2.getMotorVoltage();
   private final StatusSignal<AngularVelocity> indexerMotor2Velocity = indexMotor2.getVelocity();
@@ -40,38 +40,37 @@ public class IndexerIOTalonFX implements IndexerIO {
   private final StatusSignal<Current> indexerMotor2SupplyCurrent = indexMotor2.getSupplyCurrent();
   private final StatusSignal<Temperature> indexerMotor2Temperature = indexMotor2.getDeviceTemp();
 
-
   public IndexerIOTalonFX() {
     PhoenixUtil.applyMotorConfigs(
-            indexMotor1, IndexerConstants.motorConfigs, IndexerConstants.flashConfigRetries);
+        indexMotor1, IndexerConstants.motorConfigs, IndexerConstants.flashConfigRetries);
 
-    PhoenixUtil.applyMotorConfigs(indexMotor2, IndexerConstants.motorConfigs, IndexerConstants.flashConfigRetries);
+    PhoenixUtil.applyMotorConfigs(
+        indexMotor2, IndexerConstants.motorConfigs, IndexerConstants.flashConfigRetries);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         IndexerConstants.updateFrequency,
-            indexerMotor1Voltage,
-            indexerMotor1Velocity,
-            indexerMotor1StatorCurrent,
-            indexerMotor1SupplyCurrent,
-            indexerMotor1Temperature,
-            indexerMotor2Voltage,
-            indexerMotor2Velocity,
-            indexerMotor2StatorCurrent,
-            indexerMotor2SupplyCurrent,
-            indexerMotor2Temperature
-            );
+        indexerMotor1Voltage,
+        indexerMotor1Velocity,
+        indexerMotor1StatorCurrent,
+        indexerMotor1SupplyCurrent,
+        indexerMotor1Temperature,
+        indexerMotor2Voltage,
+        indexerMotor2Velocity,
+        indexerMotor2StatorCurrent,
+        indexerMotor2SupplyCurrent,
+        indexerMotor2Temperature);
     PhoenixUtil.registerSignals(
         false,
-            indexerMotor1Voltage,
-            indexerMotor1Velocity,
-            indexerMotor1StatorCurrent,
-            indexerMotor1SupplyCurrent,
-            indexerMotor1Temperature,
-            indexerMotor2Voltage,
-            indexerMotor2Velocity,
-            indexerMotor2StatorCurrent,
-            indexerMotor2SupplyCurrent,
-            indexerMotor2Temperature);
+        indexerMotor1Voltage,
+        indexerMotor1Velocity,
+        indexerMotor1StatorCurrent,
+        indexerMotor1SupplyCurrent,
+        indexerMotor1Temperature,
+        indexerMotor2Voltage,
+        indexerMotor2Velocity,
+        indexerMotor2StatorCurrent,
+        indexerMotor2SupplyCurrent,
+        indexerMotor2Temperature);
     indexMotor1.optimizeBusUtilization();
     indexMotor2.optimizeBusUtilization();
 
@@ -85,7 +84,6 @@ public class IndexerIOTalonFX implements IndexerIO {
     inputs.indexerMotor1StatorCurrent = indexerMotor1StatorCurrent.getValueAsDouble();
     inputs.indexerMotor1SupplyCurrent = indexerMotor1SupplyCurrent.getValueAsDouble();
     inputs.indexerMotor1Temperature = indexerMotor1Temperature.getValueAsDouble();
-
 
     inputs.indexerMotor2Voltage = indexerMotor2Voltage.getValueAsDouble();
     inputs.indexerMotor2Velocity = indexerMotor2Velocity.getValueAsDouble();
