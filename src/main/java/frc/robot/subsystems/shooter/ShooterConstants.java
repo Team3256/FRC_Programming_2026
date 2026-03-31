@@ -41,7 +41,7 @@ public final class ShooterConstants {
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(80)
                   .withStatorCurrentLimitEnable(true)
-                  .withSupplyCurrentLimit(50)
+                  .withSupplyCurrentLimit(60)
                   .withSupplyCurrentLowerLimit(40)
                   .withSupplyCurrentLowerTime(0.1));
   public static TalonFXConfiguration followerMotorConfigs = motorConfigs;

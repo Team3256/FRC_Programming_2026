@@ -9,24 +9,25 @@ package frc.robot.subsystems.indexer;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
 import org.littletonrobotics.junction.Logger;
 
-// TODO: FIll
 
 public class Indexer extends DisableSubsystem {
 
   private final IndexerIO indexerIO;
   private final IndexerIOInputsAutoLogged indexerIOAutoLogged = new IndexerIOInputsAutoLogged();
 
-  private final Timer highCurrentTimer = new Timer();
-  private boolean isAutoUnjamming = false;
-  private final Timer unjamTimer = new Timer();
+  private final Trigger jammed = new Trigger(() -> indexerIOAutoLogged.indexerMotor1StatorCurrent >= IndexerConstants.autoUnjamCurrentThreshold);
 
   public Indexer(boolean enabled, IndexerIO indexerIO) {
     super(enabled);
     this.indexerIO = indexerIO;
+
+    jammed.debounce(IndexerConstants.autoUnjamCurrentDuration).onTrue(this.unjam());
+
   }
 
   @Override
@@ -47,41 +48,12 @@ public class Indexer extends DisableSubsystem {
   }
 
   public Command startShooting() {
-    return this.run(
-            () -> {
-              double statorCurrent = indexerIOAutoLogged.indexerMotor1StatorCurrent;
-
-              if (isAutoUnjamming) {
-                if (unjamTimer.hasElapsed(IndexerConstants.autoUnjamDuration)) {
-                  isAutoUnjamming = false;
-                  highCurrentTimer.stop();
-                  highCurrentTimer.reset();
-                } else {
-                  indexerIO.setVoltage(-IndexerConstants.autoUnjamVoltage);
-                  return;
-                }
-              }
-
-              if (statorCurrent >= IndexerConstants.autoUnjamCurrentThreshold) {
-                if (!highCurrentTimer.isRunning()) {
-                  highCurrentTimer.start();
-                }
-
-                if (highCurrentTimer.hasElapsed(IndexerConstants.autoUnjamCurrentDuration)) {
-                  isAutoUnjamming = true;
-                  unjamTimer.restart();
-                  indexerIO.setVoltage(-IndexerConstants.autoUnjamVoltage);
-                  return;
-                }
-              } else {
-                highCurrentTimer.stop();
-                highCurrentTimer.reset();
-              }
-
-              // Normal operation
-              indexerIO.setVoltage(IndexerConstants.indexVolt);
-            })
+    return setVoltage(IndexerConstants.indexVolt)
         .finallyDo(indexerIO::off);
+  }
+
+  public Command unjam() {
+    return setVoltage(IndexerConstants.autoUnjamVoltage).withTimeout(IndexerConstants.autoUnjamDuration).andThen(startShooting());
   }
 
   public Command off() {

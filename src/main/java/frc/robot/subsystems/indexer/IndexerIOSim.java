@@ -23,10 +23,10 @@ public class IndexerIOSim extends IndexerIOTalonFX {
   private FlywheelSim indexerSimModel =
       new FlywheelSim(
           LinearSystemId.createFlywheelSystem(
-              IntakeRollersConstants.kUseFOC ? DCMotor.getKrakenX60Foc(1) : DCMotor.getKrakenX60(1),
-              IntakeRollersConstants.SimulationConstants.rollerGearingRatio,
-              IntakeRollersConstants.SimulationConstants.rollerMomentOfInertia),
-          IntakeRollersConstants.kUseFOC ? DCMotor.getKrakenX60Foc(1) : DCMotor.getKrakenX60(1));
+              IndexerConstants.kUseFOC ? DCMotor.getKrakenX60Foc(1) : DCMotor.getKrakenX60(1),
+              IndexerConstants.SimulationConstants.rollerGearingRatio,
+              IndexerConstants.SimulationConstants.rollerMomentOfInertia),
+          IndexerConstants.kUseFOC ? DCMotor.getKrakenX60Foc(1) : DCMotor.getKrakenX60(1));
 
   private final TalonFXSimState motorSim;
 
