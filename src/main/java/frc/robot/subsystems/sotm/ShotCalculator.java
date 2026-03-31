@@ -37,6 +37,14 @@ public class ShotCalculator {
           put(4.857, 1.27);
           put(5.616, 1.2);
           put(5.837, 1.27);
+
+          // fake data
+          put(6.2, 1.3);
+          put(6.7, 1.32);
+          put(7.2, 1.35);
+          put(7.7, 1.37);
+
+
         }
       };
   private static final InterpolatingDoubleTreeMap timeOfFlightMapFeed =
@@ -48,6 +56,12 @@ public class ShotCalculator {
           put(9.42, 1.3);
           put(10.8, 1.55);
           put(12.834, 1.7);
+
+          //fake data
+          put(14.0, 1.8);
+          put(15.0, 1.9);
+          put(16.0, 2.0);
+          put(17.0, 2.1);
         }
       };
   private final Supplier<Pose2d> robotPoseSupplier;
