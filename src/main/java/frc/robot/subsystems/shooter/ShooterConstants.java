@@ -29,7 +29,7 @@ public final class ShooterConstants {
   public static TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
           .withSlot0(
-              new Slot0Configs().withKS(0).withKV(.132).withKA(0).withKP(.4).withKI(0).withKD(0))
+              new Slot0Configs().withKS(0.2).withKV(.12).withKA(0).withKP(.4).withKI(0).withKD(0))
           // For regenerative braking
           .withMotorOutput(
               new MotorOutputConfigs()
@@ -41,7 +41,7 @@ public final class ShooterConstants {
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(80)
                   .withStatorCurrentLimitEnable(true)
-                  .withSupplyCurrentLimit(60)
+                  .withSupplyCurrentLimit(50)
                   .withSupplyCurrentLowerLimit(40)
                   .withSupplyCurrentLowerTime(0.1));
   public static TalonFXConfiguration followerMotorConfigs = motorConfigs;
@@ -53,20 +53,18 @@ public final class ShooterConstants {
           put(1.826, 31.2);
           put(2.247, 32.2);
           put(2.765, 33.6);
-          put(3.135, 33.6);
+          put(3.135, 34.5);
+          put(3.1979,34.5);
           put(3.501, 35.6);
+          put(3.85, 37.0);
           put(3.901, 37.0);
-          put(4.017, 37.0);
-          put(4.501, 38.8);
-          put(4.857, 40.6);
-          put(5.616, 43.2);
-          put(5.837, 45.4);
+          put(4.135, 40.2);
+          put(4.450, 41.6);
+          put(4.9539, 42.4);
+          put(5.086, 44.6);
+          put(5.7645, 46.8);
 
           // fake data
-          put(6.2, 47.0);
-          put(6.7, 49.0);
-          put(7.2, 51.0);
-          put(7.7, 53.0);
 
 
 
