@@ -78,7 +78,11 @@ public class TurretConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(80))
+                  .withStatorCurrentLimit(60)
+                      .withSupplyCurrentLimit(50)
+                      .withSupplyCurrentLimitEnable(true)
+                      .withSupplyCurrentLowerLimit(30)
+                      .withSupplyCurrentLowerTime(0.1))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(90.0 / 10 * 48.0 / 12));
 
   public static final class SimulationConstants {

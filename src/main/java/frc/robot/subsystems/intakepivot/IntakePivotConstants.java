@@ -50,7 +50,11 @@ public final class IntakePivotConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(40))
+                  .withStatorCurrentLimit(40)
+                      .withSupplyCurrentLimit(50)
+                      .withSupplyCurrentLimitEnable(true)
+                      .withSupplyCurrentLowerTime(.1)
+                      .withSupplyCurrentLowerLimit(20))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(85.46));
 
   public static final class PivotSim {
