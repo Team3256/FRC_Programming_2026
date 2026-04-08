@@ -54,7 +54,7 @@ public final class ShooterConstants {
           put(2.247, 32.2);
           put(2.765, 33.6);
           put(3.135, 34.5);
-          put(3.1979,34.5);
+          put(3.1979, 34.5);
           put(3.501, 35.6);
           put(3.85, 37.0);
           put(3.901, 37.0);
@@ -66,13 +66,8 @@ public final class ShooterConstants {
 
           // fake data
 
-
-
-
         }
       };
-
-
 
   public static final InterpolatingDoubleTreeMap feedLUT =
       new InterpolatingDoubleTreeMap() {

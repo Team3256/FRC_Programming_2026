@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import frc.robot.subsystems.intakerollers.IntakeRollersConstants;
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class IndexerIOSim extends IndexerIOTalonFX {

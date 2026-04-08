@@ -65,16 +65,15 @@ public class ShooterPivotConstants {
           put(1.826, 0.002197);
           put(2.247, 0.017578);
           put(2.765, 0.0234);
-          put(3.0670,0.028809);
+          put(3.0670, 0.028809);
           put(3.135, 0.03833);
           put(3.501, 0.037842);
           put(3.901, 0.037842);
           put(4.135, 0.033203);
           put(4.450, 0.044189);
-          put(4.9539,0.053711);
+          put(4.9539, 0.053711);
           put(5.086, 0.044189);
-          put(5.7645,0.057617);
-
+          put(5.7645, 0.057617);
         }
       };
   public static final InterpolatingDoubleTreeMap feedLUT =

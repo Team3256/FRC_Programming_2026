@@ -34,12 +34,9 @@ public class ShotCalculator {
           put(3.901, 1.09);
           put(4.017, 1.12);
           put(4.560, 1.2);
-//          put(4.857, 1.27);
-//          put(5.616, 1.2);
+          //          put(4.857, 1.27);
+          //          put(5.616, 1.2);
           put(5.837, 1.27);
-
-
-
         }
       };
   private static final InterpolatingDoubleTreeMap timeOfFlightMapFeed =
@@ -52,7 +49,7 @@ public class ShotCalculator {
           put(10.8, 1.55);
           put(12.834, 1.7);
 
-          //fake data
+          // fake data
           put(14.0, 1.8);
           put(15.0, 1.9);
           put(16.0, 2.0);

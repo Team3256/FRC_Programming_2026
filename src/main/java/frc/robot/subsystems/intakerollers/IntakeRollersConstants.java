@@ -31,10 +31,10 @@ public class IntakeRollersConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(60)
-                      .withSupplyCurrentLimit(50)
-                      .withSupplyCurrentLimitEnable(true)
-                      .withSupplyCurrentLowerLimit(30)
-                      .withSupplyCurrentLowerTime(0.1));
+                  .withSupplyCurrentLimit(50)
+                  .withSupplyCurrentLimitEnable(true)
+                  .withSupplyCurrentLowerLimit(30)
+                  .withSupplyCurrentLowerTime(0.1));
   public static int flashConfigRetries = 5;
 
   public static final class SimulationConstants {

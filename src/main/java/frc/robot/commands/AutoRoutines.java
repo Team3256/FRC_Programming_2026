@@ -130,6 +130,23 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine shootPreloadAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("ShootPreload");
+    final AutoTrajectory shootPreloadAuto = routine.trajectory("ShootPreload");
+    routine.active().onTrue(shootPreloadAuto.resetOdometry().andThen(shootPreloadAuto.cmd()));
+    shootPreloadAuto
+        .atTime("Shoot")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.REV)
+                .andThen(Commands.waitSeconds(2))
+                .andThen(m_superstructure.setState(StructureState.SHOOT)));
+
+    shootPreloadAuto.atTime("StopShooting").onTrue(m_superstructure.setState(StructureState.IDLE));
+
+    return routine;
+  }
+
   public AutoRoutine topMidNoClimbDepotAuto() {
     final AutoRoutine routine = m_factory.newRoutine("toTopBumpMidDepotNoCimb");
     final AutoTrajectory topMidNoClimbDepot = routine.trajectory("TopBumpMidDepotNoCimb");
