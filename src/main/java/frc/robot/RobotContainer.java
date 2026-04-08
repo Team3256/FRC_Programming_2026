@@ -14,6 +14,8 @@ import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -55,6 +57,8 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.utils.MappedXboxController;
+import org.littletonrobotics.junction.Logger;
+
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -186,8 +190,11 @@ public class RobotContainer {
         .y()
         .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
 
-    m_operatorController.povUp().onTrue(superstructure.addShootMultiplier(.02));
-    m_operatorController.povDown().onTrue(superstructure.addShootMultiplier(-0.02));
+    m_operatorController.povUp().onTrue(Commands.runOnce(()-> TurretConstants.driveBaseToTurret = TurretConstants.driveBaseToTurret.plus(new Transform2d(0,.1, Rotation2d.kZero))));
+    m_operatorController.povDown().onTrue(Commands.runOnce(()-> TurretConstants.driveBaseToTurret = TurretConstants.driveBaseToTurret.plus(new Transform2d(0,-.1, Rotation2d.kZero))));
+    m_operatorController.povRight().onTrue(Commands.runOnce(()-> TurretConstants.driveBaseToTurret = TurretConstants.driveBaseToTurret.plus(new Transform2d(0.1,0, Rotation2d.kZero))));
+    m_operatorController.povLeft().onTrue(Commands.runOnce(()-> TurretConstants.driveBaseToTurret = TurretConstants.driveBaseToTurret.plus(new Transform2d(0.1,0, Rotation2d.kZero))));
+
   }
 
   private void configureChoreoAutoChooser() {
@@ -308,5 +315,8 @@ public class RobotContainer {
   public void periodic() {
     shotCalculator.periodic();
     superstructure.periodic();
+
+
+    Logger.recordOutput("Turret Offsets", TurretConstants.driveBaseToTurret);
   }
 }

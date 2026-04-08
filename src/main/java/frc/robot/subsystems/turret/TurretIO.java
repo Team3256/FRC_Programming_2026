@@ -33,6 +33,9 @@ public interface TurretIO {
 
   default void setPosition(double position) {}
 
+  default void setPosition(double position, double velocity) {}
+
+
   default void setVoltage(double voltage) {}
 
   default TalonFX getMotor() {

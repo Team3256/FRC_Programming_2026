@@ -39,7 +39,7 @@ public final class ShooterConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(80)
+                  .withStatorCurrentLimit(60)
                   .withStatorCurrentLimitEnable(true)
                   .withSupplyCurrentLimit(50)
                   .withSupplyCurrentLowerLimit(40)
@@ -58,11 +58,14 @@ public final class ShooterConstants {
           put(3.501, 35.6);
           put(3.85, 37.0);
           put(3.901, 37.0);
-          put(4.135, 40.2);
-          put(4.450, 41.6);
-          put(4.9539, 42.4);
-          put(5.086, 44.6);
-          put(5.7645, 46.8);
+          put(4.1, 37.8/1.04);
+          put(4.450, 38.6/1.04);
+          put(4.899,41/1.04);
+          put(5.31, 42/1.04);
+          put(5.7,43/1.04);
+
+
+
 
           // fake data
 

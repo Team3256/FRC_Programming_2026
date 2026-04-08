@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems.shooterpivot;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.utils.DisableSubsystem;
@@ -25,6 +26,13 @@ public class ShooterPivot extends DisableSubsystem {
 
   private double reqPosition = 0.0;
 
+  private double lastHoodAngle = 0;
+
+  private double hoodVel =0;
+
+  private final LinearFilter hoodAngleFilter =
+          LinearFilter.movingAverage((int) (0.1 / .02));
+
   public ShooterPivot(boolean enabled, ShooterPivotIO shooterPivotIO) {
     super(enabled);
 
@@ -39,6 +47,10 @@ public class ShooterPivot extends DisableSubsystem {
 
     Logger.recordOutput(this.getClass().getSimpleName() + "/reqPosition", reqPosition);
 
+    hoodVel = hoodAngleFilter.calculate((reqPosition - lastHoodAngle) /0.02);
+    lastHoodAngle = reqPosition;
+    Logger.recordOutput(this.getClass().getSimpleName() + "/turretVel", hoodVel);
+
     LoggedTracer.record("ShooterPivot");
   }
 
@@ -50,7 +62,7 @@ public class ShooterPivot extends DisableSubsystem {
     return this.run(
         () -> {
           reqPosition = position.getAsDouble();
-          shooterPivotIO.setPosition(reqPosition);
+          shooterPivotIO.setPosition(reqPosition, hoodVel);
         });
   }
 

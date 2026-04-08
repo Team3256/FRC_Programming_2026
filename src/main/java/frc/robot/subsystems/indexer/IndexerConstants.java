@@ -44,18 +44,18 @@ public class IndexerConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(60)
-                  .withSupplyCurrentLimit(50)
+                  .withSupplyCurrentLimit(45)
                   .withSupplyCurrentLimitEnable(true)
-                  .withSupplyCurrentLowerLimit(35)
+                  .withSupplyCurrentLowerLimit(30)
                   .withSupplyCurrentLowerTime(0.1));
 
   public static int flashConfigRetries = 5;
 
   public static final class SimulationConstants {
-    public static double rollerGearingRatio = 0.0;
-    public static double rollerMomentOfInertia = 0.0;
+    public static double rollerGearingRatio = 1.0;
+    public static double rollerMomentOfInertia = 1.0;
 
     // Scale down the angular velocity so we can actually see what is happening
-    public static double kAngularVelocityScalar = 0.0;
+    public static double kAngularVelocityScalar = 0.1;
   }
 }

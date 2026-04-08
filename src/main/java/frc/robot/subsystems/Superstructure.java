@@ -166,7 +166,7 @@ public class Superstructure {
         .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
         .and(shooter.reachedVelocity)
         .or(stateTriggers.get(StructureState.JITTER_AND_SHOOT))
-        .debounce(.2)
+        .debounce(.1)
         .onTrue(indexer.startShooting())
         .onTrue(feeder.startFeeding());
 

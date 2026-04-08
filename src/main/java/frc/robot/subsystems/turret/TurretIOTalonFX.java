@@ -13,6 +13,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
@@ -26,6 +27,8 @@ public class TurretIOTalonFX implements TurretIO {
   private final TalonFX turretMotor = new TalonFX(TurretConstants.turretMotorId);
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0).withSlot(0).withEnableFOC(TurretConstants.kUseFOC);
+
+  private final PositionVoltage positionVoltageRequest = new PositionVoltage(0).withSlot(0);
 
   private final StatusSignal<Voltage> turretMotorVoltage = turretMotor.getMotorVoltage();
   private final StatusSignal<AngularVelocity> turretMotorVelocity = turretMotor.getVelocity();
@@ -97,6 +100,11 @@ public class TurretIOTalonFX implements TurretIO {
   @Override
   public void setPosition(double position) {
     turretMotor.setControl(motionMagicRequest.withPosition(position));
+  }
+
+  @Override
+  public void setPosition(double position, double velocity) {
+    turretMotor.setControl(positionVoltageRequest.withPosition(position).withVelocity(velocity));
   }
 
   @Override

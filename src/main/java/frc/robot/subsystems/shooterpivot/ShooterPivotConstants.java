@@ -55,7 +55,11 @@ public class ShooterPivotConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(20))
+                  .withStatorCurrentLimit(40)
+                      .withSupplyCurrentLimit(30)
+                      .withSupplyCurrentLimitEnable(true)
+                      .withSupplyCurrentLowerLimit(20)
+                      .withSupplyCurrentLowerTime(0.1))
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(158.142945));
 
   public static final InterpolatingDoubleTreeMap hubLUT =

@@ -26,6 +26,8 @@ public interface ShooterPivotIO {
 
   public default void setPosition(double position) {}
 
+  public default void setPosition(double position, double velocity) {}
+
   public default void setVoltage(double voltage) {}
 
   public default TalonFX getMotor() {

@@ -37,7 +37,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.swerve.generated.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.utils.LoggedTracer;
-import frc.robot.utils.sotm.ChassisAccelerations;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -282,11 +281,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     // }
   }
 
-  public ChassisAccelerations getFieldRelativeAccelerations() {
-
-    return new ChassisAccelerations(
-        getFieldRelativeSpeeds(), previousSpeeds, getState().Timestamp - previousTime);
-  }
 
   public ChassisSpeeds getFieldRelativeSpeeds() {
     return ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getState().Pose.getRotation());
