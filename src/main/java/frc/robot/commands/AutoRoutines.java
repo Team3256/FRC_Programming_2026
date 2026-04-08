@@ -98,6 +98,42 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine depotBumpSOTM() {
+    final AutoRoutine routine = m_factory.newRoutine("DepotBumpSOTM");
+    final AutoTrajectory topBumpDirectionalIntakeAuto = routine.trajectory("DepotBumpSOTM");
+    routine
+        .active()
+        .onTrue(
+            topBumpDirectionalIntakeAuto
+                .resetOdometry()
+                .andThen(topBumpDirectionalIntakeAuto.cmd()));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Intake")
+        .onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("StopShooting")
+        .onTrue(m_superstructure.setState(StructureState.IDLE));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Shoot")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.SHOOT)
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
   public AutoRoutine bottomBumpDirectionalIntake() {
     final AutoRoutine routine = m_factory.newRoutine("BottomBumpDirectionalIntake");
     final AutoTrajectory topBumpDirectionalIntakeAuto =
@@ -130,9 +166,26 @@ public class AutoRoutines {
     return routine;
   }
 
-  public AutoRoutine shootPreloadAuto() {
-    final AutoRoutine routine = m_factory.newRoutine("ShootPreload");
-    final AutoTrajectory shootPreloadAuto = routine.trajectory("ShootPreload");
+  public AutoRoutine depotShootPreloadAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("DepotShootPreload");
+    final AutoTrajectory shootPreloadAuto = routine.trajectory("DepotShootPreload");
+    routine.active().onTrue(shootPreloadAuto.resetOdometry().andThen(shootPreloadAuto.cmd()));
+    shootPreloadAuto
+        .atTime("Shoot")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.REV)
+                .andThen(Commands.waitSeconds(2))
+                .andThen(m_superstructure.setState(StructureState.SHOOT)));
+
+    shootPreloadAuto.atTime("StopShooting").onTrue(m_superstructure.setState(StructureState.IDLE));
+
+    return routine;
+  }
+
+  public AutoRoutine outpostShootPreloadAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("OutpostShootPreload");
+    final AutoTrajectory shootPreloadAuto = routine.trajectory("OutpostShootPreload");
     routine.active().onTrue(shootPreloadAuto.resetOdometry().andThen(shootPreloadAuto.cmd()));
     shootPreloadAuto
         .atTime("Shoot")
