@@ -148,15 +148,11 @@ public class AutoRoutines {
 
     topBumpDirectionalIntakeAuto
         .atTime("StopIntake")
-        .onTrue(
-            m_superstructure
-                .setState(StructureState.IDLE));
+        .onTrue(m_superstructure.setState(StructureState.IDLE));
 
     topBumpDirectionalIntakeAuto
         .atTime("Shoot")
-        .onTrue(
-            m_superstructure
-                .setState(StructureState.SHOOT));
+        .onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
   }
@@ -195,7 +191,8 @@ public class AutoRoutines {
 
   public AutoRoutine preloadAuto() {
     final AutoRoutine routine = m_factory.newRoutine("DepotShootPreload");
-    routine.active()
+    routine
+        .active()
         .onTrue(
             m_superstructure
                 .setState(StructureState.REV)
@@ -203,9 +200,6 @@ public class AutoRoutines {
                 .andThen(m_superstructure.setState(StructureState.SHOOT)));
     return routine;
   }
-
-
-
 
   public AutoRoutine topMidNoClimbDepotAuto() {
     final AutoRoutine routine = m_factory.newRoutine("toTopBumpMidDepotNoCimb");
