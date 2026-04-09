@@ -283,6 +283,21 @@ public class RobotContainer {
                                     * Math.pow(m_driverController.getLeftX(), 2))
                                 * SlowMaxSpeed)
                         .withRotationalRate(-m_driverController.getRightX() * SlowMaxAngular)));
+    m_driverController
+            .rightBumper()
+            .whileTrue(
+                    drivetrain.applyRequest(
+                            () ->
+                                    drive
+                                            .withVelocityX(
+                                                    -(Math.signum(m_driverController.getLeftY())
+                                                            * Math.pow(m_driverController.getLeftY(), 2))
+                                                            * SuperSlowMaxSpeed)
+                                            .withVelocityY(
+                                                    -(Math.signum(m_driverController.getLeftX())
+                                                            * Math.pow(m_driverController.getLeftX(), 2))
+                                                            * SuperSlowMaxSpeed)
+                                            .withRotationalRate(-m_driverController.getRightX() * SlowMaxAngular)));
 
     m_driverController.povRight().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
@@ -300,7 +315,6 @@ public class RobotContainer {
     m_driverController
         .y()
         .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
-
     drivetrain.registerTelemetry(logger::telemeterize);
 
     SmartDashboard.putData("Choose command", selectBumpCrossCommand());

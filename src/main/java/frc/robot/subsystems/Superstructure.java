@@ -51,7 +51,7 @@ public class Superstructure {
   private StructureState state = StructureState.IDLE;
   private StructureState prevState = StructureState.IDLE;
 
-  private Map<StructureState, Trigger> stateTriggers = new HashMap<StructureState, Trigger>();
+  public Map<StructureState, Trigger> stateTriggers = new HashMap<StructureState, Trigger>();
 
   private Map<StructureState, Trigger> prevStateTriggers = new HashMap<StructureState, Trigger>();
 
@@ -166,7 +166,7 @@ public class Superstructure {
         .or(stateTriggers.get(StructureState.SHOOT_AND_INTAKE))
         .and(shooter.reachedVelocity)
         .or(stateTriggers.get(StructureState.JITTER_AND_SHOOT))
-        .debounce(.1)
+        .debounce(.2)
         .onTrue(indexer.startShooting())
         .onTrue(feeder.startFeeding());
 

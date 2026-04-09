@@ -24,6 +24,9 @@ public final class SwerveConstants {
   public static final double SlowMaxSpeed = MaxSpeed * 0.3;
   public static final double SlowMaxAngular = MaxAngularRate * 0.3;
 
+  public static final double SuperSlowMaxSpeed = MaxSpeed * 0.15;
+
+
   // Physics constants
   public static final Mass robotMass = Pounds.of(120);
   public static final MomentOfInertia robotMOI = KilogramSquareMeters.of(36);

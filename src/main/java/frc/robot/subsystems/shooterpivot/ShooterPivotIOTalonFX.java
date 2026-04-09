@@ -99,7 +99,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
   }
 
   @Override
-  public void resetPosition(Angle angle) {
+  public void resetPosition(double angle) {
     shooterPivotMotor.setPosition(angle);
   }
 }

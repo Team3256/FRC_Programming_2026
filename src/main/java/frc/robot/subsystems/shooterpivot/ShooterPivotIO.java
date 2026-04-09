@@ -34,7 +34,7 @@ public interface ShooterPivotIO {
     return new TalonFX(0);
   }
 
-  public default void resetPosition(Angle angle) {}
+  public default void resetPosition(double angle) {}
 
   public default void off() {}
 }
