@@ -100,28 +100,28 @@ public class AutoRoutines {
 
   public AutoRoutine topBumpDirectionalIntakeSOTM() {
     final AutoRoutine routine = m_factory.newRoutine("TopBumpDirectionalIntakeSOTM");
-    final AutoTrajectory topBumpDirectionalIntakeAuto =
+    final AutoTrajectory topBumpDirectionalintakeSOTMAuto =
         routine.trajectory("DepotBumpDirectionalIntakeSOTM");
     routine
         .active()
         .onTrue(
-            topBumpDirectionalIntakeAuto
+            topBumpDirectionalintakeSOTMAuto
                 .resetOdometry()
-                .andThen(topBumpDirectionalIntakeAuto.cmd()));
+                .andThen(topBumpDirectionalintakeSOTMAuto.cmd()));
 
-    topBumpDirectionalIntakeAuto
+    topBumpDirectionalintakeSOTMAuto
         .atTime("Intake")
         .onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-    topBumpDirectionalIntakeAuto
+    topBumpDirectionalintakeSOTMAuto
         .atTime("Jitter")
         .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
 
-    topBumpDirectionalIntakeAuto
+    topBumpDirectionalintakeSOTMAuto
         .atTime("Shoot")
         .onTrue(m_superstructure.setState(StructureState.SHOOT));
 
-    topBumpDirectionalIntakeAuto
+    topBumpDirectionalintakeSOTMAuto
         .atTime("StopShooting")
         .onTrue(m_superstructure.setState(StructureState.IDLE));
 
