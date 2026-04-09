@@ -13,7 +13,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class IntakeRollersConstants {
 
-  public static final boolean kUseFOC = false;
+  public static final boolean kUseFOC = true;
 
   public static final int kIntakeRollerMotorIDLeft = 46;
   public static final int kIntakeRollerMotorIDRight = 47;
