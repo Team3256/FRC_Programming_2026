@@ -58,15 +58,13 @@ public final class ShooterConstants {
           put(3.501, 35.6);
           put(3.85, 37.0);
           put(3.901, 37.0);
+
           put(4.1, 37.8); //d
           put(4.450, 38.6);
           put(4.899,41.0);
           put(5.31, 42.0);
           put(5.7,43.0);
-
-
-
-
+          
           // fake data
 
         }
