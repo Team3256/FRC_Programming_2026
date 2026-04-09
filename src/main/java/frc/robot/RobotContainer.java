@@ -57,10 +57,9 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.utils.MappedXboxController;
-import org.littletonrobotics.junction.Logger;
-
 import java.util.Set;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public class RobotContainer {
 
@@ -190,11 +189,38 @@ public class RobotContainer {
         .y()
         .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
 
-    m_operatorController.povUp().onTrue(Commands.runOnce(()-> TurretConstants.driveBaseToTurret = TurretConstants.driveBaseToTurret.plus(new Transform2d(0,.1, Rotation2d.kZero))));
-    m_operatorController.povDown().onTrue(Commands.runOnce(()-> TurretConstants.driveBaseToTurret = TurretConstants.driveBaseToTurret.plus(new Transform2d(0,-.1, Rotation2d.kZero))));
-    m_operatorController.povRight().onTrue(Commands.runOnce(()-> TurretConstants.driveBaseToTurret = TurretConstants.driveBaseToTurret.plus(new Transform2d(0.1,0, Rotation2d.kZero))));
-    m_operatorController.povLeft().onTrue(Commands.runOnce(()-> TurretConstants.driveBaseToTurret = TurretConstants.driveBaseToTurret.plus(new Transform2d(0.1,0, Rotation2d.kZero))));
-
+    m_operatorController
+        .povUp()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    TurretConstants.driveBaseToTurret =
+                        TurretConstants.driveBaseToTurret.plus(
+                            new Transform2d(0, .1, Rotation2d.kZero))));
+    m_operatorController
+        .povDown()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    TurretConstants.driveBaseToTurret =
+                        TurretConstants.driveBaseToTurret.plus(
+                            new Transform2d(0, -.1, Rotation2d.kZero))));
+    m_operatorController
+        .povRight()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    TurretConstants.driveBaseToTurret =
+                        TurretConstants.driveBaseToTurret.plus(
+                            new Transform2d(0.1, 0, Rotation2d.kZero))));
+    m_operatorController
+        .povLeft()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    TurretConstants.driveBaseToTurret =
+                        TurretConstants.driveBaseToTurret.plus(
+                            new Transform2d(0.1, 0, Rotation2d.kZero))));
   }
 
   private void configureChoreoAutoChooser() {
@@ -315,7 +341,6 @@ public class RobotContainer {
   public void periodic() {
     shotCalculator.periodic();
     superstructure.periodic();
-
 
     Logger.recordOutput("Turret Offsets", TurretConstants.driveBaseToTurret);
   }

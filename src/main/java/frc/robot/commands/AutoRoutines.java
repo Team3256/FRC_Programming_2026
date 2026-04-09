@@ -98,6 +98,36 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine topBumpDirectionalIntakeSOTM() {
+    final AutoRoutine routine = m_factory.newRoutine("TopBumpDirectionalIntakeSOTM");
+    final AutoTrajectory topBumpDirectionalIntakeAuto =
+        routine.trajectory("DepotBumpDirectionalIntakeSOTM");
+    routine
+        .active()
+        .onTrue(
+            topBumpDirectionalIntakeAuto
+                .resetOdometry()
+                .andThen(topBumpDirectionalIntakeAuto.cmd()));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Intake")
+        .onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Jitter")
+        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Shoot")
+        .onTrue(m_superstructure.setState(StructureState.SHOOT));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("StopShooting")
+        .onTrue(m_superstructure.setState(StructureState.IDLE));
+
+    return routine;
+  }
+
   public AutoRoutine depotBumpSOTM() {
     final AutoRoutine routine = m_factory.newRoutine("DepotBumpSOTM");
     final AutoTrajectory topBumpDirectionalIntakeAuto = routine.trajectory("DepotBumpSOTM");

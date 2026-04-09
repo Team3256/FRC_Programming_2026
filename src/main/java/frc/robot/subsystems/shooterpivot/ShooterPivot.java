@@ -28,10 +28,9 @@ public class ShooterPivot extends DisableSubsystem {
 
   private double lastHoodAngle = 0;
 
-  private double hoodVel =0;
+  private double hoodVel = 0;
 
-  private final LinearFilter hoodAngleFilter =
-          LinearFilter.movingAverage((int) (0.1 / .02));
+  private final LinearFilter hoodAngleFilter = LinearFilter.movingAverage((int) (0.1 / .02));
 
   public ShooterPivot(boolean enabled, ShooterPivotIO shooterPivotIO) {
     super(enabled);
@@ -47,7 +46,7 @@ public class ShooterPivot extends DisableSubsystem {
 
     Logger.recordOutput(this.getClass().getSimpleName() + "/reqPosition", reqPosition);
 
-    hoodVel = hoodAngleFilter.calculate((reqPosition - lastHoodAngle) /0.02);
+    hoodVel = hoodAngleFilter.calculate((reqPosition - lastHoodAngle) / 0.02);
     lastHoodAngle = reqPosition;
     Logger.recordOutput(this.getClass().getSimpleName() + "/turretVel", hoodVel);
 

@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTracer;
 import frc.robot.utils.Util;
@@ -32,10 +31,9 @@ public class Turret extends DisableSubsystem {
 
   private double lastTurretAngle = 0;
 
-  private double turretVel =0;
+  private double turretVel = 0;
 
-  private final LinearFilter turretAngleFilter =
-          LinearFilter.movingAverage((int) (0.1 / .02));
+  private final LinearFilter turretAngleFilter = LinearFilter.movingAverage((int) (0.1 / .02));
 
   public Turret(boolean enabled, TurretIO turretIO) {
     super(enabled);
@@ -79,10 +77,9 @@ public class Turret extends DisableSubsystem {
     }
     LoggedTracer.record("Turret");
 
-    turretVel = turretAngleFilter.calculate((reqPosition - lastTurretAngle) /0.02);
+    turretVel = turretAngleFilter.calculate((reqPosition - lastTurretAngle) / 0.02);
     lastTurretAngle = reqPosition;
     Logger.recordOutput(this.getClass().getSimpleName() + "/turretVel", turretVel);
-
   }
 
   public Command setVoltage(double voltage) {
