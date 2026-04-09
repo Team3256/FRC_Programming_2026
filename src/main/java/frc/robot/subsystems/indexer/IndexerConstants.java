@@ -18,7 +18,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class IndexerConstants {
 
-  public static final boolean kUseFOC = false;
+  public static final boolean kUseFOC = true;
 
   public static final int kIndexerMotor1ID = 49;
   public static final int kIndexerMotor2ID = 50;
