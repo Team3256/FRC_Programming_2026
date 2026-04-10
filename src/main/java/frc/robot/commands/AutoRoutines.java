@@ -135,12 +135,13 @@ public class AutoRoutines {
         .active()
         .onTrue(
             topBumpDirectionalIntakeAuto
-                .resetOdometry()
-                .andThen(topBumpDirectionalIntakeAuto.cmd()));
+                    .resetOdometry()
+                    .andThen(m_superstructure.setState(StructureState.INTAKE))
+                    .andThen(topBumpDirectionalIntakeAuto.cmd()));
 
     topBumpDirectionalIntakeAuto
-        .atTime("Intake")
-        .onTrue(m_superstructure.setState(StructureState.INTAKE));
+            .atTime("Intake")
+            .onTrue(m_superstructure.setState(StructureState.INTAKE));
 
     topBumpDirectionalIntakeAuto
         .atTime("StopShooting")
