@@ -27,13 +27,13 @@ public class FieldConstants {
   public static final FieldType fieldType = FieldType.WELDED;
 
   // AprilTag related constants
-  public static final int aprilTagCount = AprilTagLayoutType.PRACTICE.getLayout().getTags().size();
+  public static final int aprilTagCount = AprilTagLayoutType.OFFICIAL.getLayout().getTags().size();
   public static final double aprilTagWidth = Units.inchesToMeters(6.5);
-  public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.PRACTICE;
+  public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.OFFICIAL;
 
   // Field dimensions
-  public static final double fieldLength = AprilTagLayoutType.PRACTICE.getLayout().getFieldLength();
-  public static final double fieldWidth = AprilTagLayoutType.PRACTICE.getLayout().getFieldWidth();
+  public static final double fieldLength = AprilTagLayoutType.OFFICIAL.getLayout().getFieldLength();
+  public static final double fieldWidth = AprilTagLayoutType.OFFICIAL.getLayout().getFieldWidth();
 
   /**
    * PRACTICEly defined and relevant vertical lines found on the field (defined by X-axis offset)
@@ -41,16 +41,16 @@ public class FieldConstants {
   public static class LinesVertical {
     public static final double center = fieldLength / 2.0;
     public static final double starting =
-        AprilTagLayoutType.PRACTICE.getLayout().getTagPose(26).get().getX();
+        AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX();
     public static final double allianceZone = starting;
     public static final double hubCenter =
-        AprilTagLayoutType.PRACTICE.getLayout().getTagPose(26).get().getX() + Hub.width / 2.0;
+        AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + Hub.width / 2.0;
     public static final double neutralZoneNear = center - Units.inchesToMeters(120);
     public static final double neutralZoneFar = center + Units.inchesToMeters(120);
     public static final double oppHubCenter =
-        AprilTagLayoutType.PRACTICE.getLayout().getTagPose(4).get().getX() + Hub.width / 2.0;
+        AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(4).get().getX() + Hub.width / 2.0;
     public static final double oppAllianceZone =
-        AprilTagLayoutType.PRACTICE.getLayout().getTagPose(10).get().getX();
+        AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(10).get().getX();
   }
 
   /**
@@ -89,12 +89,12 @@ public class FieldConstants {
     // Relevant reference points on alliance side
     public static final Translation3d topCenterPoint =
         new Translation3d(
-            AprilTagLayoutType.PRACTICE.getLayout().getTagPose(26).get().getX() + width / 2.0,
+            AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
             fieldWidth / 2.0,
             height);
     public static final Translation3d innerCenterPoint =
         new Translation3d(
-            AprilTagLayoutType.PRACTICE.getLayout().getTagPose(26).get().getX() + width / 2.0,
+            AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
             fieldWidth / 2.0,
             innerHeight);
 
@@ -110,7 +110,7 @@ public class FieldConstants {
     // Relevant reference points on the opposite side
     public static final Translation3d oppTopCenterPoint =
         new Translation3d(
-            AprilTagLayoutType.PRACTICE.getLayout().getTagPose(4).get().getX() + width / 2.0,
+            AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(4).get().getX() + width / 2.0,
             fieldWidth / 2.0,
             height);
     public static final Translation2d oppNearLeftCorner =
@@ -124,13 +124,13 @@ public class FieldConstants {
 
     // Hub faces
     public static final Pose2d nearFace =
-        AprilTagLayoutType.PRACTICE.getLayout().getTagPose(26).get().toPose2d();
+        AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().toPose2d();
     public static final Pose2d farFace =
-        AprilTagLayoutType.PRACTICE.getLayout().getTagPose(20).get().toPose2d();
+        AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(20).get().toPose2d();
     public static final Pose2d rightFace =
-        AprilTagLayoutType.PRACTICE.getLayout().getTagPose(18).get().toPose2d();
+        AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(18).get().toPose2d();
     public static final Pose2d leftFace =
-        AprilTagLayoutType.PRACTICE.getLayout().getTagPose(21).get().toPose2d();
+        AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(21).get().toPose2d();
   }
 
   /** Left Bump related constants */
@@ -245,17 +245,17 @@ public class FieldConstants {
     // Relevant reference points on alliance side
     public static final Translation2d centerPoint =
         new Translation2d(
-            frontFaceX, AprilTagLayoutType.PRACTICE.getLayout().getTagPose(31).get().getY());
+            frontFaceX, AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(31).get().getY());
     public static final Translation2d leftUpright =
         new Translation2d(
             frontFaceX,
-            (AprilTagLayoutType.PRACTICE.getLayout().getTagPose(31).get().getY())
+            (AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(31).get().getY())
                 + innerOpeningWidth / 2
                 + Units.inchesToMeters(0.75));
     public static final Translation2d rightUpright =
         new Translation2d(
             frontFaceX,
-            (AprilTagLayoutType.PRACTICE.getLayout().getTagPose(31).get().getY())
+            (AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(31).get().getY())
                 - innerOpeningWidth / 2
                 - Units.inchesToMeters(0.75));
 
@@ -263,17 +263,17 @@ public class FieldConstants {
     public static final Translation2d oppCenterPoint =
         new Translation2d(
             fieldLength - frontFaceX,
-            AprilTagLayoutType.PRACTICE.getLayout().getTagPose(15).get().getY());
+            AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(15).get().getY());
     public static final Translation2d oppLeftUpright =
         new Translation2d(
             fieldLength - frontFaceX,
-            (AprilTagLayoutType.PRACTICE.getLayout().getTagPose(15).get().getY())
+            (AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(15).get().getY())
                 + innerOpeningWidth / 2
                 + Units.inchesToMeters(0.75));
     public static final Translation2d oppRightUpright =
         new Translation2d(
             fieldLength - frontFaceX,
-            (AprilTagLayoutType.PRACTICE.getLayout().getTagPose(15).get().getY())
+            (AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(15).get().getY())
                 - innerOpeningWidth / 2
                 - Units.inchesToMeters(0.75));
   }
@@ -302,7 +302,7 @@ public class FieldConstants {
 
     // Relevant reference points on alliance side
     public static final Translation2d centerPoint =
-        new Translation2d(0, AprilTagLayoutType.PRACTICE.getLayout().getTagPose(29).get().getY());
+        new Translation2d(0, AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(29).get().getY());
   }
 
   public enum FieldType {

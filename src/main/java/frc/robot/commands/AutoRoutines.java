@@ -291,6 +291,63 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine happytownDepotStealAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("MadtownStealDepot");
+    final AutoTrajectory stealAuto = routine.trajectory("Depotsteal");
+    final AutoTrajectory stealP2 = routine.trajectory("Depotstealp2");
+
+    routine.active().onTrue(stealAuto.resetOdometry().andThen(stealAuto.cmd()));
+
+    stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    stealAuto.doneDelayed(1.5).onTrue(stealP2.cmd());
+
+    stealP2
+            .atTime("StopIntake")
+            .onTrue(
+                    m_superstructure
+                            .setState(StructureState.IDLE)
+                            .andThen(m_superstructure.setState(StructureState.REV)));
+
+    stealP2
+            .atTime("Shoot")
+            .onTrue(
+                            m_superstructure.setState(StructureState.SHOOT)
+                            .andThen(Commands.waitSeconds(1))
+                            .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
+  public AutoRoutine happytownOutpostStealAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("MadtownOutpostSteal");
+    final AutoTrajectory stealAuto = routine.trajectory("Outpoststeal");
+    final AutoTrajectory stealP2 = routine.trajectory("Outpoststealp2");
+
+    routine.active().onTrue(stealAuto.resetOdometry().andThen(stealAuto.cmd()));
+
+    stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    stealAuto.doneDelayed(1.5).onTrue(stealP2.cmd());
+
+    stealP2
+            .atTime("StopIntake")
+            .onTrue(
+                    m_superstructure
+                            .setState(StructureState.IDLE)
+                            .andThen(m_superstructure.setState(StructureState.REV)));
+
+    stealP2
+            .atTime("Shoot")
+            .onTrue(m_superstructure.setState(StructureState.SHOOT)
+                            .andThen(Commands.waitSeconds(1))
+                            .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
+
+
   public AutoRoutine outpostStealAuto() {
     final AutoRoutine routine = m_factory.newRoutine("outpostStealAuto");
     final AutoTrajectory stealAuto = routine.trajectory("Outpoststeal");

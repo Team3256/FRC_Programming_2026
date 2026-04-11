@@ -8,6 +8,7 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
@@ -17,21 +18,9 @@ import java.nio.file.Path;
 
 public class VisionConstants {
   // AprilTag layout
-  public static AprilTagFieldLayout aprilTagLayout;
+  public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
-  static {
-    try {
-      aprilTagLayout =
-          new AprilTagFieldLayout(
-              Path.of(
-                  Filesystem.getDeployDirectory().toString(),
-                  "apriltags",
-                  "welded",
-                  "2026-practice" + ".json"));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
+
 
   // Camera names, must match names configured on coprocessor
   public static String frontRightCam = "frontRight";

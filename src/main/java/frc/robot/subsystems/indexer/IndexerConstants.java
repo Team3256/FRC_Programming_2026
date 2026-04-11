@@ -29,7 +29,7 @@ public class IndexerConstants {
 
   public static final double autoUnjamCurrentThreshold = 50.0; // amps
   public static final double autoUnjamCurrentDuration =
-      1.0; // seconds over threshold before unjam triggers
+      0.5; // seconds over threshold before unjam triggers
   public static final double autoUnjamVoltage = -4.0; // volts reversed during unjam
   public static final double autoUnjamDuration = 0.5; // seconds to run in reverse
 

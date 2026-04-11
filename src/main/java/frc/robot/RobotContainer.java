@@ -237,6 +237,8 @@ public class RobotContainer {
     autoChooser.addRoutine("Preload", m_autoRoutines::preloadAuto);
     autoChooser.addRoutine("Depot SOTM Directional", m_autoRoutines::topBumpDirectionalIntakeSOTM);
     autoChooser.addRoutine("OutpostDirectionalWait", m_autoRoutines::bottomBumpDirectionalIntakeWait);
+    autoChooser.addRoutine("HappyTownDepotSteal", m_autoRoutines::happytownDepotStealAuto);
+    autoChooser.addRoutine("HappyTownOutpostSteal", m_autoRoutines::happytownOutpostStealAuto);
     SmartDashboard.putData("auto chooser", autoChooser);
     RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
   }
