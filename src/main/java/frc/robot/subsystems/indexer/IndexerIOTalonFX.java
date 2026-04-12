@@ -9,11 +9,10 @@ package frc.robot.subsystems.indexer;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
@@ -31,8 +30,7 @@ public class IndexerIOTalonFX implements IndexerIO {
   private final StatusSignal<Temperature> indexerMotor1Temperature = indexMotor1.getDeviceTemp();
 
   private final TalonFX indexMotor2 = new TalonFX(IndexerConstants.kIndexerMotor2ID);
-  final Follower followReq =
-      new Follower(IndexerConstants.kIndexerMotor1ID, MotorAlignmentValue.Aligned);
+  final TorqueCurrentFOC motor2CurrentReq = new TorqueCurrentFOC(0);
 
   private final StatusSignal<Voltage> indexerMotor2Voltage = indexMotor2.getMotorVoltage();
   private final StatusSignal<AngularVelocity> indexerMotor2Velocity = indexMotor2.getVelocity();
@@ -73,8 +71,6 @@ public class IndexerIOTalonFX implements IndexerIO {
         indexerMotor2Temperature);
     indexMotor1.optimizeBusUtilization();
     indexMotor2.optimizeBusUtilization();
-
-    indexMotor2.setControl(followReq);
   }
 
   public void updateInputs(IndexerIOInputs inputs) {
@@ -84,6 +80,8 @@ public class IndexerIOTalonFX implements IndexerIO {
     inputs.indexerMotor1StatorCurrent = indexerMotor1StatorCurrent.getValueAsDouble();
     inputs.indexerMotor1SupplyCurrent = indexerMotor1SupplyCurrent.getValueAsDouble();
     inputs.indexerMotor1Temperature = indexerMotor1Temperature.getValueAsDouble();
+
+    indexMotor2.setControl(motor2CurrentReq.withOutput(inputs.indexerMotor1StatorCurrent));
 
     inputs.indexerMotor2Voltage = indexerMotor2Voltage.getValueAsDouble();
     inputs.indexerMotor2Velocity = indexerMotor2Velocity.getValueAsDouble();
