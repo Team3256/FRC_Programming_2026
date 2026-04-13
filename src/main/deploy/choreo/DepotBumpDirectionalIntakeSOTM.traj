@@ -421,6 +421,5 @@
    {"name":"Intake", "from":{"target":10, "targetTimestamp":8.20425, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"Jitter", "from":{"target":12, "targetTimestamp":9.93473, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"Shoot", "from":{"target":9, "targetTimestamp":6.19652, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"StopShooting", "from":{"target":10, "targetTimestamp":8.20425, "offset":{"exp":"-0.2 s", "val":-0.2}}, "event":null},
-   {"name":"Marker", "from":{"target":7, "targetTimestamp":4.40341, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
+   {"name":"StopShooting", "from":{"target":10, "targetTimestamp":8.20425, "offset":{"exp":"-0.2 s", "val":-0.2}}, "event":null}]
 }

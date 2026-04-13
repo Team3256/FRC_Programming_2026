@@ -148,12 +148,11 @@ public class AutoRoutines {
         .onTrue(m_superstructure.setState(StructureState.IDLE));
 
     topBumpDirectionalIntakeAuto
-        .atTime("StopIntake")
-        .onTrue(m_superstructure.setState(StructureState.IDLE));
-
+        .atTime("Shoot2")
+        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
     topBumpDirectionalIntakeAuto
-        .atTime("Shoot")
-        .onTrue(m_superstructure.setState(StructureState.SHOOT));
+            .atTime("Shoot1")
+            .onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
   }
@@ -206,12 +205,6 @@ public class AutoRoutines {
     topBumpDirectionalIntakeAuto
         .atTime("Intake")
         .onTrue(m_superstructure.setState(StructureState.INTAKE));
-    topBumpDirectionalIntakeAuto
-        .atTime("StopIntake")
-        .onTrue(
-            m_superstructure
-                .setState(StructureState.IDLE)
-                .andThen(m_superstructure.setState(StructureState.REV)));
 
     topBumpDirectionalIntakeAuto
         .atTime("Shoot")
@@ -291,6 +284,35 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine depotStealAutoBIG() {
+    final AutoRoutine routine = m_factory.newRoutine("stealAuto");
+    final AutoTrajectory stealAuto = routine.trajectory("Depotsteal");
+    final AutoTrajectory stealP2 = routine.trajectory("Depotstealp2p2");
+
+    routine.active().onTrue(stealAuto.resetOdometry().andThen(stealAuto.cmd()));
+
+    stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    stealAuto.doneDelayed(2).onTrue(stealP2.cmd());
+
+    stealP2
+            .atTime("StopIntake")
+            .onTrue(
+                    m_superstructure
+                            .setState(StructureState.IDLE)
+                            .andThen(m_superstructure.setState(StructureState.REV)));
+
+    stealP2
+            .atTime("Shoot")
+            .onTrue(
+                    Commands.waitSeconds(1.5)
+                            .andThen(m_superstructure.setState(StructureState.SHOOT))
+                            .andThen(Commands.waitSeconds(1))
+                            .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
   public AutoRoutine happytownDepotStealAuto() {
     final AutoRoutine routine = m_factory.newRoutine("MadtownStealDepot");
     final AutoTrajectory stealAuto = routine.trajectory("Depotsteal");
@@ -328,20 +350,35 @@ public class AutoRoutines {
 
     stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-    stealAuto.doneDelayed(1.5).onTrue(stealP2.cmd());
+    stealAuto.doneDelayed(1.25).onTrue(stealP2.cmd());
 
-    stealP2
-            .atTime("StopIntake")
-            .onTrue(
-                    m_superstructure
-                            .setState(StructureState.IDLE)
-                            .andThen(m_superstructure.setState(StructureState.REV)));
 
     stealP2
             .atTime("Shoot")
             .onTrue(m_superstructure.setState(StructureState.SHOOT)
                             .andThen(Commands.waitSeconds(1))
                             .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
+  public AutoRoutine happytownOutpostStealAutoBig() {
+    final AutoRoutine routine = m_factory.newRoutine("MadtownOutpostSteal");
+    final AutoTrajectory stealAuto = routine.trajectory("Outpoststeal");
+    final AutoTrajectory stealP2 = routine.trajectory("Outpoststealp2p2");
+
+    routine.active().onTrue(stealAuto.resetOdometry().andThen(stealAuto.cmd()));
+
+    stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    stealAuto.done().onTrue(stealP2.cmd());
+
+
+    stealP2
+            .atTime("Shoot")
+            .onTrue(m_superstructure.setState(StructureState.SHOOT)
+                    .andThen(Commands.waitSeconds(.5))
+                    .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
 
     return routine;
   }

@@ -47,7 +47,7 @@ public class FeederConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(50)
+                  .withStatorCurrentLimit(70)
                   .withSupplyCurrentLimit(45)
                   .withSupplyCurrentLimitEnable(true)
                   .withSupplyCurrentLowerLimit(30)
