@@ -320,6 +320,41 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine neutralZoneAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("neutralZoneAuto");
+    final AutoTrajectory neutralZoneAuto =
+        routine.trajectory("NeutralZone");
+
+    final AutoTrajectory neutralZoneAutopt2 = routine.trajectory("NeutralZonept2");
+    routine
+        .active()
+        .onTrue(
+            neutralZoneAuto
+                .resetOdometry()
+                .andThen(neutralZoneAuto.cmd()));
+
+    neutralZoneAuto
+        .atTime("Intake")
+        .onTrue(m_superstructure.setState(StructureState.INTAKE)
+        .andThen(m_superstructure.setState(StructureState.REV)));
+
+    neutralZoneAuto
+        .atTime("Shoot")
+        .onTrue(m_superstructure.setState(StructureState.SHOOT_AND_INTAKE));
+
+    neutralZoneAuto
+        .atTime("Jitter")
+        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)
+        .andThen(Commands.waitSeconds(3))
+        .andThen(neutralZoneAutopt2.spawnCmd())); // idk
+
+    neutralZoneAutopt2
+        .atTime("StopShoot")
+        .onTrue(m_superstructure.setState(StructureState.IDLE));
+
+    return routine;
+  }
+
   public Command outpostRedBumpForwardCrossCmd() {
     return m_factory.trajectoryCmd("OutpostRedBumpForwardCross");
   }
