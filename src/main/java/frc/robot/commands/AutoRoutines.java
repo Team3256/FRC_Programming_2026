@@ -135,13 +135,13 @@ public class AutoRoutines {
         .active()
         .onTrue(
             topBumpDirectionalIntakeAuto
-                    .resetOdometry()
-                    .andThen(m_superstructure.setState(StructureState.INTAKE))
-                    .andThen(topBumpDirectionalIntakeAuto.cmd()));
+                .resetOdometry()
+                .andThen(m_superstructure.setState(StructureState.INTAKE))
+                .andThen(topBumpDirectionalIntakeAuto.cmd()));
 
     topBumpDirectionalIntakeAuto
-            .atTime("Intake")
-            .onTrue(m_superstructure.setState(StructureState.INTAKE));
+        .atTime("Intake")
+        .onTrue(m_superstructure.setState(StructureState.INTAKE));
 
     topBumpDirectionalIntakeAuto
         .atTime("StopShooting")
@@ -190,8 +190,7 @@ public class AutoRoutines {
     return routine;
   }
 
-
-    public AutoRoutine bottomBumpDirectionalIntakeWait() {
+  public AutoRoutine bottomBumpDirectionalIntakeWait() {
     final AutoRoutine routine = m_factory.newRoutine("BottomBumpDirectionalIntakeWait");
     final AutoTrajectory topBumpDirectionalIntakeAuto =
         routine.trajectory("OutpostBumpDirectionalIntake");
@@ -322,21 +321,17 @@ public class AutoRoutines {
 
   public AutoRoutine neutralZoneAuto() {
     final AutoRoutine routine = m_factory.newRoutine("neutralZoneAuto");
-    final AutoTrajectory neutralZoneAuto =
-        routine.trajectory("NeutralZone");
+    final AutoTrajectory neutralZoneAuto = routine.trajectory("NeutralZone");
 
     final AutoTrajectory neutralZoneAutopt2 = routine.trajectory("NeutralZonept2");
-    routine
-        .active()
-        .onTrue(
-            neutralZoneAuto
-                .resetOdometry()
-                .andThen(neutralZoneAuto.cmd()));
+    routine.active().onTrue(neutralZoneAuto.resetOdometry().andThen(neutralZoneAuto.cmd()));
 
     neutralZoneAuto
         .atTime("Intake")
-        .onTrue(m_superstructure.setState(StructureState.INTAKE)
-        .andThen(m_superstructure.setState(StructureState.REV)));
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.INTAKE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
 
     neutralZoneAuto
         .atTime("Shoot")
@@ -344,13 +339,13 @@ public class AutoRoutines {
 
     neutralZoneAuto
         .atTime("Jitter")
-        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)
-        .andThen(Commands.waitSeconds(3))
-        .andThen(neutralZoneAutopt2.spawnCmd())); // idk
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.JITTER_AND_SHOOT)
+                .andThen(Commands.waitSeconds(3))
+                .andThen(neutralZoneAutopt2.spawnCmd())); // idk
 
-    neutralZoneAutopt2
-        .atTime("StopShoot")
-        .onTrue(m_superstructure.setState(StructureState.IDLE));
+    neutralZoneAutopt2.atTime("StopShoot").onTrue(m_superstructure.setState(StructureState.IDLE));
 
     return routine;
   }
