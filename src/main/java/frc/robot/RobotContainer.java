@@ -236,16 +236,16 @@ public class RobotContainer {
     autoChooser.addRoutine("SOTM", m_autoRoutines::depotBumpSOTM);
     autoChooser.addRoutine("Preload", m_autoRoutines::preloadAuto);
     autoChooser.addRoutine("Depot SOTM Directional", m_autoRoutines::topBumpDirectionalIntakeSOTM);
-    autoChooser.addRoutine("OutpostDirectionalWait", m_autoRoutines::bottomBumpDirectionalIntakeWait);
+    autoChooser.addRoutine(
+        "OutpostDirectionalWait", m_autoRoutines::bottomBumpDirectionalIntakeWait);
     autoChooser.addRoutine("HappyTownDepotSteal", m_autoRoutines::happytownDepotStealAuto);
     autoChooser.addRoutine("HappyTownOutpostSteal", m_autoRoutines::happytownOutpostStealAuto);
 
     autoChooser.addRoutine("CHUNKY", m_autoRoutines::depotStealAutoBIG);
 
-
-
-
     autoChooser.addRoutine("Big Steal", m_autoRoutines::happytownOutpostStealAutoBig);
+    autoChooser.addRoutine("neutral zone auto", m_autoRoutines::neutralZoneAuto);
+
     SmartDashboard.putData("auto chooser", autoChooser);
     RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
   }
