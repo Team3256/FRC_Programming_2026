@@ -27,9 +27,9 @@ public class IndexerConstants {
 
   public static double updateFrequency = 50;
 
-  public static final double autoUnjamCurrentThreshold = 50.0; // amps
+  public static final double autoUnjamCurrentThreshold = 80.0; // amps
   public static final double autoUnjamCurrentDuration =
-      1.0; // seconds over threshold before unjam triggers
+      0.5; // seconds over threshold before unjam triggers
   public static final double autoUnjamVoltage = -4.0; // volts reversed during unjam
   public static final double autoUnjamDuration = 0.5; // seconds to run in reverse
 
@@ -38,15 +38,15 @@ public class IndexerConstants {
           .withSlot0(new Slot0Configs().withKS(0.37).withKV(0.1).withKP(0.05).withKI(0).withKD(0))
           .withMotorOutput(
               new MotorOutputConfigs()
-                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withNeutralMode(NeutralModeValue.Coast)
                   .withInverted(InvertedValue.Clockwise_Positive))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(60)
-                  .withSupplyCurrentLimit(45)
+                  .withStatorCurrentLimit(90)
+                  .withSupplyCurrentLimit(50)
                   .withSupplyCurrentLimitEnable(true)
-                  .withSupplyCurrentLowerLimit(30)
+                  .withSupplyCurrentLowerLimit(35)
                   .withSupplyCurrentLowerTime(0.1));
 
   public static int flashConfigRetries = 5;
