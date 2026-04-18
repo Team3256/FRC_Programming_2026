@@ -292,7 +292,7 @@ public class AutoRoutines {
 
     stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-    stealAuto.doneDelayed(0.5).onTrue(stealP2.cmd());
+    stealAuto.doneDelayed(0.75).onTrue(stealP2.cmd());
 
     stealP2
         .atTime("StopIntake")
@@ -304,7 +304,7 @@ public class AutoRoutines {
     stealP2
         .atTime("Shoot")
         .onTrue(
-            Commands.waitSeconds(1.5)
+            Commands.waitSeconds(0.5)
                 .andThen(m_superstructure.setState(StructureState.SHOOT))
                 .andThen(Commands.waitSeconds(1))
                 .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
