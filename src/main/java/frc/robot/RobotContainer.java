@@ -245,7 +245,7 @@ public class RobotContainer {
 
     autoChooser.addRoutine("CHUNKY", m_autoRoutines::depotStealAutoBIG);
    autoChooser.addRoutine("CHUNKY", m_autoRoutines::depotStealAutoBIG);
-   autoChooser.addRoutine("depostSnake", m_autoRoutines::depotStealAutoSNAKE);
+   autoChooser.addRoutine("depotSnake", m_autoRoutines::depotStealAutoSNAKE);
 
 
     autoChooser.addRoutine("Big Steal", m_autoRoutines::happytownOutpostStealAutoBig);

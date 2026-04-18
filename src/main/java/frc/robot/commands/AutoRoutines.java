@@ -292,7 +292,7 @@ public class AutoRoutines {
 
     stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-    stealAuto.doneDelayed(2).onTrue(stealP2.cmd());
+    stealAuto.doneDelayed(0.5).onTrue(stealP2.cmd());
 
     stealP2
         .atTime("StopIntake")
