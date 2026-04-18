@@ -11,6 +11,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 
 import choreo.auto.AutoChooser;
+import choreo.auto.AutoRoutine;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -242,6 +244,9 @@ public class RobotContainer {
     autoChooser.addRoutine("HappyTownOutpostSteal", m_autoRoutines::happytownOutpostStealAuto);
 
     autoChooser.addRoutine("CHUNKY", m_autoRoutines::depotStealAutoBIG);
+   autoChooser.addRoutine("CHUNKY", m_autoRoutines::depotStealAutoBIG);
+   autoChooser.addRoutine("depostSnake", m_autoRoutines::depotStealAutoSNAKE);
+
 
     autoChooser.addRoutine("Big Steal", m_autoRoutines::happytownOutpostStealAutoBig);
     SmartDashboard.putData("auto chooser", autoChooser);

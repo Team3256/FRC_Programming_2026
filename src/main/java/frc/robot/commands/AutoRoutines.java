@@ -283,6 +283,35 @@ public class AutoRoutines {
     return routine;
   }
 
+   public AutoRoutine depotStealAutoSNAKE() {
+    final AutoRoutine routine = m_factory.newRoutine("stealAuto");
+    final AutoTrajectory stealAuto = routine.trajectory("Depotsteal");
+    final AutoTrajectory stealP2 = routine.trajectory("Depotstealsake");
+
+    routine.active().onTrue(stealAuto.resetOdometry().andThen(stealAuto.cmd()));
+
+    stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    stealAuto.doneDelayed(2).onTrue(stealP2.cmd());
+
+    stealP2
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    stealP2
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
   public AutoRoutine depotStealAutoBIG() {
     final AutoRoutine routine = m_factory.newRoutine("stealAuto");
     final AutoTrajectory stealAuto = routine.trajectory("Depotsteal");
@@ -385,7 +414,11 @@ public class AutoRoutines {
     return routine;
   }
 
-  public AutoRoutine outpostStealAuto() {
+ 
+
+
+
+   public AutoRoutine outpostStealAuto() {
     final AutoRoutine routine = m_factory.newRoutine("outpostStealAuto");
     final AutoTrajectory stealAuto = routine.trajectory("Outpoststeal");
     final AutoTrajectory stealP2 = routine.trajectory("Outpoststealp2");
