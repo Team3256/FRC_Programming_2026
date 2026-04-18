@@ -49,6 +49,11 @@ public class IntakeRollers extends DisableSubsystem {
     return this.run(() -> intakeRollersIO.setVelocity(velocity)).finallyDo(intakeRollersIO::off);
   }
 
+  public Command outtake() {
+    return this.run(() -> intakeRollersIO.setVoltage(IntakeRollersConstants.outtakeVoltage))
+        .finallyDo(intakeRollersIO::off);
+  }
+
   public Command off() {
     return this.runOnce(intakeRollersIO::off);
   }

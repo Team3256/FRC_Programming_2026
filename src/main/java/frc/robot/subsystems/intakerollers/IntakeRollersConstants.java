@@ -20,6 +20,8 @@ public class IntakeRollersConstants {
 
   public static double updateFrequency = 50;
 
+  public static final double outtakeVoltage = -8;
+
   public static final TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
           .withSlot0(new Slot0Configs().withKS(0).withKV(0.12).withKP(1).withKI(0).withKD(0))
