@@ -12,15 +12,11 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Filesystem;
-import java.io.IOException;
-import java.nio.file.Path;
 
 public class VisionConstants {
   // AprilTag layout
-  public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-
-
+  public static AprilTagFieldLayout aprilTagLayout =
+      AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
   public static String frontRightCam = "frontRight";

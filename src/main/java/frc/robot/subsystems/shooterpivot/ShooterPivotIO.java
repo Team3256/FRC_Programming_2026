@@ -8,7 +8,6 @@
 package frc.robot.subsystems.shooterpivot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.units.measure.Angle;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ShooterPivotIO {
