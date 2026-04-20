@@ -237,7 +237,7 @@ public class Superstructure {
         .get(StructureState.OUTTAKE)
         .onTrue(intakeRollers.outtake())
         .onTrue(intakePivot.goToGroundIntake())
-        .onTrue(indexer.unjam());
+        .onTrue(indexer.outtake());
   }
 
   private void configureLed() {
