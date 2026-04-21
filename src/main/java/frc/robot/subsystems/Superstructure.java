@@ -235,9 +235,8 @@ public class Superstructure {
 
     stateTriggers
         .get(StructureState.OUTTAKE)
-        .onTrue(intakeRollers.outtake())
-        .onTrue(intakePivot.goToGroundIntake())
-        .onTrue(indexer.outtake());
+        .onTrue(intakeRollers.setVoltage(-8))
+        .onTrue(intakePivot.goToGroundIntake());
   }
 
   private void configureLed() {

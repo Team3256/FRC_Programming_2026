@@ -60,7 +60,7 @@ public class Indexer extends DisableSubsystem {
 
   public Command outtake() {
     return setVoltage(IndexerConstants.autoUnjamVoltage)
-        .withTimeout(IndexerConstants.autoUnjamDuration) 
+        .withTimeout(IndexerConstants.autoUnjamDuration)
         .finallyDo(indexerIO::off);
   }
 
