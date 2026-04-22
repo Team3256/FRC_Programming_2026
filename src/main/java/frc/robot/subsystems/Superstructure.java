@@ -46,6 +46,7 @@ public class Superstructure {
     CLIMB,
     CANCEL_ALL,
     REV,
+    OUTTAKE,
   }
 
   private StructureState state = StructureState.IDLE;
@@ -231,6 +232,11 @@ public class Superstructure {
     stateTriggers
         .get(StructureState.REV)
         .whileTrue(shooter.shootHub(shotCalculator::getDistance, () -> velMultiplier));
+
+    stateTriggers
+        .get(StructureState.OUTTAKE)
+        .onTrue(intakeRollers.setVoltage(-8))
+        .onTrue(intakePivot.goToGroundIntake());
   }
 
   private void configureLed() {
