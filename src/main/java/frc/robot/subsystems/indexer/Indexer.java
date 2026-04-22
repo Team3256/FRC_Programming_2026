@@ -58,12 +58,6 @@ public class Indexer extends DisableSubsystem {
         .andThen(startShooting());
   }
 
-  public Command outtake() {
-    return setVoltage(IndexerConstants.autoUnjamVoltage)
-        .withTimeout(IndexerConstants.autoUnjamDuration)
-        .finallyDo(indexerIO::off);
-  }
-
   public Command off() {
     return this.runOnce(indexerIO::off);
   }
