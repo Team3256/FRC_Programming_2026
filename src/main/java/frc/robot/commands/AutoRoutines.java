@@ -124,6 +124,13 @@ public class AutoRoutines {
         .atTime("Intake")
         .onTrue(m_superstructure.setState(StructureState.INTAKE));
 
+      topBumpDirectionalintakeSOTMAuto
+        .atTime("Intake1")
+        .onTrue(
+         m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.INTAKE)));
+
     topBumpDirectionalintakeSOTMAuto
         .atTime("Jitter")
         .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
