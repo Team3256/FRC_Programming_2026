@@ -12,12 +12,20 @@ import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AutoRoutines {
 
@@ -62,6 +70,7 @@ public class AutoRoutines {
 
   public AutoRoutine getdisrupted() {
     final AutoRoutine routine = m_factory.newRoutine("getdisruptedp1");
+
     final AutoTrajectory p1 = routine.trajectory("getdisruptedp1");
     final AutoTrajectory p2 = routine.trajectory("getdisruptedp2");
 
@@ -126,9 +135,7 @@ public class AutoRoutines {
 
     topBumpDirectionalintakeSOTMAuto
         .atTime("Intake1")
-        .onTrue(
-         m_superstructure
-                .setState(StructureState.SHOOT_AND_INTAKE));
+        .onTrue(m_superstructure.setState(StructureState.SHOOT_AND_INTAKE));
 
     topBumpDirectionalintakeSOTMAuto
         .atTime("Jitter")
@@ -250,13 +257,6 @@ public class AutoRoutines {
     doubleLoop.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
     doubleLoop
-        .atTime("StopIntake")
-        .onTrue(
-            m_superstructure
-                .setState(StructureState.IDLE)
-                .andThen(m_superstructure.setState(StructureState.REV)));
-
-    doubleLoop
         .atTime("Shoot")
         .onTrue(
             m_superstructure
@@ -270,7 +270,36 @@ public class AutoRoutines {
   public Pose2d getInitialPose(String trajectoryName) {
     var trajectory = Choreo.loadTrajectory(trajectoryName);
     Pose2d initialPose = trajectory.get().getInitialPose(false).get();
+
     return initialPose;
+  }
+
+  public void updateField2d(Field2d field2d, List<String> trajectoryNames) {
+
+    ArrayList<Pose2d> poseList = new ArrayList<>();
+    for (int t = 1; t < trajectoryNames.size(); t++) {
+      var trajectory = Choreo.loadTrajectory(trajectoryNames.get(t));
+
+      if (trajectory.isEmpty()) {
+        poseList.add(new Pose2d(0,0, Rotation2d.kZero));
+      } else {
+        var poses = trajectory.get().getPoses();
+
+        for (int i = 0; i < poses.length; i += 2) {
+          poseList.add(poses[i]);
+          System.out.println(poses[i]);
+        }
+      }
+
+
+
+    }
+    field2d.setRobotPose(poseList.get(0));
+
+    field2d
+        .getObject("traj")
+        .setTrajectory(
+            TrajectoryGenerator.generateTrajectory(poseList, new TrajectoryConfig(4, 16)));
   }
 
   private boolean isRedAlliance() {

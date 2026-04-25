@@ -15,6 +15,8 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -55,6 +57,8 @@ import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.utils.MappedXboxController;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.List;
 
 public class RobotContainer {
 
@@ -130,17 +134,8 @@ public class RobotContainer {
 
   private AutoChooser autoChooser = new AutoChooser();
 
-  private static final String[] BUMP_TRAJECTORIES =
-      new String[] {
-        "OutpostRedBumpForwardCross",
-        "OutpostRedBumpBackCross",
-        "OutpostBlueBumpForwardCross",
-        "OutpostBlueBumpBackCross",
-        "DepotRedBumpForwardCross",
-        "DepotRedBumpBackCross",
-        "DepotBlueBumpForwardCross",
-        "DepotBlueBumpBackCross"
-      };
+  private SendableChooser<List<String>> autoVisualizer = new SendableChooser<List<String>>();
+  private Field2d field2d = new Field2d();
 
   public RobotContainer() {
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
@@ -151,6 +146,7 @@ public class RobotContainer {
     configureSwerve();
     configureChoreoAutoChooser();
     configureOperatorBinds();
+    configureAutoVisualizer();
     if (Utils.isSimulation()) {
       SimMechs.getInstance().publishToNT();
     }
@@ -219,6 +215,24 @@ public class RobotContainer {
     autoChooser.addRoutine("OutpostDisrupt", m_autoRoutines::getdisrupted);
     SmartDashboard.putData("auto chooser", autoChooser);
     RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
+  }
+
+
+
+  private void configureAutoVisualizer() {
+    autoVisualizer.addOption("Top 1 Cycle Directional Intake", List.of("Top 1 Cycle Directional Intake", "DepotBumpDirectionalIntake"));
+    autoVisualizer.addOption("Bottom Directional Intake", List.of("Bottom Directional Intake", "OutpostBumpDirectionalIntake"));
+    autoVisualizer.addOption("Depot Delayed", List.of("Depot Delayed", "DepotBumpSOTM"));
+    autoVisualizer.addOption("Depot SOTM Directional", List.of("Depot SOTM Directional", "DepotBumpDirectionalIntakeSOTM"));
+    autoVisualizer.addOption("SOTMthenclosetobump", List.of("SOTMthenclosetobump", "tweaked"));
+    autoVisualizer.addOption("OutpostDirectionalWait", List.of("OutpostDirectionalWait", "OutpostBumpDirectionalIntake"));
+    autoVisualizer.addOption("DoubleLoop", List.of("DoubleLoop" ,"DoubleLoop"));
+    autoVisualizer.addOption("OutpostDisrupt", List.of("OutpostDisrupt", "getdisruptedp1", "getdisruptedp2"));
+
+    autoVisualizer.onChange((trajNames) ->{m_autoRoutines.updateField2d(field2d, trajNames);autoChooser.select(trajNames.get(0));});
+
+    SmartDashboard.putData("Auto Visualizer", autoVisualizer);
+    SmartDashboard.putData("Field Visualize", field2d);
   }
 
   private void configureSwerve() {
