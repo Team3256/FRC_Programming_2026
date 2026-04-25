@@ -277,8 +277,8 @@ public class AutoRoutines {
   public void updateField2d(Field2d field2d, List<String> trajectoryNames) {
 
     ArrayList<Pose2d> poseList = new ArrayList<>();
-    for (int t = 1; t < trajectoryNames.size(); t++) {
-      var trajectory = Choreo.loadTrajectory(trajectoryNames.get(t));
+    for (String t : trajectoryNames) {
+      var trajectory = Choreo.loadTrajectory(t);
 
       if (trajectory.isEmpty()) {
         poseList.add(new Pose2d(0,0, Rotation2d.kZero));
@@ -295,6 +295,10 @@ public class AutoRoutines {
 
     }
     field2d.setRobotPose(poseList.get(0));
+
+    if (poseList.size() == 1) {
+      return;
+    }
 
     field2d
         .getObject("traj")

@@ -55,9 +55,11 @@ import frc.robot.subsystems.turret.TurretIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.utils.AutoConfig;
 import frc.robot.utils.MappedXboxController;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RobotContainer {
@@ -130,11 +132,14 @@ public class RobotContainer {
           shotCalculator,
           () -> drivetrain.getState().Pose);
 
+
   /// sim file for intakepivot needs to be added -- seems like its not been merged yet
 
   private AutoChooser autoChooser = new AutoChooser();
 
-  private SendableChooser<List<String>> autoVisualizer = new SendableChooser<List<String>>();
+  private List<AutoConfig> autos = new ArrayList<>();
+
+  private SendableChooser<AutoConfig> autoVisualizer = new SendableChooser<AutoConfig>();
   private Field2d field2d = new Field2d();
 
   public RobotContainer() {
@@ -199,20 +204,70 @@ public class RobotContainer {
   }
 
   private void configureChoreoAutoChooser() {
-    autoChooser.addCmd("Wheel Radius Change", () -> drivetrain.wheelRadiusCharacterization(1));
-    autoChooser.addRoutine(
-        "Top 1 Cycle Directional Intake", m_autoRoutines::topBumpDirectionalIntake);
 
-    autoChooser.addRoutine(
-        "Bottom Directional Intake", m_autoRoutines::bottomBumpDirectionalIntake);
-    autoChooser.addRoutine("Depot Delayed", m_autoRoutines::depotBumpSOTM);
-    autoChooser.addRoutine("Preload", m_autoRoutines::preloadAuto);
-    autoChooser.addRoutine("Depot SOTM Directional", m_autoRoutines::topBumpDirectionalIntakeSOTM);
-    autoChooser.addRoutine("SOTMthenclosetobump", m_autoRoutines::closetobump);
-    autoChooser.addRoutine(
-        "OutpostDirectionalWait", m_autoRoutines::bottomBumpDirectionalIntakeWait);
-    autoChooser.addRoutine("DoubleLoop", m_autoRoutines::doubleLoop);
-    autoChooser.addRoutine("OutpostDisrupt", m_autoRoutines::getdisrupted);
+    autos = List.of(
+            new AutoConfig(
+                    "Top 1 Cycle Directional Intake",
+                    m_autoRoutines::topBumpDirectionalIntake,
+                    List.of("DepotBumpDirectionalIntake")
+            ),
+            new AutoConfig(
+                    "Bottom Directional Intake",
+                    m_autoRoutines::bottomBumpDirectionalIntake,
+                    List.of("OutpostBumpDirectionalIntake")
+            ),
+            new AutoConfig(
+                    "Depot Delayed",
+                    m_autoRoutines::depotBumpSOTM,
+                    List.of("DepotBumpSOTM")
+            ),
+            new AutoConfig("Preload", m_autoRoutines::preloadAuto, List.of( "")),
+            new AutoConfig(
+                    "Depot SOTM Directional",
+                    m_autoRoutines::topBumpDirectionalIntakeSOTM,
+                    List.of("DepotBumpDirectionalIntakeSOTM")
+            ),
+            new AutoConfig(
+                    "SOTMthenclosetobump",
+                    m_autoRoutines::closetobump,
+                    List.of("tweaked")
+            ),
+            new AutoConfig(
+                    "OutpostDirectionalWait",
+                    m_autoRoutines::bottomBumpDirectionalIntakeWait,
+                    List.of("OutpostBumpDirectionalIntake")
+            ),
+            new AutoConfig(
+                    "DoubleLoop",
+                    m_autoRoutines::doubleLoop,
+                    List.of("DoubleLoop")
+            ),
+            new AutoConfig(
+                    "OutpostDisrupt",
+                    m_autoRoutines::getdisrupted,
+                    List.of("getdisruptedp1", "getdisruptedp2")
+            )
+    );
+    for (AutoConfig auto : autos) {
+      autoChooser.addRoutine(auto.name, auto.routine);
+    }
+
+
+
+    autoChooser.addCmd("Wheel Radius Change", () -> drivetrain.wheelRadiusCharacterization(1));
+//    autoChooser.addRoutine(
+//        "Top 1 Cycle Directional Intake", m_autoRoutines::topBumpDirectionalIntake);
+//
+//    autoChooser.addRoutine(
+//        "Bottom Directional Intake", m_autoRoutines::bottomBumpDirectionalIntake);
+//    autoChooser.addRoutine("Depot Delayed", m_autoRoutines::depotBumpSOTM);
+//    autoChooser.addRoutine("Preload", m_autoRoutines::preloadAuto);
+//    autoChooser.addRoutine("Depot SOTM Directional", m_autoRoutines::topBumpDirectionalIntakeSOTM);
+//    autoChooser.addRoutine("SOTMthenclosetobump", m_autoRoutines::closetobump);
+//    autoChooser.addRoutine(
+//        "OutpostDirectionalWait", m_autoRoutines::bottomBumpDirectionalIntakeWait);
+//    autoChooser.addRoutine("DoubleLoop", m_autoRoutines::doubleLoop);
+//    autoChooser.addRoutine("OutpostDisrupt", m_autoRoutines::getdisrupted);
     SmartDashboard.putData("auto chooser", autoChooser);
     RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
   }
@@ -220,16 +275,22 @@ public class RobotContainer {
 
 
   private void configureAutoVisualizer() {
-    autoVisualizer.addOption("Top 1 Cycle Directional Intake", List.of("Top 1 Cycle Directional Intake", "DepotBumpDirectionalIntake"));
-    autoVisualizer.addOption("Bottom Directional Intake", List.of("Bottom Directional Intake", "OutpostBumpDirectionalIntake"));
-    autoVisualizer.addOption("Depot Delayed", List.of("Depot Delayed", "DepotBumpSOTM"));
-    autoVisualizer.addOption("Depot SOTM Directional", List.of("Depot SOTM Directional", "DepotBumpDirectionalIntakeSOTM"));
-    autoVisualizer.addOption("SOTMthenclosetobump", List.of("SOTMthenclosetobump", "tweaked"));
-    autoVisualizer.addOption("OutpostDirectionalWait", List.of("OutpostDirectionalWait", "OutpostBumpDirectionalIntake"));
-    autoVisualizer.addOption("DoubleLoop", List.of("DoubleLoop" ,"DoubleLoop"));
-    autoVisualizer.addOption("OutpostDisrupt", List.of("OutpostDisrupt", "getdisruptedp1", "getdisruptedp2"));
 
-    autoVisualizer.onChange((trajNames) ->{m_autoRoutines.updateField2d(field2d, trajNames);autoChooser.select(trajNames.get(0));});
+
+
+    for (AutoConfig auto : autos) {
+      autoVisualizer.addOption(auto.name, auto);
+    }
+//    autoVisualizer.addOption("Top 1 Cycle Directional Intake", List.of("Top 1 Cycle Directional Intake", "DepotBumpDirectionalIntake"));
+//    autoVisualizer.addOption("Bottom Directional Intake", List.of("Bottom Directional Intake", "OutpostBumpDirectionalIntake"));
+//    autoVisualizer.addOption("Depot Delayed", List.of("Depot Delayed", "DepotBumpSOTM"));
+//    autoVisualizer.addOption("Depot SOTM Directional", List.of("Depot SOTM Directional", "DepotBumpDirectionalIntakeSOTM"));
+//    autoVisualizer.addOption("SOTMthenclosetobump", List.of("SOTMthenclosetobump", "tweaked"));
+//    autoVisualizer.addOption("OutpostDirectionalWait", List.of("OutpostDirectionalWait", "OutpostBumpDirectionalIntake"));
+//    autoVisualizer.addOption("DoubleLoop", List.of("DoubleLoop" ,"DoubleLoop"));
+//    autoVisualizer.addOption("OutpostDisrupt", List.of("OutpostDisrupt", "getdisruptedp1", "getdisruptedp2"));
+
+    autoVisualizer.onChange((trajNames) ->{m_autoRoutines.updateField2d(field2d, trajNames.trajectories);autoChooser.select(trajNames.name);});
 
     SmartDashboard.putData("Auto Visualizer", autoVisualizer);
     SmartDashboard.putData("Field Visualize", field2d);
