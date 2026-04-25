@@ -60,6 +60,26 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine getdisrupted() {
+    final AutoRoutine routine = m_factory.newRoutine("getdisruptedp1");
+    final AutoTrajectory p1 = routine.trajectory("getdisruptedp1");
+    final AutoTrajectory p2 = routine.trajectory("getdisruptedp2");
+
+    routine.active().onTrue(p1.resetOdometry().andThen(p1.cmd()));
+
+    p1.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    p1.doneDelayed(1).onTrue(p2.cmd());
+
+    p2.atTime("StopIntake")
+        .onTrue(m_superstructure.setState(StructureState.IDLE))
+        .onTrue(m_superstructure.setState(StructureState.REV));
+
+    p2.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+
+    return routine;
+  }
+
   public AutoRoutine topBumpDirectionalIntakeSOTM() {
     final AutoRoutine routine = m_factory.newRoutine("TopBumpDirectionalIntakeSOTM");
     final AutoTrajectory topBumpDirectionalintakeSOTMAuto =
@@ -103,6 +123,13 @@ public class AutoRoutines {
     topBumpDirectionalintakeSOTMAuto
         .atTime("Intake")
         .onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+      topBumpDirectionalintakeSOTMAuto
+        .atTime("Intake1")
+        .onTrue(
+         m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.INTAKE)));
 
     topBumpDirectionalintakeSOTMAuto
         .atTime("Jitter")
