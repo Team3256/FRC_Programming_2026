@@ -216,6 +216,7 @@ public class RobotContainer {
     autoChooser.addRoutine(
         "OutpostDirectionalWait", m_autoRoutines::bottomBumpDirectionalIntakeWait);
     autoChooser.addRoutine("DoubleLoop", m_autoRoutines::doubleLoop);
+    autoChooser.addRoutine("OutpostDisrupt", m_autoRoutines::getdisrupted);
     SmartDashboard.putData("auto chooser", autoChooser);
     RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
   }
