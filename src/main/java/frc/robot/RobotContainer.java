@@ -13,12 +13,9 @@ import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -57,8 +54,6 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.utils.MappedXboxController;
-import java.util.Set;
-import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class RobotContainer {
@@ -147,27 +142,11 @@ public class RobotContainer {
         "DepotBlueBumpBackCross"
       };
 
-  @SuppressWarnings("unchecked")
-  private Supplier<Command>[] BUMP_CMDS;
-
   public RobotContainer() {
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
     m_autoRoutines =
         new AutoRoutines(
             drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure);
-
-    BUMP_CMDS =
-        (Supplier<Command>[])
-            new Supplier[] {
-              m_autoRoutines::outpostRedBumpForwardCrossCmd,
-              m_autoRoutines::outpostRedBumpBackCrossCmd,
-              m_autoRoutines::outpostBlueBumpForwardCrossCmd,
-              m_autoRoutines::outpostBlueBumpBackCrossCmd,
-              m_autoRoutines::depotRedBumpForwardCrossCmd,
-              m_autoRoutines::depotRedBumpBackCrossCmd,
-              m_autoRoutines::depotBlueBumpForwardCrossCmd,
-              m_autoRoutines::depotBlueBumpBackCrossCmd
-            };
 
     configureSwerve();
     configureChoreoAutoChooser();
@@ -230,22 +209,12 @@ public class RobotContainer {
 
     autoChooser.addRoutine(
         "Bottom Directional Intake", m_autoRoutines::bottomBumpDirectionalIntake);
-    autoChooser.addRoutine("Top Depot Outpost", m_autoRoutines::topTrenchDepotOutpostHub);
-    autoChooser.addRoutine("DepotSteal", m_autoRoutines::depotStealAuto);
-    autoChooser.addRoutine("OutpostSteal", m_autoRoutines::outpostStealAuto);
-    autoChooser.addRoutine("SOTM", m_autoRoutines::depotBumpSOTM);
+    autoChooser.addRoutine("Depot Delayed", m_autoRoutines::depotBumpSOTM);
     autoChooser.addRoutine("Preload", m_autoRoutines::preloadAuto);
     autoChooser.addRoutine("Depot SOTM Directional", m_autoRoutines::topBumpDirectionalIntakeSOTM);
+    autoChooser.addRoutine("SOTMthenclosetobump", m_autoRoutines::closetobump);
     autoChooser.addRoutine(
         "OutpostDirectionalWait", m_autoRoutines::bottomBumpDirectionalIntakeWait);
-    autoChooser.addRoutine("HappyTownDepotSteal", m_autoRoutines::happytownDepotStealAuto);
-    autoChooser.addRoutine("HappyTownOutpostSteal", m_autoRoutines::happytownOutpostStealAuto);
-
-    autoChooser.addRoutine("CHUNKY", m_autoRoutines::depotStealAutoBIG);
-
-    autoChooser.addRoutine("Big Steal", m_autoRoutines::happytownOutpostStealAutoBig);
-    autoChooser.addRoutine("neutral zone auto", m_autoRoutines::neutralZoneAuto);
-
     SmartDashboard.putData("auto chooser", autoChooser);
     RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
   }
@@ -325,44 +294,6 @@ public class RobotContainer {
         .y()
         .onTrue(superstructure.setState(Superstructure.StructureState.JITTER_INTAKE));
     drivetrain.registerTelemetry(logger::telemeterize);
-
-    SmartDashboard.putData("Choose command", selectBumpCrossCommand());
-    SmartDashboard.putData("Run", selectBumpCrossCommand());
-  }
-
-  public Command selectBumpCrossCommand() {
-    return Commands.defer(
-        () -> {
-          Translation2d current = drivetrain.getState().Pose.getTranslation();
-
-          int closestIdx = 0;
-          double closestDist = Double.MAX_VALUE;
-          for (int i = 0; i < BUMP_TRAJECTORIES.length; i++) {
-            double dist =
-                current.getDistance(
-                    m_autoRoutines.getInitialPose(BUMP_TRAJECTORIES[i]).getTranslation());
-            if (dist < closestDist) {
-              closestDist = dist;
-              closestIdx = i;
-            }
-          }
-
-          return buildBumpCrossSequence(BUMP_TRAJECTORIES[closestIdx], BUMP_CMDS[closestIdx]);
-        },
-        Set.of(drivetrain));
-  }
-
-  public Command buildBumpCrossSequence(String routineName, Supplier<Command> routineCmd) {
-    return drivetrain
-        .pidToPose(() -> m_autoRoutines.getInitialPose(routineName))
-        .until(() -> closeEnoughToStart(m_autoRoutines.getInitialPose(routineName)))
-        .andThen(routineCmd.get());
-  }
-
-  public boolean closeEnoughToStart(Pose2d targetStartPose) {
-    Pose2d current = drivetrain.getState().Pose;
-    double distance = current.getTranslation().getDistance(targetStartPose.getTranslation());
-    return distance < 0.15;
   }
 
   public void periodic() {

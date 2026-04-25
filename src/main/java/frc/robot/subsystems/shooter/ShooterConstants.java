@@ -39,7 +39,7 @@ public final class ShooterConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(60)
+                  .withStatorCurrentLimit(80)
                   .withStatorCurrentLimitEnable(true)
                   .withSupplyCurrentLimit(50)
                   .withSupplyCurrentLowerLimit(40)
