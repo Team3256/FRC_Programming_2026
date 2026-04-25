@@ -124,7 +124,7 @@ public class AutoRoutines {
         .atTime("Intake")
         .onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-      topBumpDirectionalintakeSOTMAuto
+    topBumpDirectionalintakeSOTMAuto
         .atTime("Intake1")
         .onTrue(
          m_superstructure
