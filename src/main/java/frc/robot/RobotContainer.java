@@ -212,6 +212,7 @@ public class RobotContainer {
     autoChooser.addRoutine("Depot Delayed", m_autoRoutines::depotBumpSOTM);
     autoChooser.addRoutine("Preload", m_autoRoutines::preloadAuto);
     autoChooser.addRoutine("Depot SOTM Directional", m_autoRoutines::topBumpDirectionalIntakeSOTM);
+    autoChooser.addRoutine("SOTMthenclosetobump", m_autoRoutines::closetobump);
     autoChooser.addRoutine(
         "OutpostDirectionalWait", m_autoRoutines::bottomBumpDirectionalIntakeWait);
     SmartDashboard.putData("auto chooser", autoChooser);

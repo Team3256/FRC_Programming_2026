@@ -90,6 +90,31 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine closetobump() {
+    final AutoRoutine routine = m_factory.newRoutine("tweaked");
+    final AutoTrajectory topBumpDirectionalintakeSOTMAuto = routine.trajectory("tweaked");
+    routine
+        .active()
+        .onTrue(
+            topBumpDirectionalintakeSOTMAuto
+                .resetOdometry()
+                .andThen(topBumpDirectionalintakeSOTMAuto.cmd()));
+
+    topBumpDirectionalintakeSOTMAuto
+        .atTime("Intake")
+        .onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    topBumpDirectionalintakeSOTMAuto
+        .atTime("Jitter")
+        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
+
+    topBumpDirectionalintakeSOTMAuto
+        .atTime("Shoot")
+        .onTrue(m_superstructure.setState(StructureState.SHOOT));
+
+    return routine;
+  }
+
   public AutoRoutine depotBumpSOTM() {
     final AutoRoutine routine = m_factory.newRoutine("DepotBumpSOTM");
     final AutoTrajectory topBumpDirectionalIntakeAuto = routine.trajectory("DepotBumpSOTM");
