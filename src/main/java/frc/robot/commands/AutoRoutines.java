@@ -215,6 +215,32 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine doubleLoop() {
+    final AutoRoutine routine = m_factory.newRoutine("doubleLoop");
+    final AutoTrajectory doubleLoop = routine.trajectory("DoubleLoop");
+
+    routine.active().onTrue(doubleLoop.resetOdometry().andThen(doubleLoop.cmd()));
+
+    doubleLoop.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    doubleLoop
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    doubleLoop
+        .atTime("Shoot")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.SHOOT)
+                .andThen(Commands.waitSeconds(.5))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
   public Pose2d getInitialPose(String trajectoryName) {
     var trajectory = Choreo.loadTrajectory(trajectoryName);
     Pose2d initialPose = trajectory.get().getInitialPose(false).get();

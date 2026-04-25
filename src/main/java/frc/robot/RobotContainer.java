@@ -215,6 +215,7 @@ public class RobotContainer {
     autoChooser.addRoutine("SOTMthenclosetobump", m_autoRoutines::closetobump);
     autoChooser.addRoutine(
         "OutpostDirectionalWait", m_autoRoutines::bottomBumpDirectionalIntakeWait);
+    autoChooser.addRoutine("DoubleLoop", m_autoRoutines::doubleLoop);
     SmartDashboard.putData("auto chooser", autoChooser);
     RobotModeTriggers.autonomous().onTrue(autoChooser.selectedCommandScheduler());
   }
