@@ -285,9 +285,8 @@ public class AutoRoutines {
       } else {
         var poses = trajectory.get().getPoses();
 
-        for (int i = 0; i < poses.length; i += 2) {
+        for (int i = 0; i < poses.length; i += 3) {
           poseList.add(poses[i]);
-          System.out.println(poses[i]);
         }
       }
 
@@ -295,6 +294,7 @@ public class AutoRoutines {
 
     }
     field2d.setRobotPose(poseList.get(0));
+    System.out.println(poseList.size());
 
     if (poseList.size() == 1) {
       return;
