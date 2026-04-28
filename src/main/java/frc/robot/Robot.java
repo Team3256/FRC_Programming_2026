@@ -54,6 +54,7 @@ public class Robot extends LoggedRobot {
     if (Constants.FeatureFlags.kAdvKitEnabled) {
       configureAdvantageKit();
     }
+
     try (MitoCANdria mito = new MitoCANdria(0)) {
 
       mito.setChannelEnabled(MitoCANdriaInterface.MITOCANDRIA_CHANNEL_USB2, true);

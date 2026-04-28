@@ -11,6 +11,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 
 import choreo.auto.AutoChooser;
+import choreo.auto.AutoFactory;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -144,9 +145,14 @@ public class RobotContainer {
 
   public RobotContainer() {
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
+
+    AutoFactory autoFactory =
+
+            drivetrain.createAutoFactory(drivetrain::trajLogger);
+    CommandScheduler.getInstance().schedule(autoFactory.warmupCmd());
     m_autoRoutines =
         new AutoRoutines(
-            drivetrain.createAutoFactory(drivetrain::trajLogger), drivetrain, superstructure);
+            autoFactory, drivetrain, superstructure);
 
     configureSwerve();
     configureChoreoAutoChooser();
