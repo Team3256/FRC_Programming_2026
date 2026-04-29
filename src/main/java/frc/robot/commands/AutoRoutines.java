@@ -13,9 +13,6 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -24,7 +21,6 @@ import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AutoRoutines {
@@ -84,7 +80,28 @@ public class AutoRoutines {
         .onTrue(m_superstructure.setState(StructureState.IDLE))
         .onTrue(m_superstructure.setState(StructureState.REV));
 
-    p2.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.SHOOT));
+    p2.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
+
+    return routine;
+  }
+
+  public AutoRoutine getdisrupteddeep() {
+    final AutoRoutine routine = m_factory.newRoutine("getdisruptedp1");
+
+    final AutoTrajectory p1 = routine.trajectory("getdisruptedp1");
+    final AutoTrajectory p2 = routine.trajectory("outpostdeep");
+
+    routine.active().onTrue(p1.resetOdometry().andThen(p1.cmd()));
+
+    p1.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    p1.doneDelayed(1).onTrue(p2.cmd());
+
+    p2.atTime("StopIntake")
+        .onTrue(m_superstructure.setState(StructureState.IDLE))
+        .onTrue(m_superstructure.setState(StructureState.REV));
+
+    p2.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
 
     return routine;
   }
@@ -281,7 +298,7 @@ public class AutoRoutines {
       var trajectory = Choreo.loadTrajectory(t);
 
       if (trajectory.isEmpty()) {
-        poseList.add(new Pose2d(0,0, Rotation2d.kZero));
+        poseList.add(new Pose2d(0, 0, Rotation2d.kZero));
       } else {
         var poses = trajectory.get().getPoses();
 
@@ -289,9 +306,6 @@ public class AutoRoutines {
           poseList.add(poses[i]);
         }
       }
-
-
-
     }
     field2d.setRobotPose(poseList.get(0));
     System.out.println(poseList.size());
@@ -300,9 +314,7 @@ public class AutoRoutines {
       return;
     }
 
-    field2d
-        .getObject("traj")
-            .setPoses(poseList);
+    field2d.getObject("traj").setPoses(poseList);
   }
 
   private boolean isRedAlliance() {
