@@ -230,7 +230,7 @@ public class RobotContainer {
                 List.of("OutpostBumpDirectionalIntake")),
             new AutoConfig("DoubleLoop", m_autoRoutines::doubleLoop, List.of("DoubleLoop")),
             new AutoConfig(
-                "OutpostDelayDeep", m_autoRoutines::getdisrupteddeep, List.of("OutpostDelayDeep")),
+                "OutpostDisruptDeep", m_autoRoutines::getdisrupteddeep, List.of("getdisrupted1","outpostdeep")),
             new AutoConfig(
                 "OutpostDisrupt",
                 m_autoRoutines::getdisrupted,
