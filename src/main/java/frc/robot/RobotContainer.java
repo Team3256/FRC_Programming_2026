@@ -232,7 +232,7 @@ public class RobotContainer {
             new AutoConfig(
                 "OutpostDisruptDeep",
                 m_autoRoutines::getdisrupteddeep,
-                List.of("getdisrupted1", "outpostdeep")),
+                List.of("getdisruptedp1", "outpostdeep")),
             new AutoConfig(
                 "OutpostDelayDeep",
                 m_autoRoutines::bottomBumpDirectionalIntakeWaitDEEP,

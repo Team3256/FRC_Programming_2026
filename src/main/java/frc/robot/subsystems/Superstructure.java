@@ -83,7 +83,7 @@ public class Superstructure {
   private final Translation2d topCorner = new Translation2d(1.5, 6.8);
   private final Translation2d bottomCorner = new Translation2d(1.5, 1.5);
 
-  private double velMultiplier = 1.06;
+  private double velMultiplier = 1.04;
 
   private Pose2d target =
       new Pose2d(FieldConstants.Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero);
