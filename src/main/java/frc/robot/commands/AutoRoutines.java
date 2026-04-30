@@ -101,7 +101,6 @@ public class AutoRoutines {
 
     p2.atTime("Shoot").onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
 
-
     return routine;
   }
 
@@ -297,10 +296,10 @@ public class AutoRoutines {
 
     routine.active().onTrue(doubleLoop.resetOdometry().andThen(doubleLoop.cmd()));
 
-    
     doubleLoop.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-    doubleLoop.atTime("StopIntake")
+    doubleLoop
+        .atTime("StopIntake")
         .onTrue(m_superstructure.setState(StructureState.IDLE))
         .onTrue(m_superstructure.setState(StructureState.REV));
 
@@ -311,7 +310,7 @@ public class AutoRoutines {
                 .setState(StructureState.SHOOT)
                 .andThen(Commands.waitSeconds(.5))
                 .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
-    
+
     return routine;
   }
 

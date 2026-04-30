@@ -12,6 +12,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import java.util.List;
 
 public class VisionConstants {
   // AprilTag layout
@@ -70,4 +71,23 @@ public class VisionConstants {
         1,
         1 // Camera 3
       };
+
+  public static List<Short> nonHub =
+      List.of(
+          (short) 1,
+          (short) 6,
+          (short) 7,
+          (short) 12,
+          (short) 13,
+          (short) 14,
+          (short) 15,
+          (short) 16,
+          (short) 17,
+          (short) 22,
+          (short) 23,
+          (short) 28,
+          (short) 29,
+          (short) 30,
+          (short) 31,
+          (short) 32);
 }
