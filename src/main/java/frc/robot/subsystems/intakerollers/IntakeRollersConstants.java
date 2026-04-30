@@ -28,7 +28,7 @@ public class IntakeRollersConstants {
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Coast)
-                  .withInverted(InvertedValue.CounterClockwise_Positive))
+                  .withInverted(InvertedValue.Clockwise_Positive))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
