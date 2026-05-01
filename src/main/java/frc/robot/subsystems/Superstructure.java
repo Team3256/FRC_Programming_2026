@@ -203,7 +203,10 @@ public class Superstructure {
                 .or(prevStateTriggers.get(StructureState.SHOOT_AND_INTAKE)))
         .onTrue(this.setState(StructureState.JITTER_AND_SHOOT));
 
-    stateTriggers.get(StructureState.UNJAM).onTrue(feeder.unjam());
+    stateTriggers
+        .get(StructureState.UNJAM)
+        .whileTrue(intakeRollers.unjam())
+        .whileTrue(indexer.unjam2());
 
     stateTriggers
         .get(StructureState.IDLE)

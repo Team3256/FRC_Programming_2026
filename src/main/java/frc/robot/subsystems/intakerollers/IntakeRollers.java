@@ -52,4 +52,8 @@ public class IntakeRollers extends DisableSubsystem {
   public Command off() {
     return this.runOnce(intakeRollersIO::off);
   }
+
+  public Command unjam() {
+    return setVoltage(-4.0);
+  }
 }
