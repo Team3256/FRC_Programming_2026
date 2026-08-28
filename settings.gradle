@@ -26,7 +26,7 @@ pluginManagement {
     }
 }
 
-includeBuild("../Choreo/choreolib") {
+includeBuild("choreolib") {
     dependencySubstitution {
         substitute module("choreo:ChoreoLib-java") using project(":")
     }
