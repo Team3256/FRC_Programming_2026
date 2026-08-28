@@ -9,6 +9,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Inches;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 
 /**
@@ -20,6 +21,20 @@ import edu.wpi.first.units.measure.Distance;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class AutoConstants {
+    /** Tracking error that pauses Choreo trajectory progress. */
+    public static final double kRecoveryTranslationErrorThresholdMeters = 0.5;
+
+    /** Heading error that pauses Choreo trajectory progress. */
+    public static final double kRecoveryHeadingErrorThresholdRadians = Units.degreesToRadians(30.0);
+
+    /** Translation error required before Choreo trajectory progress resumes. */
+    public static final double kRecoveryTranslationToleranceMeters = 0.1;
+
+    /** Heading error required before Choreo trajectory progress resumes. */
+    public static final double kRecoveryHeadingToleranceRadians = Units.degreesToRadians(5.0);
+  }
+
   public static class ControllerConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
