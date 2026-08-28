@@ -108,6 +108,10 @@ wpi.sim.addDriverstation()
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
+    // The composite-build dependency exposes ChoreoLib's output file, but Gradle does not infer
+    // the producer task through the zipTree below. Ensure clean builds create the JAR first.
+    dependsOn gradle.includedBuild("choreolib").task(":jar")
+
     from {
         configurations.runtimeClasspath.collect {
             it.isDirectory() ? it : zipTree(it)
