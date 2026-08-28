@@ -26,5 +26,11 @@ pluginManagement {
     }
 }
 
+includeBuild("../Choreo/choreolib") {
+    dependencySubstitution {
+        substitute module("choreo:ChoreoLib-java") using project(":")
+    }
+}
+
 Properties props = System.getProperties();
 props.setProperty("org.gradle.internal.native.headers.unresolved.dependencies.ignore", "true");
