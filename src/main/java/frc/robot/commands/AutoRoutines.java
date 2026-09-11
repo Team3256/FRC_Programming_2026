@@ -134,6 +134,35 @@ public class AutoRoutines {
     return routine;
   }
 
+  public AutoRoutine stealAuto() {
+    final AutoRoutine routine = m_factory.newRoutine("stealAuto");
+    final AutoTrajectory stealAuto = routine.trajectory("steal");
+    final AutoTrajectory stealP2 = routine.trajectory("stealp2");
+
+    routine.active().onTrue(stealAuto.resetOdometry().andThen(stealAuto.cmd()));
+
+    stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    stealAuto.doneDelayed(2).onTrue(stealP2.cmd());
+
+    stealP2
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    stealP2
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
   public AutoRoutine closetobump() {
     final AutoRoutine routine = m_factory.newRoutine("tweaked");
     final AutoTrajectory topBumpDirectionalintakeSOTMAuto = routine.trajectory("tweaked");
