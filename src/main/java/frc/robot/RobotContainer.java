@@ -238,6 +238,10 @@ public class RobotContainer {
                 m_autoRoutines::bottomBumpDirectionalIntakeWaitDEEP,
                 List.of("OutpostBumpDirectionalIntakeDeep")),
             new AutoConfig(
+                "OutpostSteal",
+                m_autoRoutines::outpostStealAuto,
+                List.of("Outpoststeal", "Outpoststealp2")),
+            new AutoConfig(
                 "OutpostDisrupt",
                 m_autoRoutines::getdisrupted,
                 List.of("getdisruptedp1", "getdisruptedp2")));
