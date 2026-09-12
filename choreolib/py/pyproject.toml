@@ -1,0 +1,30 @@
+[project]
+name = "sleipnirgroup-choreolib"
+description = "Robot-side library for parsing and following Choreo paths"
+dynamic = ["version"]
+readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE.txt"]
+requires-python = ">=3.9"
+dependencies = ["numpy", "wpilib>=2025.1.1,<2027"]
+
+  [[project.authors]]
+  name = "Choreo Development Team"
+
+  [project.urls]
+  Documentation = "https://choreo.autos/"
+
+[build-system]
+requires = [
+  "setuptools>=61.0",
+  "setuptools-git-versioning",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools-git-versioning]
+enabled = true
+version_callback = "_choreo_version:get_version"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["choreo/test"]
