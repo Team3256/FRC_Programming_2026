@@ -217,14 +217,6 @@ public class RobotContainer {
                 m_autoRoutines::bottomBumpDirectionalIntake,
                 List.of("OutpostBumpDirectionalIntake")),
             new AutoConfig(
-                "Depot Delayed", m_autoRoutines::depotBumpSOTM, List.of("DepotBumpSOTM")),
-            new AutoConfig("Preload", m_autoRoutines::preloadAuto, List.of("")),
-            new AutoConfig(
-                "Depot SOTM Directional",
-                m_autoRoutines::topBumpDirectionalIntakeSOTM,
-                List.of("DepotBumpDirectionalIntakeSOTM")),
-            new AutoConfig("SOTMthenclosetobump", m_autoRoutines::closetobump, List.of("tweaked")),
-            new AutoConfig(
                 "OutpostDirectionalWait",
                 m_autoRoutines::bottomBumpDirectionalIntakeWait,
                 List.of("OutpostBumpDirectionalIntake")),

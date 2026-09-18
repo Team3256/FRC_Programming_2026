@@ -104,36 +104,6 @@ public class AutoRoutines {
     return routine;
   }
 
-  public AutoRoutine topBumpDirectionalIntakeSOTM() {
-    final AutoRoutine routine = m_factory.newRoutine("TopBumpDirectionalIntakeSOTM");
-    final AutoTrajectory topBumpDirectionalintakeSOTMAuto =
-        routine.trajectory("DepotBumpDirectionalIntakeSOTM");
-    routine
-        .active()
-        .onTrue(
-            topBumpDirectionalintakeSOTMAuto
-                .resetOdometry()
-                .andThen(topBumpDirectionalintakeSOTMAuto.cmd()));
-
-    topBumpDirectionalintakeSOTMAuto
-        .atTime("Intake")
-        .onTrue(m_superstructure.setState(StructureState.INTAKE));
-
-    topBumpDirectionalintakeSOTMAuto
-        .atTime("Jitter")
-        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
-
-    topBumpDirectionalintakeSOTMAuto
-        .atTime("Shoot")
-        .onTrue(m_superstructure.setState(StructureState.SHOOT));
-
-    topBumpDirectionalintakeSOTMAuto
-        .atTime("StopShooting")
-        .onTrue(m_superstructure.setState(StructureState.IDLE));
-
-    return routine;
-  }
-
   public AutoRoutine stealAuto() {
     final AutoRoutine routine = m_factory.newRoutine("stealAuto");
     final AutoTrajectory stealAuto = routine.trajectory("steal");
@@ -188,64 +158,6 @@ public class AutoRoutines {
                 .andThen(m_superstructure.setState(StructureState.SHOOT))
                 .andThen(Commands.waitSeconds(1))
                 .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
-
-    return routine;
-  }
-
-  public AutoRoutine closetobump() {
-    final AutoRoutine routine = m_factory.newRoutine("tweaked");
-    final AutoTrajectory topBumpDirectionalintakeSOTMAuto = routine.trajectory("tweaked");
-    routine
-        .active()
-        .onTrue(
-            topBumpDirectionalintakeSOTMAuto
-                .resetOdometry()
-                .andThen(topBumpDirectionalintakeSOTMAuto.cmd()));
-
-    topBumpDirectionalintakeSOTMAuto
-        .atTime("Intake")
-        .onTrue(m_superstructure.setState(StructureState.INTAKE));
-
-    topBumpDirectionalintakeSOTMAuto
-        .atTime("Intake1")
-        .onTrue(m_superstructure.setState(StructureState.SHOOT_AND_INTAKE));
-
-    topBumpDirectionalintakeSOTMAuto
-        .atTime("Jitter")
-        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
-
-    topBumpDirectionalintakeSOTMAuto
-        .atTime("Shoot")
-        .onTrue(m_superstructure.setState(StructureState.SHOOT));
-
-    return routine;
-  }
-
-  public AutoRoutine depotBumpSOTM() {
-    final AutoRoutine routine = m_factory.newRoutine("DepotBumpSOTM");
-    final AutoTrajectory topBumpDirectionalIntakeAuto = routine.trajectory("DepotBumpSOTM");
-    routine
-        .active()
-        .onTrue(
-            topBumpDirectionalIntakeAuto
-                .resetOdometry()
-                .andThen(m_superstructure.setState(StructureState.INTAKE))
-                .andThen(topBumpDirectionalIntakeAuto.cmd()));
-
-    topBumpDirectionalIntakeAuto
-        .atTime("Intake")
-        .onTrue(m_superstructure.setState(StructureState.INTAKE));
-
-    topBumpDirectionalIntakeAuto
-        .atTime("StopShooting")
-        .onTrue(m_superstructure.setState(StructureState.IDLE));
-
-    topBumpDirectionalIntakeAuto
-        .atTime("Shoot2")
-        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
-    topBumpDirectionalIntakeAuto
-        .atTime("Shoot1")
-        .onTrue(m_superstructure.setState(StructureState.SHOOT));
 
     return routine;
   }
