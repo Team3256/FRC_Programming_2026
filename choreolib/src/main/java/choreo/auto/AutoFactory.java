@@ -13,6 +13,7 @@ import choreo.util.ChoreoAllianceFlipUtil;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -98,6 +99,7 @@ public class AutoFactory {
   private final TrajectoryLogger<? extends TrajectorySample<?>> trajectoryLogger;
   private final AutoRoutine voidRoutine;
   private SwerveTrajectoryRecoveryConfig swerveTrajectoryRecoveryConfig;
+  private Supplier<ChassisSpeeds> fieldSpeedsSupplier;
 
   /**
    * Create a factory that can be used to create {@link AutoRoutine} and {@link AutoTrajectory}.
@@ -213,9 +215,9 @@ public class AutoFactory {
    * Enables automatic tracking-error recovery for all swerve trajectories created by this factory.
    *
    * <p>When tracking error exceeds either configured threshold, trajectory time and its time-based
-   * triggers pause. The controller receives a stationary sample at the paused trajectory pose until
-   * the robot is within both resume tolerances. Existing behavior is unchanged unless this method
-   * is called.
+   * triggers pause. The controller is steered back onto the trajectory at the speed the trajectory
+   * expects there, and time resumes from the rejoin point once the robot is within the resume
+   * tolerances. Existing behavior is unchanged unless this method is called.
    *
    * <p>This method should be called before creating any routines or trajectories.
    *
@@ -226,6 +228,24 @@ public class AutoFactory {
     this.swerveTrajectoryRecoveryConfig =
         requireNonNullParam(config, "config", "withSwerveTrajectoryRecovery");
     return this;
+  }
+
+  /**
+   * Enables automatic tracking-error recovery for all swerve trajectories created by this factory,
+   * with a chassis speeds supplier so resuming can also require the robot's velocity to match the
+   * trajectory's at the rejoin point.
+   *
+   * @param config recovery thresholds and resume tolerances
+   * @param fieldSpeedsSupplier supplier of the robot's current field-relative chassis speeds
+   * @return this factory
+   * @see #withSwerveTrajectoryRecovery(SwerveTrajectoryRecoveryConfig)
+   */
+  public AutoFactory withSwerveTrajectoryRecovery(
+      SwerveTrajectoryRecoveryConfig config, Supplier<ChassisSpeeds> fieldSpeedsSupplier) {
+    this.fieldSpeedsSupplier =
+        requireNonNullParam(
+            fieldSpeedsSupplier, "fieldSpeedsSupplier", "withSwerveTrajectoryRecovery");
+    return withSwerveTrajectoryRecovery(config);
   }
 
   /**
@@ -302,7 +322,8 @@ public class AutoFactory {
         driveSubsystem,
         routine,
         useBindings ? bindings : new AutoBindings(),
-        swerveTrajectoryRecoveryConfig);
+        swerveTrajectoryRecoveryConfig,
+        fieldSpeedsSupplier);
   }
 
   /**

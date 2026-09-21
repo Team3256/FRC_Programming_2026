@@ -18,6 +18,7 @@ import choreo.util.ChoreoAllianceFlipUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.BooleanSupplier;
@@ -71,6 +73,7 @@ public class AutoTrajectory {
   private final AutoRoutine routine;
   private final AutoBindings bindings;
   private final SwerveTrajectoryRecoveryConfig swerveTrajectoryRecoveryConfig;
+  private final Supplier<ChassisSpeeds> fieldSpeedsSupplier;
 
   /**
    * A way to create slightly less triggers for many actions. Not static as to not leak triggers
@@ -87,13 +90,16 @@ public class AutoTrajectory {
   /** Whether trajectory progress is paused to recover from excessive tracking error. */
   private boolean isRecovering = false;
 
-  /** Raw timer value when the current recovery started. */
-  private double recoveryStartTime = 0.0;
+  /** Raw timer value when tracking error first exceeded a start threshold, or NaN if it has not. */
+  private double errorExceededSince = Double.NaN;
 
-  /** Trajectory time held during the current recovery. */
+  /**
+   * Trajectory time held during the current recovery. This is the time of the point on the
+   * trajectory the robot is being steered back onto, and only ever advances while recovering.
+   */
   private double recoveryHoldTime = 0.0;
 
-  /** Total raw time spent recovering before the current recovery. */
+  /** Raw timer offset so that {@link #getTrajectoryTime()} lines up with the rejoin point. */
   private double accumulatedRecoveryTime = 0.0;
 
   /** Whether to suppress warnings for this trajectory. */
@@ -112,6 +118,8 @@ public class AutoTrajectory {
    * @param routine Event loop.
    * @param bindings {@link AutoFactory}
    * @param swerveTrajectoryRecoveryConfig optional swerve trajectory recovery configuration
+   * @param fieldSpeedsSupplier optional supplier of the robot's field-relative chassis speeds, used
+   *     for the recovery resume velocity check
    */
   <SampleType extends TrajectorySample<SampleType>> AutoTrajectory(
       String name,
@@ -124,7 +132,8 @@ public class AutoTrajectory {
       Subsystem driveSubsystem,
       AutoRoutine routine,
       AutoBindings bindings,
-      SwerveTrajectoryRecoveryConfig swerveTrajectoryRecoveryConfig) {
+      SwerveTrajectoryRecoveryConfig swerveTrajectoryRecoveryConfig,
+      Supplier<ChassisSpeeds> fieldSpeedsSupplier) {
     this.name = name;
     this.trajectory = trajectory;
     this.poseSupplier = poseSupplier;
@@ -137,6 +146,7 @@ public class AutoTrajectory {
     this.trajectoryLogger = trajectoryLogger;
     this.bindings = bindings;
     this.swerveTrajectoryRecoveryConfig = swerveTrajectoryRecoveryConfig;
+    this.fieldSpeedsSupplier = fieldSpeedsSupplier;
 
     bindings.getBindings().forEach((key, value) -> active().and(atTime(key)).onTrue(value));
   }
@@ -165,7 +175,7 @@ public class AutoTrajectory {
 
   private void cmdInitialize() {
     isRecovering = false;
-    recoveryStartTime = 0.0;
+    errorExceededSince = Double.NaN;
     recoveryHoldTime = 0.0;
     accumulatedRecoveryTime = 0.0;
     activeTimer.start();
@@ -191,8 +201,7 @@ public class AutoTrajectory {
     var sample = sampleOpt.get();
     if (sample instanceof SwerveSample swerveSample) {
       var swerveController = (Consumer<SwerveSample>) this.controller;
-      updateSwerveRecovery(swerveSample, sampleTime);
-      swerveController.accept(isRecovering ? recoverySample(swerveSample) : swerveSample);
+      swerveController.accept(updateSwerveRecovery(swerveSample, sampleTime));
     } else if (sample instanceof DifferentialSample differentialSample) {
       var differentialController = (Consumer<DifferentialSample>) this.controller;
       differentialController.accept(differentialSample);
@@ -239,26 +248,70 @@ public class AutoTrajectory {
     return activeTimer.get() - accumulatedRecoveryTime;
   }
 
-  private void updateSwerveRecovery(SwerveSample sample, double sampleTime) {
+  /**
+   * Updates the recovery state machine and returns the sample the controller should track this
+   * cycle.
+   *
+   * <p>Outside of recovery this is simply {@code sample}. While recovering, trajectory time is
+   * paused and the returned sample is the point on the trajectory closest to the robot, searched
+   * forward from the paused time. Its velocity feedforward is left intact so the controller drives
+   * along the path at the speed the trajectory expects there instead of decelerating to a stop at a
+   * fixed correction pose; the pose feedback only has to close the remaining cross-track error.
+   * Once the robot is within the resume tolerances of that rejoin point, trajectory time resumes
+   * from it, so the commanded velocity is continuous across the resume.
+   *
+   * @param sample the sample at the current trajectory time
+   * @param sampleTime the current trajectory time
+   * @return the sample to hand to the controller
+   */
+  private SwerveSample updateSwerveRecovery(SwerveSample sample, double sampleTime) {
     if (swerveTrajectoryRecoveryConfig == null) {
-      return;
+      return sample;
     }
 
     Pose2d currentPose = poseSupplier.get();
-    Pose2d targetPose = sample.getPose();
-    if (isRecovering) {
-      if (swerveTrajectoryRecoveryConfig.shouldResume(currentPose, targetPose)) {
-        accumulatedRecoveryTime += activeTimer.get() - recoveryStartTime;
-        isRecovering = false;
+    if (!isRecovering) {
+      if (!swerveTrajectoryRecoveryConfig.shouldStartRecovery(currentPose, sample.getPose())) {
+        errorExceededSince = Double.NaN;
+        return sample;
       }
-    } else if (swerveTrajectoryRecoveryConfig.shouldStartRecovery(currentPose, targetPose)) {
+      // Debounce so a single bad pose estimate does not pause the trajectory.
+      double now = activeTimer.get();
+      if (Double.isNaN(errorExceededSince)) {
+        errorExceededSince = now;
+      }
+      if (now - errorExceededSince < swerveTrajectoryRecoveryConfig.startDebounceSeconds()) {
+        return sample;
+      }
+      errorExceededSince = Double.NaN;
       recoveryHoldTime = sampleTime;
-      recoveryStartTime = activeTimer.get();
       isRecovering = true;
     }
+
+    SwerveSample rejoinSample = findRejoinSample(currentPose, sample);
+    if (swerveTrajectoryRecoveryConfig.shouldResume(currentPose, rejoinSample.getPose())
+        && isVelocityWithinResumeTolerance(rejoinSample)) {
+      // Resume so that getTrajectoryTime() continues from the rejoin point rather than the time
+      // recovery started, keeping the commanded velocity continuous.
+      accumulatedRecoveryTime = activeTimer.get() - recoveryHoldTime;
+      isRecovering = false;
+    }
+    if (recoveryHoldTime >= trajectory.getTotalTime()) {
+      // There is no further setpoint to carry speed into, so hold the final pose at rest.
+      return stoppedSample(rejoinSample);
+    }
+    return rejoinSample;
   }
 
-  private static SwerveSample recoverySample(SwerveSample sample) {
+  private boolean isVelocityWithinResumeTolerance(SwerveSample rejoinSample) {
+    if (fieldSpeedsSupplier == null) {
+      return true;
+    }
+    return swerveTrajectoryRecoveryConfig.isVelocityWithinTolerance(
+        fieldSpeedsSupplier.get(), rejoinSample.getChassisSpeeds());
+  }
+
+  private static SwerveSample stoppedSample(SwerveSample sample) {
     return new SwerveSample(
         sample.t,
         sample.x,
@@ -272,6 +325,62 @@ public class AutoTrajectory {
         0.0,
         new double[4],
         new double[4]);
+  }
+
+  /**
+   * Finds the sample on the trajectory closest to the robot, searching forward from the current
+   * hold time up to the configured rejoin window, and advances the hold time to it.
+   *
+   * @param currentPose the robot's current pose
+   * @param holdSample the sample at the current hold time, used as the fallback
+   * @return the sample the robot should rejoin the trajectory at
+   */
+  @SuppressWarnings("unchecked")
+  private SwerveSample findRejoinSample(Pose2d currentPose, SwerveSample holdSample) {
+    double windowEnd =
+        Math.min(
+            recoveryHoldTime + swerveTrajectoryRecoveryConfig.rejoinSearchWindowSeconds(),
+            trajectory.getTotalTime());
+    boolean flip = allianceCtx.doFlip();
+
+    double bestTime = recoveryHoldTime;
+    SwerveSample bestSample = holdSample;
+    double bestDistance =
+        SwerveTrajectoryRecoveryConfig.translationError(currentPose, holdSample.getPose());
+
+    for (var candidate : (List<SwerveSample>) trajectory.samples()) {
+      double t = candidate.getTimestamp();
+      if (t <= recoveryHoldTime) {
+        continue;
+      }
+      if (t > windowEnd) {
+        break;
+      }
+      SwerveSample flipped = flip ? candidate.flipped() : candidate;
+      double distance =
+          SwerveTrajectoryRecoveryConfig.translationError(currentPose, flipped.getPose());
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestTime = t;
+        bestSample = flipped;
+      }
+    }
+
+    // Also consider the end of the window itself, which may fall between samples.
+    if (windowEnd > recoveryHoldTime) {
+      var endSample = (Optional<SwerveSample>) trajectory.sampleAt(windowEnd, flip);
+      if (endSample.isPresent()) {
+        double distance =
+            SwerveTrajectoryRecoveryConfig.translationError(currentPose, endSample.get().getPose());
+        if (distance < bestDistance) {
+          bestTime = windowEnd;
+          bestSample = endSample.get();
+        }
+      }
+    }
+
+    recoveryHoldTime = bestTime;
+    return bestSample;
   }
 
   /** Suppresses warnings for this trajectory. */
@@ -367,7 +476,8 @@ public class AutoTrajectory {
         driveSubsystem,
         routine,
         bindings,
-        swerveTrajectoryRecoveryConfig);
+        swerveTrajectoryRecoveryConfig,
+        fieldSpeedsSupplier);
   }
 
   /**
@@ -391,7 +501,8 @@ public class AutoTrajectory {
         driveSubsystem,
         routine,
         bindings,
-        swerveTrajectoryRecoveryConfig);
+        swerveTrajectoryRecoveryConfig,
+        fieldSpeedsSupplier);
   }
 
   /**
@@ -415,7 +526,8 @@ public class AutoTrajectory {
         driveSubsystem,
         routine,
         bindings,
-        swerveTrajectoryRecoveryConfig);
+        swerveTrajectoryRecoveryConfig,
+        fieldSpeedsSupplier);
   }
 
   /**
