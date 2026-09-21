@@ -33,6 +33,18 @@ public final class Constants {
 
     /** Heading error required before Choreo trajectory progress resumes. */
     public static final double kRecoveryHeadingToleranceRadians = Units.degreesToRadians(5.0);
+
+    /**
+     * How long tracking error must stay over a threshold before Choreo pauses the trajectory, so a
+     * single bad vision update does not trigger recovery (3 loops at 20 ms).
+     */
+    public static final double kRecoveryStartDebounceSeconds = 0.06;
+
+    /**
+     * Field-relative velocity error required before Choreo trajectory progress resumes, so the
+     * trajectory does not resume while the robot is crossing the path at the wrong speed.
+     */
+    public static final double kRecoveryResumeVelocityToleranceMetersPerSecond = 0.5;
   }
 
   public static class ControllerConstants {

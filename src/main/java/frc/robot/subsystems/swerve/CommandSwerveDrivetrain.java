@@ -10,6 +10,8 @@ package frc.robot.subsystems.swerve;
 import static edu.wpi.first.units.Units.*;
 import static frc.robot.Constants.AutoConstants.kRecoveryHeadingErrorThresholdRadians;
 import static frc.robot.Constants.AutoConstants.kRecoveryHeadingToleranceRadians;
+import static frc.robot.Constants.AutoConstants.kRecoveryResumeVelocityToleranceMetersPerSecond;
+import static frc.robot.Constants.AutoConstants.kRecoveryStartDebounceSeconds;
 import static frc.robot.Constants.AutoConstants.kRecoveryTranslationErrorThresholdMeters;
 import static frc.robot.Constants.AutoConstants.kRecoveryTranslationToleranceMeters;
 
@@ -202,10 +204,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             () -> this.getState().Pose, this::resetPose, this::followPath, true, this, trajLogger)
         .withSwerveTrajectoryRecovery(
             new SwerveTrajectoryRecoveryConfig(
-                kRecoveryTranslationErrorThresholdMeters,
-                kRecoveryHeadingErrorThresholdRadians,
-                kRecoveryTranslationToleranceMeters,
-                kRecoveryHeadingToleranceRadians));
+                    kRecoveryTranslationErrorThresholdMeters,
+                    kRecoveryHeadingErrorThresholdRadians,
+                    kRecoveryTranslationToleranceMeters,
+                    kRecoveryHeadingToleranceRadians)
+                .withStartDebounce(kRecoveryStartDebounceSeconds)
+                .withResumeVelocityTolerance(kRecoveryResumeVelocityToleranceMetersPerSecond),
+            this::getFieldRelativeSpeeds);
   }
 
   /**
