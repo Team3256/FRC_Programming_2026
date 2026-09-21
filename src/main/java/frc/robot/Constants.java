@@ -23,7 +23,7 @@ import edu.wpi.first.units.measure.Distance;
 public final class Constants {
   public static class AutoConstants {
     /** Tracking error that pauses Choreo trajectory progress. */
-    public static final double kRecoveryTranslationErrorThresholdMeters = 0.5;
+    public static final double kRecoveryTranslationErrorThresholdMeters = 1;
 
     /** Heading error that pauses Choreo trajectory progress. */
     public static final double kRecoveryHeadingErrorThresholdRadians = Units.degreesToRadians(30.0);

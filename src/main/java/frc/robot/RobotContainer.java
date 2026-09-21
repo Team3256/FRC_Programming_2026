@@ -213,6 +213,10 @@ public class RobotContainer {
                 m_autoRoutines::topBumpDirectionalIntake,
                 List.of("DepotBumpDirectionalIntake")),
             new AutoConfig(
+                "DepotStealRIGHT",
+                m_autoRoutines::depotstealautoDOWN,
+                List.of("steal", "stealp2v2")),
+            new AutoConfig(
                 "Bottom Directional Intake",
                 m_autoRoutines::bottomBumpDirectionalIntake,
                 List.of("OutpostBumpDirectionalIntake")),
@@ -220,19 +224,29 @@ public class RobotContainer {
                 "OutpostDirectionalWait",
                 m_autoRoutines::bottomBumpDirectionalIntakeWait,
                 List.of("OutpostBumpDirectionalIntake")),
+            new AutoConfig(
+                "CenterDepotOnly", m_autoRoutines::centerdepotOnly, List.of("CenterDepotOnly")),
             new AutoConfig("DoubleLoop", m_autoRoutines::doubleLoop, List.of("DoubleLoop")),
             new AutoConfig(
                 "OutpostDisruptDeep",
                 m_autoRoutines::getdisrupteddeep,
                 List.of("getdisruptedp1", "outpostdeep")),
+            new AutoConfig("Depotfeed", m_autoRoutines::feed, List.of("feed")),
+            new AutoConfig(
+                "OutpostStealRIGHT",
+                m_autoRoutines::outpostStealAutoDOWN,
+                List.of("Outpoststeal", "Outpoststealp2v2")),
             new AutoConfig(
                 "OutpostDelayDeep",
                 m_autoRoutines::bottomBumpDirectionalIntakeWaitDEEP,
                 List.of("OutpostBumpDirectionalIntakeDeep")),
             new AutoConfig(
-                "OutpostSteal",
+                "OutpostStealLEFT",
                 m_autoRoutines::outpostStealAuto,
                 List.of("Outpoststeal", "Outpoststealp2")),
+            new AutoConfig(
+                "DepotSteal", m_autoRoutines::depotstealAutoUP, List.of("steal", "stealp2")),
+            new AutoConfig("BumpStop", m_autoRoutines::stop, List.of("stop")),
             new AutoConfig(
                 "OutpostDisrupt",
                 m_autoRoutines::getdisrupted,

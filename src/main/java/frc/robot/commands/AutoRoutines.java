@@ -16,14 +16,21 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.StructureState;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class AutoRoutines {
+
+  private static final String waitkey = "Auto/WaitKey";
+
+  private static final double waitkeydefault = 0.5;
 
   private final AutoFactory m_factory;
 
@@ -36,6 +43,13 @@ public class AutoRoutines {
     m_factory = factory;
     m_drivetrain = drivetrain; // subsystems
     m_superstructure = superstructure;
+
+    SmartDashboard.setDefaultNumber(waitkey, waitkeydefault);
+  }
+
+  private Command tunableWait(String key, double defaultSeconds) {
+    return Commands.defer(
+        () -> Commands.waitSeconds(SmartDashboard.getNumber(key, defaultSeconds)), Set.of());
   }
 
   public AutoRoutine topBumpDirectionalIntake() {
@@ -60,6 +74,73 @@ public class AutoRoutines {
     topBumpDirectionalIntakeAuto
         .atTime("Shoot")
         .onTrue(m_superstructure.setState(StructureState.SHOOT));
+
+    return routine;
+  }
+
+  public AutoRoutine feed() {
+    final AutoRoutine routine = m_factory.newRoutine("feed");
+    final AutoTrajectory topBumpDirectionalIntakeAuto = routine.trajectory("feed");
+    routine
+        .active()
+        .onTrue(
+            topBumpDirectionalIntakeAuto
+                .resetOdometry()
+                .andThen(topBumpDirectionalIntakeAuto.cmd()));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Intake")
+        .onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Jitter")
+        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
+
+    return routine;
+  }
+
+  public AutoRoutine stop() {
+    final AutoRoutine routine = m_factory.newRoutine("stop");
+    final AutoTrajectory topBumpDirectionalIntakeAuto = routine.trajectory("stop");
+    routine
+        .active()
+        .onTrue(
+            topBumpDirectionalIntakeAuto
+                .resetOdometry()
+                .andThen(topBumpDirectionalIntakeAuto.cmd()));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Intake")
+        .onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Jitter")
+        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Shoot")
+        .onTrue(m_superstructure.setState(StructureState.SHOOT));
+
+    return routine;
+  }
+
+  public AutoRoutine centerdepotOnly() {
+    final AutoRoutine routine = m_factory.newRoutine("CenterDepotOnly");
+    final AutoTrajectory topBumpDirectionalIntakeAuto = routine.trajectory("CenterDepotOnly");
+    routine
+        .active()
+        .onTrue(
+            topBumpDirectionalIntakeAuto
+                .resetOdometry()
+                .andThen(topBumpDirectionalIntakeAuto.cmd()));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Intake")
+        .onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    topBumpDirectionalIntakeAuto
+        .atTime("Shoot")
+        .onTrue(m_superstructure.setState(StructureState.JITTER_AND_SHOOT));
 
     return routine;
   }
@@ -104,7 +185,7 @@ public class AutoRoutines {
     return routine;
   }
 
-  public AutoRoutine stealAuto() {
+  public AutoRoutine depotstealAutoUP() {
     final AutoRoutine routine = m_factory.newRoutine("stealAuto");
     final AutoTrajectory stealAuto = routine.trajectory("steal");
     final AutoTrajectory stealP2 = routine.trajectory("stealp2");
@@ -113,7 +194,36 @@ public class AutoRoutines {
 
     stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-    stealAuto.doneDelayed(2).onTrue(stealP2.cmd());
+    stealAuto.done().onTrue(tunableWait(waitkey, waitkeydefault).andThen(stealP2.cmd()));
+
+    stealP2
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    stealP2
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
+  public AutoRoutine depotstealautoDOWN() {
+    final AutoRoutine routine = m_factory.newRoutine("stealAuto");
+    final AutoTrajectory stealAuto = routine.trajectory("steal");
+    final AutoTrajectory stealP2 = routine.trajectory("stealp2v2");
+
+    routine.active().onTrue(stealAuto.resetOdometry().andThen(stealAuto.cmd()));
+
+    stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    stealAuto.done().onTrue(tunableWait(waitkey, waitkeydefault).andThen(stealP2.cmd()));
 
     stealP2
         .atTime("StopIntake")
@@ -142,7 +252,36 @@ public class AutoRoutines {
 
     stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
 
-    stealAuto.doneDelayed(0.5).onTrue(stealP2.cmd());
+    stealAuto.done().onTrue(tunableWait(waitkey, waitkeydefault).andThen(stealP2.cmd()));
+
+    stealP2
+        .atTime("StopIntake")
+        .onTrue(
+            m_superstructure
+                .setState(StructureState.IDLE)
+                .andThen(m_superstructure.setState(StructureState.REV)));
+
+    stealP2
+        .atTime("Shoot")
+        .onTrue(
+            Commands.waitSeconds(1.5)
+                .andThen(m_superstructure.setState(StructureState.SHOOT))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(m_superstructure.setState(StructureState.JITTER_AND_SHOOT)));
+
+    return routine;
+  }
+
+  public AutoRoutine outpostStealAutoDOWN() {
+    final AutoRoutine routine = m_factory.newRoutine("outpostStealAuto");
+    final AutoTrajectory stealAuto = routine.trajectory("Outpoststeal");
+    final AutoTrajectory stealP2 = routine.trajectory("Outpoststealp2v2");
+
+    routine.active().onTrue(stealAuto.resetOdometry().andThen(stealAuto.cmd()));
+
+    stealAuto.atTime("Intake").onTrue(m_superstructure.setState(StructureState.INTAKE));
+
+    stealAuto.done().onTrue(tunableWait(waitkey, waitkeydefault).andThen(stealP2.cmd()));
 
     stealP2
         .atTime("StopIntake")

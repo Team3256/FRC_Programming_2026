@@ -554,7 +554,7 @@
  },
  "events":[
    {"name":"Shoot", "from":{"target":12, "targetTimestamp":10.2456, "offset":{"exp":"2 s", "val":2.0}}, "event":null},
-   {"name":"Intake", "from":{"target":1, "targetTimestamp":1.00593, "offset":{"exp":"0.2 s", "val":0.2}}, "event":null},
+   {"name":"Intake", "from":{"target":1, "targetTimestamp":1.00593, "offset":{"exp":"-0.15 s", "val":-0.15}}, "event":null},
    {"name":"Intake", "from":{"target":10, "targetTimestamp":8.35882, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"Jitter", "from":{"target":12, "targetTimestamp":10.2456, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"Shoot", "from":{"target":9, "targetTimestamp":6.3511, "offset":{"exp":"0 s", "val":0.0}}, "event":null},

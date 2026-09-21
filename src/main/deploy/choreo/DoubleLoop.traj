@@ -485,7 +485,7 @@
   "splits":[0]
  },
  "events":[
-   {"name":"Intake", "from":{"target":1, "targetTimestamp":1.06152, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Intake", "from":{"target":1, "targetTimestamp":1.06152, "offset":{"exp":"-0.2 s", "val":-0.2}}, "event":null},
    {"name":"Shoot", "from":{"target":13, "targetTimestamp":9.10537, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"StopIntake", "from":{"target":11, "targetTimestamp":7.66059, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }
