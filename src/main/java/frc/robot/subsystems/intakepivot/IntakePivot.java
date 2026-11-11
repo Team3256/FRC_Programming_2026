@@ -84,6 +84,11 @@ public class IntakePivot extends DisableSubsystem {
         .repeatedly();
   }
 
+  /** Measured intake pivot position, in mechanism rotations. */
+  public double getPosition() {
+    return intakePivotIOInputsAutoLogged.pivotMotorPosition;
+  }
+
   public boolean reachedPosition() {
     return Util.epsilonEquals(intakePivotIOInputsAutoLogged.pivotMotorPosition, reqPosition, 0.01);
   }

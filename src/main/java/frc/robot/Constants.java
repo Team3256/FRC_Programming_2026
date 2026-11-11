@@ -11,6 +11,7 @@ import static edu.wpi.first.units.Units.Inches;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -21,6 +22,18 @@ import edu.wpi.first.units.measure.Distance;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public enum Mode {
+    /** Running on the robot. */
+    REAL,
+    /** Running the physics simulation. */
+    SIM,
+    /** Replaying a log file; no physics, inputs come from the log. */
+    REPLAY
+  }
+
+  public static final Mode currentMode =
+      RobotBase.isReal() ? Mode.REAL : Logging.kAdvkitUseReplayLogs ? Mode.REPLAY : Mode.SIM;
+
   public static class AutoConstants {
     /** Tracking error that pauses Choreo trajectory progress. */
     public static final double kRecoveryTranslationErrorThresholdMeters = 1;

@@ -41,7 +41,7 @@ public class IntakeRollersConstants {
 
   public static final class SimulationConstants {
     public static double rollerGearingRatio = 1.0;
-    public static double rollerMomentOfInertia = 1;
+    public static double rollerMomentOfInertia = 0.002;
 
     // Scale down the angular velocity so we can actually see what is happening
     public static double kAngularVelocityScalar = 5;

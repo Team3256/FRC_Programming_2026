@@ -14,8 +14,10 @@ import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AutoRoutines;
+import frc.robot.sim.RebuiltFieldSim;
 import frc.robot.sim.SimMechs;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.feeder.Feeder;
@@ -55,11 +58,14 @@ import frc.robot.subsystems.turret.TurretIOSim;
 import frc.robot.subsystems.turret.TurretIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.utils.AutoConfig;
 import frc.robot.utils.MappedXboxController;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
 public class RobotContainer {
@@ -103,13 +109,10 @@ public class RobotContainer {
   private final Vision vision =
       new Vision(
           drivetrain::addVisionMeasurement,
-          new VisionIOPhotonVision(
-              VisionConstants.frontRightCam, VisionConstants.robotToFrontRightCam),
-          new VisionIOPhotonVision(VisionConstants.backLeftCam, VisionConstants.robotToBackLeftCam),
-          new VisionIOPhotonVision(
-              VisionConstants.backRightCam, VisionConstants.robotToBackRightCam),
-          new VisionIOPhotonVision(
-              VisionConstants.frontLeftCam, VisionConstants.robotToFrontLeftCam));
+          cameraIO(VisionConstants.frontRightCam, VisionConstants.robotToFrontRightCam),
+          cameraIO(VisionConstants.backLeftCam, VisionConstants.robotToBackLeftCam),
+          cameraIO(VisionConstants.backRightCam, VisionConstants.robotToBackRightCam),
+          cameraIO(VisionConstants.frontLeftCam, VisionConstants.robotToFrontLeftCam));
 
   private final ShotCalculator shotCalculator =
       new ShotCalculator(
@@ -132,7 +135,10 @@ public class RobotContainer {
           shotCalculator,
           () -> drivetrain.getState().Pose);
 
-  /// sim file for intakepivot needs to be added -- seems like its not been merged yet
+  private final RobotVisualizer robotVisualizer =
+      new RobotVisualizer(turret::getPosition, shooterPivot::getPosition, intakePivot::getPosition);
+
+  private final Optional<RebuiltFieldSim> fieldSim;
 
   private AutoChooser autoChooser = new AutoChooser();
 
@@ -156,6 +162,49 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
       SimMechs.getInstance().publishToNT();
     }
+
+    fieldSim =
+        drivetrain
+            .getMapleSim()
+            .map(
+                mapleSim ->
+                    new RebuiltFieldSim(
+                        mapleSim.mapleSimDrive,
+                        () -> drivetrain.getState().Pose,
+                        intakeRollers::getVoltage,
+                        intakePivot::getPosition,
+                        shooter::getVelocity,
+                        shooterPivot::getPosition,
+                        turret::getPosition,
+                        feeder::getVelocity));
+  }
+
+  /**
+   * A camera. In simulation it sees the AprilTags from where the robot really is (the physics
+   * pose), so vision corrects odometry drift from wheel slip like it does on the field.
+   */
+  private VisionIO cameraIO(String name, Transform3d robotToCamera) {
+    return Utils.isSimulation()
+        ? new VisionIOPhotonVisionSim(name, robotToCamera, this::getSimulatedPose)
+        : new VisionIOPhotonVision(name, robotToCamera);
+  }
+
+  /** Where the robot really is: the physics pose in simulation, the pose estimate otherwise. */
+  private Pose2d getSimulatedPose() {
+    return drivetrain
+        .getMapleSim()
+        .map(mapleSim -> mapleSim.mapleSimDrive.getSimulatedDriveTrainPose())
+        .orElseGet(() -> drivetrain.getState().Pose);
+  }
+
+  /** In simulation, puts the FUEL back and preloads the robot, as at the start of a match. */
+  public void resetSimulationField() {
+    fieldSim.ifPresent(RebuiltFieldSim::resetForAuto);
+  }
+
+  /** Runs the field simulation; call from Robot.simulationPeriodic. */
+  public void simulationPeriodic() {
+    fieldSim.ifPresent(RebuiltFieldSim::periodic);
   }
 
   public Led getLed() {
@@ -359,5 +408,6 @@ public class RobotContainer {
     superstructure.periodic();
 
     Logger.recordOutput("Turret Offsets", TurretConstants.driveBaseToTurret);
+    robotVisualizer.periodic();
   }
 }

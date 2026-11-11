@@ -93,11 +93,12 @@ public class ShooterPivotConstants {
       };
 
   public static final class PivotSim {
-    public static final double pivotSimGearing = 40;
+    /** Must equal the SensorToMechanismRatio, or the sim hood ends up somewhere else. */
+    public static final double pivotSimGearing = 158.142945;
 
-    public static final Distance shooterPivotLength = Inches.of(12);
+    public static final Distance shooterPivotLength = Inches.of(8);
     public static final Mass shooterPivotMass = Kilograms.of(1);
-    public static final double jkGMetersSquared = 1;
+    public static final double jkGMetersSquared = 0.05;
 
     public static final Rotation2d minAngle = Rotation2d.fromDegrees(0.0);
     public static final Rotation2d maxAngle = Rotation2d.fromDegrees(45);

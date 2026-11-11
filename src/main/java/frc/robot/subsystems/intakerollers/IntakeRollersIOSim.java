@@ -24,8 +24,8 @@ public class IntakeRollersIOSim extends IntakeRollersIOTalonFX {
       new FlywheelSim(
           LinearSystemId.createFlywheelSystem(
               IntakeRollersConstants.kUseFOC ? DCMotor.getKrakenX60Foc(1) : DCMotor.getKrakenX60(1),
-              IntakeRollersConstants.SimulationConstants.rollerGearingRatio,
-              IntakeRollersConstants.SimulationConstants.rollerMomentOfInertia),
+              IntakeRollersConstants.SimulationConstants.rollerMomentOfInertia,
+              IntakeRollersConstants.SimulationConstants.rollerGearingRatio),
           IntakeRollersConstants.kUseFOC ? DCMotor.getKrakenX60Foc(1) : DCMotor.getKrakenX60(1));
 
   private final TalonFXSimState motorSim;

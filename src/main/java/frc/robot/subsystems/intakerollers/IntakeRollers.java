@@ -49,6 +49,11 @@ public class IntakeRollers extends DisableSubsystem {
     return this.run(() -> intakeRollersIO.setVelocity(velocity)).finallyDo(intakeRollersIO::off);
   }
 
+  /** Measured intake roller voltage. */
+  public double getVoltage() {
+    return intakeIOAutoLogged.rollerVoltageLeft;
+  }
+
   public Command off() {
     return this.runOnce(intakeRollersIO::off);
   }

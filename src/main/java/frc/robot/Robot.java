@@ -11,8 +11,10 @@ import au.grapplerobotics.MitoCANdria;
 import au.grapplerobotics.interfaces.MitoCANdriaInterface;
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.led.Led;
 import frc.robot.utils.LoggedTracer;
@@ -105,6 +107,8 @@ public class Robot extends LoggedRobot {
         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
       } else {
         Logger.addDataReceiver(new NT4Publisher());
+        // Keep sim runs too, to line them up against match logs in AdvantageScope
+        Logger.addDataReceiver(new WPILOGWriter("logs/sim"));
       }
     }
 
@@ -114,6 +118,7 @@ public class Robot extends LoggedRobot {
     Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
     Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
     Logger.recordMetadata("SerialNumber", RobotController.getSerialNumber());
+    Logger.recordMetadata("Mode", Constants.currentMode.toString());
 
     Logger.start();
   }
@@ -167,6 +172,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     // no auto command, uses trigger
+    m_robotContainer.resetSimulationField();
     SignalLogger.writeString("MatchStatus", "Auto");
   }
 
@@ -211,9 +217,16 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    // The sim robot starts in the blue alliance zone (SimConstants.kStartingPose), but the Sim GUI
+    // defaults to Red 1, whose driver perspective makes W drive it straight into the blue wall
+    DriverStationSim.setAllianceStationId(AllianceStationID.Blue1);
+    DriverStationSim.notifyNewData();
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    m_robotContainer.simulationPeriodic();
+  }
 }

@@ -45,6 +45,11 @@ public class Feeder extends DisableSubsystem {
     return setVelocity(FeederConstants.feederVelocity);
   }
 
+  /** Measured feeder velocity, in rotations per second. */
+  public double getVelocity() {
+    return feederIOAutoLogged.feederMotor1Velocity;
+  }
+
   public Command off() {
     return this.runOnce(feederIO::off);
   }

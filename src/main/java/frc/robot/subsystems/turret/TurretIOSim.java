@@ -19,19 +19,18 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import frc.robot.sim.MechanismSimLoop;
 import frc.robot.sim.SimMechs;
-import org.littletonrobotics.junction.LoggedRobot;
 
 public class TurretIOSim extends TurretIOTalonFX {
 
-  private final LinearSystem<N1, N1, N1> flywheelSystem =
+  private final LinearSystem<N1, N1, N1> turretSystem =
       LinearSystemId.createFlywheelSystem(
           DCMotor.getKrakenX60(1),
           TurretConstants.SimulationConstants.kMomentOfInertia,
           TurretConstants.SimulationConstants.turretSimGearing);
 
-  private final FlywheelSim turretSimModel =
-      new FlywheelSim(flywheelSystem, DCMotor.getKrakenX60(1));
+  private final FlywheelSim turretSimModel = new FlywheelSim(turretSystem, DCMotor.getKrakenX60(1));
 
   private final TalonFXSimState turretSimState;
 
@@ -39,31 +38,29 @@ public class TurretIOSim extends TurretIOTalonFX {
     super();
     turretSimState = super.getMotor().getSimState();
     turretSimState.Orientation = ChassisReference.Clockwise_Positive;
+    MechanismSimLoop.register(this::step);
+  }
+
+  /** Steps the physics, faster than the robot loop so the TalonFX's position loop stays stable. */
+  private void step(double dtSeconds) {
+    turretSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
+    turretSimModel.setInput(turretSimState.getMotorVoltage());
+    turretSimModel.update(dtSeconds);
+
+    double rotorRps =
+        turretSimModel.getAngularVelocityRPM()
+            / 60
+            * TurretConstants.SimulationConstants.turretSimGearing;
+    turretSimState.setRotorVelocity(rotorRps);
+    turretSimState.addRotorPosition(rotorRps * dtSeconds);
+
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(turretSimModel.getCurrentDrawAmps()));
   }
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-
-    // Update battery voltage
-    turretSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
-    // Update physics models
-    turretSimModel.setInput(turretSimState.getMotorVoltage());
-
-    turretSimModel.update(LoggedRobot.defaultPeriodSecs);
-
-    double motor1Rps =
-        turretSimModel.getAngularVelocityRPM()
-            / 60
-            * TurretConstants.SimulationConstants.turretSimGearing;
-    turretSimState.setRotorVelocity(motor1Rps);
-    turretSimState.addRotorPosition(motor1Rps * LoggedRobot.defaultPeriodSecs);
-
-    // Update battery voltage (after the effects of physics models)
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(turretSimModel.getCurrentDrawAmps()));
-
     super.updateInputs(inputs);
-
     SimMechs.getInstance().updateTurret(Rotations.of(inputs.turretMotorPosition));
   }
 }

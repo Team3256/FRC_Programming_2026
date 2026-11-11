@@ -88,6 +88,11 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
+    // maple-sim (physics sim for the drivetrain and FUEL), built from source by
+    // tools/maplesim/build-maplesim.sh because the published vendordep is out of date
+    implementation files('libs/maplesim-java-1b1e8ea.jar')
+    implementation 'org.dyn4j:dyn4j:5.0.2'
+
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 

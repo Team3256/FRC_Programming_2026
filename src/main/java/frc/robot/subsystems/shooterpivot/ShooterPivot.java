@@ -81,6 +81,11 @@ public class ShooterPivot extends DisableSubsystem {
     return setPosition(() -> ShooterPivotConstants.feedLUT.get(distance.getAsDouble()));
   }
 
+  /** Measured hood position, in mechanism rotations. */
+  public double getPosition() {
+    return shooterPivotIOInputsAutoLogged.shooterPivotMotorPosition;
+  }
+
   public boolean reachedPosition() {
     return Util.epsilonEquals(
         shooterPivotIOInputsAutoLogged.shooterPivotMotorPosition, reqPosition, 0.01);

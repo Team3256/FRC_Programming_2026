@@ -87,8 +87,12 @@ public class TurretConstants {
 
   public static final class SimulationConstants {
 
-    public static double turretSimGearing = 1.0; // TODO: Update this value
-    public static double kMomentOfInertia = 0.0001; // TODO: Update this value
+    /** Must equal the SensorToMechanismRatio (90:10 then 48:12). */
+    public static double turretSimGearing = 90.0 / 10 * 48.0 / 12;
+
+    /** Turret plus shooter, about 6 kg at an average radius of about 0.15 m. */
+    public static double kMomentOfInertia = 0.15;
+
     public static double kAngularVelocityScalar = 0.03;
   }
 

@@ -58,16 +58,23 @@ public final class IntakePivotConstants {
           .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(85.46));
 
   public static final class PivotSim {
-    // not sure about what gearing means and not sure if its equal to gear ratio
-    public static final double pivotSimGearing = 40;
+    /**
+     * Motor rotations per arm rotation. Must equal the SensorToMechanismRatio, or the sim arm ends
+     * up somewhere other than where the code sent it.
+     */
+    public static final double pivotSimGearing = 85.46;
 
-    public static final Distance intakePivotLength = Inches.of(24);
-    public static final Mass intakePivotMass = Kilograms.of(1);
-    public static final double jkGMetersSquared = 1;
+    /** Pivot axle to the front roller, from the CAD. */
+    public static final Distance intakePivotLength = Millimeters.of(340);
 
+    public static final Mass intakePivotMass = Kilograms.of(4);
+    public static final double jkGMetersSquared = 0.4;
+
+    /** Angle 0 is the intake on the ground (arm level), as is mechanism position 0. */
     public static final Rotation2d minAngle = Rotation2d.fromDegrees(0);
-    public static final Rotation2d maxAngle = Rotation2d.fromDegrees(180);
-    public static final Rotation2d startingAngle = Rotation2d.fromDegrees(90);
+
+    public static final Rotation2d maxAngle = Rotation2d.fromRotations(stowPosition + 0.01);
+    public static final Rotation2d startingAngle = Rotation2d.fromRotations(stowPosition);
   }
 
   public static double updateFrequency = 50;
