@@ -147,6 +147,11 @@ public class Turret extends DisableSubsystem {
     return this.runOnce(turretIO::off).withName("off");
   }
 
+  /** Measured turret position, in mechanism rotations. */
+  public double getPosition() {
+    return turretIOInputsAutoLogged.turretMotorPosition;
+  }
+
   public boolean reachedPosition() {
     return Util.epsilonEquals(turretIOInputsAutoLogged.turretMotorPosition, reqPosition, 0.05);
   }

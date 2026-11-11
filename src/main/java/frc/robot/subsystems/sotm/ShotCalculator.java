@@ -60,7 +60,8 @@ public class ShotCalculator {
   private final Supplier<ChassisSpeeds> robotVelocitySupplier;
   private final Transform2d robotToTurret;
 
-  private Pose2d lookaheadPose;
+  // Starts at the origin so commands that run before the first periodic() don't get null
+  private Pose2d lookaheadPose = Pose2d.kZero;
 
   private Translation2d target = FieldConstants.Hub.topCenterPoint.toTranslation2d();
 

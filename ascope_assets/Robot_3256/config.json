@@ -1,0 +1,37 @@
+{
+  "name": "3256",
+  "isFTC": false,
+  "rotations": [],
+  "position": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "cameras": [],
+  "components": [
+    {
+      "zeroedRotations": [],
+      "zeroedPosition": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "zeroedRotations": [],
+      "zeroedPosition": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "zeroedRotations": [],
+      "zeroedPosition": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ]
+}

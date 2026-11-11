@@ -144,6 +144,8 @@ gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
+# maple-sim built from source by tools/maplesim/build-maplesim.sh
+!libs/*.jar
 
 # Cache of project
 .gradletasknamecache

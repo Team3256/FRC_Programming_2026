@@ -35,15 +35,21 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.Constants;
+import frc.robot.sim.MapleSimSwerveDrivetrain;
+import frc.robot.sim.RebuiltFieldSim;
+import frc.robot.sim.SimConstants;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.subsystems.swerve.generated.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.utils.LoggedTracer;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -53,9 +59,16 @@ import org.littletonrobotics.junction.Logger;
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
-  private static final double kSimLoopPeriod = 0.005; // 5 ms
   private Notifier m_simNotifier = null;
-  private double m_lastSimTime;
+  private MapleSimSwerveDrivetrain m_mapleSim = null;
+  private boolean m_wasAutonomousEnabled = false;
+  private double m_autonomousStartTime = Double.NEGATIVE_INFINITY;
+
+  /**
+   * How long after auto starts a resetPose still places the simulated robot: long enough for the
+   * auto's initial odometry reset, short enough that later resets only reset odometry.
+   */
+  private static final double kSimPlacementWindowSeconds = 0.25;
 
   @AutoLogOutput private double lastGyroYawRads = 0;
   @AutoLogOutput private double accumGyroYawRads = 0;
@@ -93,8 +106,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    */
   public CommandSwerveDrivetrain(
       SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
-    super(drivetrainConstants, modules);
-    if (Utils.isSimulation()) {
+    super(
+        drivetrainConstants,
+        MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
+    if (Constants.currentMode == Constants.Mode.SIM) {
       startSimThread();
     }
   }
@@ -114,8 +129,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       SwerveDrivetrainConstants drivetrainConstants,
       double odometryUpdateFrequency,
       SwerveModuleConstants<?, ?, ?>... modules) {
-    super(drivetrainConstants, odometryUpdateFrequency, modules);
-    if (Utils.isSimulation()) {
+    super(
+        drivetrainConstants,
+        odometryUpdateFrequency,
+        MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
+    if (Constants.currentMode == Constants.Mode.SIM) {
       startSimThread();
     }
   }
@@ -146,8 +164,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         odometryUpdateFrequency,
         odometryStandardDeviation,
         visionStandardDeviation,
-        modules);
-    if (Utils.isSimulation()) {
+        MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
+    if (Constants.currentMode == Constants.Mode.SIM) {
       startSimThread();
     }
   }
@@ -261,6 +279,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * This ensures driving behavior doesn't change until an explicit disable event
      * occurs during testing.
      */
+    boolean autonomousEnabled = DriverStation.isAutonomousEnabled();
+    if (autonomousEnabled && !m_wasAutonomousEnabled) {
+      m_autonomousStartTime = Timer.getFPGATimestamp();
+    }
+    m_wasAutonomousEnabled = autonomousEnabled;
+
     if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
       DriverStation.getAlliance()
           .ifPresent(
@@ -273,9 +297,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
               });
     }
 
-    previousSpeeds =
-        ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getState().RawHeading);
-    previousTime = getState().Timestamp;
+    // getState() is a snapshot from the odometry thread; log it here, on the main thread, since
+    // AdvantageKit's Logger isn't thread-safe (registerTelemetry runs on the odometry thread)
+    var state = getState();
+    Logger.recordOutput("Drive/Pose", state.Pose);
+    Logger.recordOutput("Drive/RobotRelativeSpeeds", state.Speeds);
+    Logger.recordOutput("Drive/ModuleStates", state.ModuleStates);
+    Logger.recordOutput("Drive/ModuleTargets", state.ModuleTargets);
+    Logger.recordOutput("Drive/ModulePositions", state.ModulePositions);
+    Logger.recordOutput("Drive/OdometryFrequency", 1.0 / state.OdometryPeriod);
+    Logger.recordOutput("Drive/FailedDaqs", state.FailedDaqs);
+
+    previousSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(state.Speeds, state.RawHeading);
+    previousTime = state.Timestamp;
 
     LoggedTracer.record(this.getClass().getSimpleName());
   }
@@ -330,21 +364,63 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
   }
 
+  /**
+   * Runs the drivetrain in maple-sim instead of CTRE's simple sim, so the robot slips, collides
+   * with the field and drifts from its odometry like a real one. The arena steps faster than the
+   * robot loop so the 250 Hz CTRE PID behaves.
+   */
   private void startSimThread() {
-    m_lastSimTime = Utils.getCurrentTimeSeconds();
+    RebuiltFieldSim.createArena();
+    m_mapleSim =
+        new MapleSimSwerveDrivetrain(
+            SimConstants.kArenaPeriod,
+            SimConstants.kRobotMassWithBumpers,
+            SimConstants.kBumperLength,
+            SimConstants.kBumperLength,
+            SimConstants.kDriveMotor,
+            SimConstants.kSteerMotor,
+            SimConstants.kWheelCOF,
+            new Translation2d[] {
+              SwerveConstants.frontLeft,
+              SwerveConstants.frontRight,
+              SwerveConstants.backLeft,
+              SwerveConstants.backRight
+            },
+            getPigeon2(),
+            getModules(),
+            TunerConstants.FrontLeft,
+            TunerConstants.FrontRight,
+            TunerConstants.BackLeft,
+            TunerConstants.BackRight);
+    resetPose(SimConstants.kStartingPose);
 
-    /* Run simulation at a faster rate so PID gains behave more reasonably */
-    m_simNotifier =
-        new Notifier(
-            () -> {
-              final double currentTime = Utils.getCurrentTimeSeconds();
-              double deltaTime = currentTime - m_lastSimTime;
-              m_lastSimTime = currentTime;
+    m_simNotifier = new Notifier(m_mapleSim::update);
+    m_simNotifier.setName("MapleSim");
+    m_simNotifier.startPeriodic(SimConstants.kArenaPeriod.in(Seconds));
+  }
 
-              /* use the measured time delta, get battery voltage from WPILib */
-              updateSimState(deltaTime, RobotController.getBatteryVoltage());
-            });
-    m_simNotifier.startPeriodic(kSimLoopPeriod);
+  /** The maple-sim drivetrain, when running in simulation. */
+  public Optional<MapleSimSwerveDrivetrain> getMapleSim() {
+    return Optional.ofNullable(m_mapleSim);
+  }
+
+  /**
+   * Resets the pose estimate. In simulation, a reset while disabled or right as auto starts also
+   * places the simulated robot there, the way the drive team sets the robot down before a match.
+   * Resets later on only reset odometry, as on the real robot.
+   */
+  @Override
+  public void resetPose(Pose2d pose) {
+    boolean placingRobot =
+        DriverStation.isDisabled()
+            || Timer.getFPGATimestamp() - m_autonomousStartTime < kSimPlacementWindowSeconds;
+    if (m_mapleSim != null && placingRobot) {
+      // The arena steps on the sim notifier thread while holding its own lock
+      synchronized (SimulatedArena.getInstance()) {
+        m_mapleSim.mapleSimDrive.setSimulationWorldPose(pose);
+      }
+    }
+    super.resetPose(pose);
   }
 
   /**

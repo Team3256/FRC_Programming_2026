@@ -66,6 +66,11 @@ public class Shooter extends DisableSubsystem {
     return setVelocity(() -> ShooterConstants.feedLUT.get(distance.getAsDouble()));
   }
 
+  /** Measured flywheel velocity, in rotations per second. */
+  public double getVelocity() {
+    return shooterIOAutoLogged.shooterMotorVelocity;
+  }
+
   public boolean reachedVelocity() {
     return Util.epsilonEquals(shooterIOAutoLogged.shooterMotorVelocity, reqVelocity, 5);
   }
